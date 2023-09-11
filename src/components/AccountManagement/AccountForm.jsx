@@ -24,6 +24,7 @@ const AddAccountForm = ({ onSubmit }) => {
     onSubmit: (values) => {
       onSubmit(values);
       formik.resetForm();
+
     },
   });
 
@@ -33,7 +34,7 @@ const AddAccountForm = ({ onSubmit }) => {
         fullWidth
         id='name'
         name='name'
-        label='Tên tài khoản'
+        label='name'
         variant='outlined'
         margin='normal'
         value={formik.values.name}

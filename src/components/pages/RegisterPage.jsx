@@ -148,12 +148,12 @@ const RegisterPage = () => {
 			) {
 				isValid = false;
 			}
-			if (!isValid) {
-				if (!captchaValue) {
-					toast.error("Please complete the captcha.");
-				}
-				return;
-			}
+			// if (!isValid) {
+			// 	if (!captchaValue) {
+			// 		toast.error("Please complete the captcha.");
+			// 	}
+			// 	return;
+			// }
 
 			try {
 				dispatch(setLoading(true));
@@ -376,14 +376,14 @@ const RegisterPage = () => {
 											  )
 											: null}
 									</div>
-									<div className="py-4">
+									{/* <div className="py-4">
 										<ReCAPTCHA
 											className="mt-2"
 											sitekey={siteKey}
 											onChange={handleCaptchaChange}
 											hl={i18n.language}
 										/>
-									</div>
+									</div> */}
 
 									<div className="pt-[5px]">
 										<button className="relative inline-flex  items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-cyan-500 to-blue-500 group-hover:from-cyan-500 group-hover:to-blue-500 hover:text-white dark:text-white ">

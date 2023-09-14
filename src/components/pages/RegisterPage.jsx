@@ -183,9 +183,20 @@ const RegisterPage = () => {
 				// 	createdAt: serverTimestamp(),
 				// });
 
-				await registerAccount({
-
+				const response = await registerAccount({
+					name: user.username,
+					email: user.email,
+					password: user.password
 				})
+				console.log(response);
+				dispatch(setLoading(false));
+				if (response.status == 200 && response.data.message == "Đăng ký thành công") {
+					toast.success(response.data.message);
+					navigate("/login");
+				}
+				else {
+					toast.error(response.data.message);
+				}
 
 				dispatch(setLoading(false));
 				// toast.success("Successful create account !");

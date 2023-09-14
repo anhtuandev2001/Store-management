@@ -25,7 +25,7 @@ const Routers = () => {
       <Route
         path='/'
         element={
-          <AuthRoute routeType='private'>
+          <AuthRoute routeType='public'>
             <App />
           </AuthRoute>
         }

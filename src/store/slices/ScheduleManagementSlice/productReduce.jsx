@@ -1,7 +1,7 @@
 // @ts-nocheck
 import axios from 'axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-const baseURL = 'https://furniturev2.onrender.com/api';
+const baseURL = 'https://furniturev2-1.onrender.com/api';
 
 const getAllProduct = createAsyncThunk('GET_PRODUCT_LIST', async () => {
   const result = await axios.get(`${baseURL}/products/0`);

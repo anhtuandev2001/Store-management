@@ -14,6 +14,7 @@ import IconOpenEye from "../../assets/icon/IconForm/IconOpenEye";
 import useAuth from "../../utils/useAuth";
 import { useTranslation } from "react-i18next";
 import Translation from "../Translation";
+import { loginAccount } from "../../api/account";
 
 const LoginPage = () => {
 	const { t } = useTranslation();
@@ -35,6 +36,8 @@ const LoginPage = () => {
 		event.preventDefault();
 
 		const { email, password } = user;
+
+		console.log("email: ", email, "password: ", password);
 
 		const handleValidationError = (info, errorMessage) => {
 			setTimeout(() => {
@@ -65,13 +68,14 @@ const LoginPage = () => {
 		}
 		try {
 			setLoading(true);
-			const userCredential = await signInWithEmailAndPassword(
-				auth,
-				user.email,
-				user.password,
-			);
-			const users = userCredential.user;
-			console.log(users);
+			// const userCredential = await signInWithEmailAndPassword(
+			// 	auth,
+			// 	user.email,
+			// 	user.password,
+			// );
+			// const users = userCredential.user;
+			const reponse = await loginAccount(user)
+
 			setLoading(false);
 			navigate("/");
 		} catch (error) {
@@ -136,17 +140,16 @@ const LoginPage = () => {
 											onChange={handleInputChange}
 											type="text"
 											name="email"
-											className={`w-full h-[45px] outline-0 p-[10px] border-2 rounded-md ${
-												inputError && error.email
-													? "border-red-500 border-2 border-solid"
-													: ""
-											} `}></input>
+											className={`w-full h-[45px] outline-0 p-[10px] border-2 rounded-md ${inputError && error.email
+												? "border-red-500 border-2 border-solid"
+												: ""
+												} `}></input>
 										{error?.email
 											? error.email && (
-													<p className="text-[red] text-left font-semibold pt-[1rem]">
-														{error.email}
-													</p>
-											  )
+												<p className="text-[red] text-left font-semibold pt-[1rem]">
+													{error.email}
+												</p>
+											)
 											: null}
 									</div>
 									<div className="mb-[25px] ">
@@ -160,11 +163,10 @@ const LoginPage = () => {
 												value={user.password}
 												onChange={handleInputChange}
 												name="password"
-												className={`w-full h-[45px] outline-0 border-2 p-[10px] rounded-md ${
-													inputError && error.password
-														? "border-red-500 border-2 border-solid"
-														: ""
-												}`}></input>
+												className={`w-full h-[45px] outline-0 border-2 p-[10px] rounded-md ${inputError && error.password
+													? "border-red-500 border-2 border-solid"
+													: ""
+													}`}></input>
 											<button
 												type="button"
 												className="absolute flex items-center pr-3 top-0 right-0 bottom-0"
@@ -175,10 +177,10 @@ const LoginPage = () => {
 
 										{error?.password
 											? error.password && (
-													<p className="text-[red] text-left font-semibold pt-[1rem]">
-														{error.password}
-													</p>
-											  )
+												<p className="text-[red] text-left font-semibold pt-[1rem]">
+													{error.password}
+												</p>
+											)
 											: null}
 
 										<div

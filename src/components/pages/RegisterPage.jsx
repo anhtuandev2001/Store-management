@@ -22,6 +22,7 @@ import { setUser, setLoading } from "../../store/slices/userSlice";
 import { setError, clearError } from "../../store/slices/errorSlice";
 import { useTranslation } from "react-i18next";
 import Translation from "../Translation";
+import { registerAccount } from "../../api/account";
 
 const siteKey = import.meta.env.VITE_REACT_APP_RECAPTCHA_KEY;
 
@@ -143,48 +144,52 @@ const RegisterPage = () => {
 				error.email ||
 				error.username ||
 				error.password ||
-				error.confirmPassword ||
-				!captchaValue
+				error.confirmPassword
+				// !captchaValue
 			) {
 				isValid = false;
 			}
-			// if (!isValid) {
-			// 	if (!captchaValue) {
-			// 		toast.error("Please complete the captcha.");
-			// 	}
-			// 	return;
-			// }
+			if (!isValid) {
+				if (!captchaValue) {
+					toast.error("Please complete the captcha.");
+				}
+				return;
+			}
 
 			try {
 				dispatch(setLoading(true));
-				const userCredential = await createUserWithEmailAndPassword(
-					auth,
-					user.email,
-					user.password,
-				);
-				await signOut(auth);
-				const users = userCredential.user;
-				const userId = users.uid;
-				const displayName = user.username;
+				// const userCredential = await createUserWithEmailAndPassword(
+				// 	auth,
+				// 	user.email,
+				// 	user.password,
+				// );
+				// await signOut(auth);
+				// const users = userCredential.user;
+				// const userId = users.uid;
+				// const displayName = user.username;
 
-				// I was create a new document reference with the generated ID in the "users" collection
-				const userDocRef = doc(db, "users", userId);
+				// // I was create a new document reference with the generated ID in the "users" collection
+				// const userDocRef = doc(db, "users", userId);
 
-				await updateProfile(users, {
-					displayName: user.username,
-				});
-				// Set the user data in the document
-				await setDoc(userDocRef, {
-					uid: userId,
-					email: email,
-					role: "user",
-					displayName: displayName,
-					createdAt: serverTimestamp(),
-				});
+				// await updateProfile(users, {
+				// 	displayName: user.username,
+				// });
+				// // Set the user data in the document
+				// await setDoc(userDocRef, {
+				// 	uid: userId,
+				// 	email: email,
+				// 	role: "user",
+				// 	displayName: displayName,
+				// 	createdAt: serverTimestamp(),
+				// });
+
+				await registerAccount({
+
+				})
 
 				dispatch(setLoading(false));
-				toast.success("Successful create account !");
-				navigate("/login");
+				// toast.success("Successful create account !");
+				// navigate("/login");
 			} catch (error) {
 				const errorCode = error.code;
 				const errorMessage = error.message;
@@ -253,18 +258,17 @@ const RegisterPage = () => {
 											name="email"
 											value={user.email}
 											onChange={handleInputChange}
-											className={`w-full mb-[10px] mt-[10px] h-[45px] outline-0 p-[10px] rounded-md ${
-												inputError && error.email
-													? "border-red-500 border-2 border-solid"
-													: ""
-											}`}
+											className={`w-full mb-[10px] mt-[10px] h-[45px] outline-0 p-[10px] rounded-md ${inputError && error.email
+												? "border-red-500 border-2 border-solid"
+												: ""
+												}`}
 										/>
 										{error.email
 											? error.email && (
-													<p className="text-[red] text-left font-semibold pt-[5px]">
-														{error.email}
-													</p>
-											  )
+												<p className="text-[red] text-left font-semibold pt-[5px]">
+													{error.email}
+												</p>
+											)
 											: null}
 									</div>
 
@@ -278,18 +282,17 @@ const RegisterPage = () => {
 											name="username"
 											value={user.username}
 											onChange={handleInputChange}
-											className={`w-full mb-[10px] mt-[10px] h-[45px] outline-0 p-[10px] rounded-md ${
-												inputError && error.username
-													? "border-red-500 border-2 border-solid"
-													: ""
-											}`}
+											className={`w-full mb-[10px] mt-[10px] h-[45px] outline-0 p-[10px] rounded-md ${inputError && error.username
+												? "border-red-500 border-2 border-solid"
+												: ""
+												}`}
 										/>
 										{error.username
 											? error.username && (
-													<p className="text-[red] text-left font-semibold pt-[5px]">
-														{error.username}
-													</p>
-											  )
+												<p className="text-[red] text-left font-semibold pt-[5px]">
+													{error.username}
+												</p>
+											)
 											: null}
 									</div>
 									<div className="flex flex-col w-[400px]">
@@ -321,11 +324,10 @@ const RegisterPage = () => {
 												value={user.password}
 												onChange={handleInputChange}
 												autoComplete="new-password"
-												className={`w-full mb-[10px] mt-[10px] h-[45px] outline-0 border-2 p-[10px] rounded-md ${
-													inputError && error.password
-														? "border-red-500 border-2 border-solid"
-														: ""
-												}`}
+												className={`w-full mb-[10px] mt-[10px] h-[45px] outline-0 border-2 p-[10px] rounded-md ${inputError && error.password
+													? "border-red-500 border-2 border-solid"
+													: ""
+													}`}
 											/>
 											<button
 												type="button"
@@ -336,10 +338,10 @@ const RegisterPage = () => {
 										</div>
 										{error.password
 											? error.password && (
-													<p className="text-[red] text-left font-semibold pt-[5px] ">
-														{error.password}
-													</p>
-											  )
+												<p className="text-[red] text-left font-semibold pt-[5px] ">
+													{error.password}
+												</p>
+											)
 											: null}
 									</div>
 									<div className="flex flex-col w-[400px]">
@@ -355,11 +357,10 @@ const RegisterPage = () => {
 												value={user.confirmPassword}
 												onChange={handleInputChange}
 												autoComplete="new-password1"
-												className={`w-full mb-[10px] mt-[10px] h-[45px] outline-0 border-2 p-[10px] rounded-md ${
-													inputError && errConfirmPassword
-														? "border-red-500 border-2 border-solid"
-														: ""
-												}`}
+												className={`w-full mb-[10px] mt-[10px] h-[45px] outline-0 border-2 p-[10px] rounded-md ${inputError && errConfirmPassword
+													? "border-red-500 border-2 border-solid"
+													: ""
+													}`}
 											/>
 											<button
 												type="button"
@@ -370,10 +371,10 @@ const RegisterPage = () => {
 										</div>
 										{errConfirmPassword
 											? errConfirmPassword && (
-													<p className="text-[red] text-left font-semibold pt-[5px]">
-														{errConfirmPassword}
-													</p>
-											  )
+												<p className="text-[red] text-left font-semibold pt-[5px]">
+													{errConfirmPassword}
+												</p>
+											)
 											: null}
 									</div>
 									{/* <div className="py-4">

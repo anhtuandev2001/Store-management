@@ -3,14 +3,9 @@ import { Button } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import IconMenu from '../../assets/icon/IconMenu';
-import IconNotification from '../../assets/icon/IconNotification';
-import IconQuestion from '../../assets/icon/IconQuestion';
-import IconSetting from '../../assets/icon/IconSetting';
 import logo from '../../assets/icon/logoBlueOC.png';
 import { handleLeftMenu } from '../../store/slices/leftMenuSlice';
 import Profile from '../Profile';
-import Translation from '../Translation';
-import { useEffect, useState } from 'react';
 
 function Nav() {
   const { t } = useTranslation();

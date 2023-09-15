@@ -1,14 +1,18 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
 import {
+  changeStatusOrder,
   createCategory,
   createProduct,
   createUser,
   deleteCategory,
   deleteProduct,
   getAllAccount,
+  getAllCategory,
   getAllOrder,
   getAllProduct,
+  loginUser,
+  updateCategory,
   updateProduct,
 } from './productReduce';
 const initialState = {
@@ -16,6 +20,7 @@ const initialState = {
   productImageList: [],
   createProduct: {},
   accountList: [],
+  categoryList: [],
   orderList: [],
   status: {
     productInfo: '',
@@ -23,10 +28,14 @@ const initialState = {
     deleteProduct: '',
     updateProduct: '',
     createCategory: '',
+    updateCategory: '',
+    loginUser: '',
     deleteCategory: '',
     accountList: '',
     createUser: '',
     orderList: '',
+    categoryList: '',
+    changeStatusOrder: '',
   },
 };
 
@@ -39,12 +48,16 @@ const productManagementSlice = createSlice({
         productInfo: '',
         createProduct: '',
         deleteProduct: '',
+        loginUser: '',
         updateProduct: '',
         createCategory: '',
         deleteCategory: '',
         accountList: '',
+        updateCategory: '',
+        categoryList: '',
         createUser: '',
         orderList: '',
+        changeStatusOrder: '',
       };
     },
   },
@@ -131,6 +144,22 @@ const productManagementSlice = createSlice({
         };
       })
 
+      //updateCategory
+      .addCase(updateCategory.fulfilled, (state, action) => {
+        toast.success('Update Successfully');
+        state.status = {
+          ...state.status,
+          updateCategory: 'success',
+        };
+      })
+      .addCase(updateCategory.rejected, (state) => {
+        toast.error('Update Error');
+        state.status = {
+          ...state.status,
+          updateCategory: 'error',
+        };
+      })
+
       //deleteCategory
       .addCase(deleteCategory.fulfilled, (state, action) => {
         toast.success('Delete Successfully');
@@ -166,7 +195,6 @@ const productManagementSlice = createSlice({
 
       //createUser
       .addCase(createUser.fulfilled, (state, action) => {
-        console.log(action);
         if (action.payload.status === 302) {
           toast.error('Account has been registered');
           state.status = {
@@ -205,6 +233,55 @@ const productManagementSlice = createSlice({
           orderList: 'error',
         };
         state.orderList = [];
+      })
+
+      //change status order
+      .addCase(changeStatusOrder.fulfilled, (state, action) => {
+        toast.success('Change Successfully');
+        state.status = {
+          ...state.status,
+          changeStatusOrder: 'success',
+        };
+      })
+      .addCase(changeStatusOrder.rejected, (state) => {
+        toast.error('Change Error');
+        state.status = {
+          ...state.status,
+          changeStatusOrder: 'error',
+        };
+      })
+
+      // //get Category List
+      .addCase(getAllCategory.fulfilled, (state, action) => {
+        state.status = {
+          ...state.status,
+          categoryList: 'success',
+        };
+        state.categoryList = action.payload;
+      })
+      .addCase(getAllCategory.rejected, (state) => {
+        toast.error('No response from server');
+        state.status = {
+          ...state.status,
+          categoryList: 'error',
+        };
+        state.categoryList = [];
+      })
+
+      // login
+      .addCase(loginUser.fulfilled, (state, action) => {
+        toast.success('Login Success');
+        state.status = {
+          ...state.status,
+          loginUser: 'success',
+        };
+      })
+      .addCase(loginUser.rejected, (state) => {
+        toast.error('Login Error');
+        state.status = {
+          ...state.status,
+          loginUser: 'error',
+        };
       });
   },
 });

@@ -2,35 +2,59 @@
 import { LoadingButton } from '@mui/lab';
 import { Button } from '@mui/material';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
-import * as Yup from 'yup';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { createCategory } from '../../store/slices/ScheduleManagementSlice/productReduce';
+import * as Yup from 'yup';
+import {
+  createCategory,
+  getAllCategory,
+  updateCategory,
+} from '../../store/slices/ScheduleManagementSlice/productReduce';
+import { clearStatus } from '../../store/slices/ScheduleManagementSlice/productManagementSlice';
+import { handleLoading } from '../../store/slices/loadingSlice';
 
 const validationSchema = Yup.object().shape({
   categoryName: Yup.string().required('Product name is required'),
 });
 
 function CategoryForm({ action, category, onClose }) {
+  console.log(category);
   const dispatch = useDispatch();
   const { status } = useSelector((state) => state.productManagement);
   const initialValues = {
-    categoryName: category ? category.categoryName : '',
+    categoryName: category ? category.name : '',
   };
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = (value) => {
-    console.log(value);
     setIsLoading(true);
-    dispatch(createCategory(value));
+    if (action === 'create') {
+      dispatch(createCategory(value));
+    } else {
+      value.categoryId = category.id;
+      dispatch(updateCategory(value));
+    }
   };
 
   useEffect(() => {
     if (
       status.createCategory === 'success' ||
-      status.createCategory === 'error'
+      status.createCategory === 'error' ||
+      status.updateCategory === 'success' ||
+      status.updateCategory === 'error'
     ) {
       setIsLoading(false);
+    }
+  });
+
+  useEffect(() => {
+    if (
+      status.createCategory === 'success' ||
+      status.updateCategory === 'success'
+    ) {
+      dispatch(getAllCategory());
+      dispatch(clearStatus());
+      dispatch(handleLoading(true));
       onClose();
     }
   }, [status]);

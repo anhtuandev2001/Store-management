@@ -10,6 +10,10 @@ import { handleLoading } from '../../store/slices/loadingSlice';
 import { AiOutlineDelete } from 'react-icons/ai';
 import { AiFillEdit } from 'react-icons/ai';
 import CategoryForm from './CategoryForm';
+import {
+  deleteCategory,
+  getAllCategory,
+} from '../../store/slices/ScheduleManagementSlice/productReduce';
 
 const style = {
   position: 'absolute',
@@ -52,8 +56,6 @@ function CategoryList({ categoryList }) {
     setItemCategory(category);
   };
 
-  console.log(itemCategory);
-
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -61,7 +63,23 @@ function CategoryList({ categoryList }) {
 
   const handleSubmitDelete = () => {
     setIsLoading(true);
+    dispatch(deleteCategory(itemCategory.id));
   };
+
+  useEffect(() => {
+    if (
+      status.deleteCategory === 'success' ||
+      status.deleteCategory === 'error'
+    ) {
+      setIsLoading(false);
+    }
+    if (status.deleteCategory === 'success' || status.createCategory === 'success') {
+      dispatch(getAllCategory());
+      dispatch(clearStatus());
+      dispatch(handleLoading(true));
+      handleClose();
+    }
+  }, [status]);
 
   const columns = [
     { field: 'id', headerName: 'ID', width: 70, renderCell: renderTooltipCell },
@@ -105,7 +123,7 @@ function CategoryList({ categoryList }) {
   return (
     <div className='overflow-scroll'>
       <h2 className='text-2xl font-bold mb-4 text-[#42526e]'>Product List</h2>
-      <div style={{ height: '600px', width: 600, marginInline: 'auto' }}>
+      <div style={{ height: '600px' }}>
         <DataGrid
           rows={rows}
           columns={columns}

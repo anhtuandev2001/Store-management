@@ -2,7 +2,10 @@
 import { Box, Button, Modal } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllProduct } from '../../store/slices/ScheduleManagementSlice/productReduce';
+import {
+  getAllCategory,
+  getAllProduct,
+} from '../../store/slices/ScheduleManagementSlice/productReduce';
 import { handleLoading } from '../../store/slices/loadingSlice';
 import ProductForm from './ProductForm';
 import ProductList from './ProductList';
@@ -21,12 +24,19 @@ export function Product() {
   const dispatch = useDispatch();
   const { productList } = useSelector((state) => state.productManagement);
   const { status } = useSelector((state) => state.productManagement);
+  const { categoryList } = useSelector((state) => state.productManagement);
+
   useEffect(() => {
     dispatch(handleLoading(true));
     dispatch(getAllProduct());
+    dispatch(getAllCategory());
   }, []);
   useEffect(() => {
-    if (status.productInfo === 'success' || status.productInfo === 'error')
+    if (
+      status.productInfo === 'success' ||
+      (status.productInfo === 'error' && status.categoryList === 'success') ||
+      status.categoryList === 'error'
+    )
       dispatch(handleLoading(false));
   }, [productList]);
 
@@ -41,7 +51,7 @@ export function Product() {
           Add Product
         </Button>
       </div>
-      <ProductList products={productList} />
+      <ProductList products={productList} categoryList={categoryList} />
       <Modal
         // @ts-ignore
         open={open}
@@ -50,7 +60,11 @@ export function Product() {
         aria-describedby='modal-modal-description'
       >
         <Box sx={style}>
-          <ProductForm onClose = {handleClose} action = 'create'/>
+          <ProductForm
+            onClose={handleClose}
+            action='create'
+            categoryList={categoryList}
+          />
         </Box>
       </Modal>
     </div>

@@ -43,19 +43,33 @@ const validationSchema = Yup.object().shape({
   price: Yup.string().required('Price is required'),
   quantity: Yup.string().required('Quantity is required'),
   description: Yup.string().required('Description is required'),
-  categoryId: Yup.number().required('Category is required'),
 });
 
-function ProductForm({ onClose, product, action }) {
+function ProductForm({ onClose, product, action, categoryList }) {
   const initialValues = {
     name: product ? product.name : '',
     price: product ? product.price : '',
     description: product ? product.description : '',
-    categoryId: product ? product.categoryId : '',
     quantity: product ? product.quantity : '',
   };
 
-  const [selectedColors, setSelectedColors] = useState([]);
+  const categoryOptions = (categoryList || []).map((item) => ({
+    label: item?.categoryName,
+    value: item?.categoryId,
+  }));
+
+  const [selectedColors, setSelectedColors] = useState(
+    product
+      ? (colorOptions || []).filter((item) => product.colorsList == item.value)
+      : null
+  );
+  const [selectedCategory, setSelectedCategory] = useState(
+    product
+      ? (categoryOptions || []).filter(
+          (item) => product.categoryId == item.value
+        )[0]
+      : null
+  );
   const [inputImg, setInputImg] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
@@ -77,14 +91,15 @@ function ProductForm({ onClose, product, action }) {
       resultString = uniqueValuesArray.toString();
     }
     values.colorsList = resultString;
+    values.categoryId = selectedCategory.value;
 
     values.image = inputImg;
+    console.log(values);
     setIsLoading(true);
     if (action === 'create') {
       dispatch(createProduct(values));
     } else {
-      values = { ...values, productId: product.id };
-      console.log(values);
+      values = { ...values, productId: product.productId };
       dispatch(updateProduct(values));
     }
   };
@@ -196,14 +211,25 @@ function ProductForm({ onClose, product, action }) {
             />
           </div>
           <div className='mb-4'>
-            <label htmlFor='categoryId' className='block text-sm font-medium'>
-              Category:
-            </label>
-            <Field
-              type='text'
+            <Autocomplete
               id='categoryId'
-              name='categoryId'
-              className='mt-1 p-2 border border-[#C4C4C4] rounded w-full outline-none'
+              options={categoryOptions}
+              getOptionLabel={(option) => option.label}
+              value={selectedCategory}
+              isOptionEqualToValue={(option, value) =>
+                option.value === value.value
+              }
+              onChange={(_, newValue) => {
+                setSelectedCategory(newValue);
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label='Category'
+                  variant='outlined'
+                  fullWidth
+                />
+              )}
             />
             <ErrorMessage
               name='categoryId'

@@ -1,9 +1,11 @@
 // @ts-nocheck
 import { Box, Button, Modal } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import CategoryList from './CategoryList';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import CategoryForm from './CategoryForm';
+import { handleLoading } from '../../store/slices/loadingSlice';
+import { getAllCategory } from '../../store/slices/ScheduleManagementSlice/productReduce';
 
 const style = {
   position: 'absolute',
@@ -15,25 +17,27 @@ const style = {
   borderRadius: '5px',
 };
 
-const categoryList = [
-  {
-    categoryId: 1,
-    categoryName: 'Chair',
-  },
-  {
-    categoryId: 2,
-    categoryName: 'Chair',
-  },
-];
-
 function CategoryManagement() {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const dispatch = useDispatch();
+  const { status } = useSelector((state) => state.productManagement);
+  const { categoryList } = useSelector((state) => state.productManagement);
   const handleCreateCategory = () => {
     handleOpen();
   };
+
+  useEffect(() => {
+    dispatch(getAllCategory());
+    dispatch(handleLoading(true));
+  }, []);
+
+  useEffect(() => {
+    if (status.categoryList === 'success' || status.categoryList === 'error')
+      dispatch(handleLoading(false));
+  }, [categoryList]);
+
   return (
     <div>
       <div className='flex justify-between items-center full-w py-4 text-[#6B778C]'>

@@ -36,9 +36,14 @@ const dataGridClass = {
     alignItems: 'center',
     justifyContent: 'center',
   },
+  '& .MuiDataGrid-cell': {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 };
 
-const ProductList = ({ products }) => {
+const ProductList = ({ products, categoryList }) => {
   const [itemProduct, setItemProduct] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [action, setAction] = useState();
@@ -46,17 +51,14 @@ const ProductList = ({ products }) => {
 
   const dispatch = useDispatch();
   const handleDelete = (product) => {
-    product = {
-      ...product,
-      productId: product.id,
-    };
-    setItemProduct(product);
+    setItemProduct({ productId: product?.id });
     setAction('delete');
     handleOpen();
   };
 
   const handleEdit = (product) => {
-    setItemProduct(product);
+    const productEdit = products.filter((item) => item.productId == product.id);
+    setItemProduct(productEdit[0]);
     setAction('edit');
     handleOpen();
   };
@@ -75,60 +77,64 @@ const ProductList = ({ products }) => {
       status.deleteProduct === 'success' ||
       status.deleteProduct === 'error'
     ) {
-      dispatch(clearStatus());
       setIsLoading(false);
+    }
+    if (status.deleteProduct === 'success') {
       dispatch(handleLoading(true));
       dispatch(getAllProduct());
       handleClose();
+      dispatch(clearStatus());
     }
   }, [status]);
 
+  const findNameCategoryById = (userIdToFind) => {
+    for (const item of categoryList) {
+      if (item.categoryId === userIdToFind) {
+        return item.categoryName;
+      }
+    }
+    return null;
+  };
+
   const columns = [
-    { field: 'id', headerName: 'ID', width: 70, renderCell: renderTooltipCell },
+    { field: 'id', headerName: 'ID', width: 70 },
     {
       field: 'name',
       headerName: 'Name',
       width: 130,
-      renderCell: renderTooltipCell,
     },
     {
       field: 'description',
       headerName: 'Description',
       width: 160,
-      renderCell: renderTooltipCell,
     },
     {
       field: 'colorList',
-      headerName: 'ColorList',
+      headerName: 'Color List',
       width: 120,
-      renderCell: renderTooltipCell,
     },
     {
       field: 'price',
       headerName: 'Price',
       type: 'number',
       width: 140,
-      renderCell: renderTooltipCell,
     },
     {
       field: 'quantity',
       headerName: 'Quantity',
       type: 'number',
       width: 140,
-      renderCell: renderTooltipCell,
     },
     {
       field: 'categoryId',
-      headerName: 'CategoryId',
+      headerName: 'Category',
       type: 'number',
       width: 140,
-      renderCell: renderTooltipCell,
     },
     {
       field: 'createdAt',
-      headerName: 'CreatedAt',
+      headerName: 'Created At',
       width: 150,
-      renderCell: renderTooltipCell,
     },
     {
       field: 'imagesList',
@@ -159,18 +165,13 @@ const ProductList = ({ products }) => {
     },
   ];
 
-  // Hàm renderCell tùy chỉnh để bọc nội dung trong Tooltip
-  function renderTooltipCell(params) {
-    return <Tooltip title={params.value.toString() || ''}>{params.value}</Tooltip>;
-  }
-
   const rows = (products || []).map((item) => ({
     id: item.productId,
     name: item.name,
     description: item.description,
     quantity: item.quantity,
     price: item.price,
-    categoryId: item.categoryId,
+    categoryId: findNameCategoryById(item.categoryId),
     createdAt: item.createdAt.split('T')[0],
     colorList: item.colorsList,
     imagesList: `https://furniturev2-1.onrender.com/api/products/images/${item.imagesList}`,
@@ -224,6 +225,7 @@ const ProductList = ({ products }) => {
               <ProductForm
                 product={itemProduct}
                 onClose={handleClose}
+                categoryList={categoryList}
                 action='edit'
               />
             </div>

@@ -1,11 +1,19 @@
 // @ts-nocheck
 import React, { useEffect, useState } from 'react';
-import { Tooltip, Button, Modal, Box } from '@mui/material';
+import { Tooltip, Button, Modal, Box, Menu, MenuItem } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { AiFillEdit, AiOutlineDelete } from 'react-icons/ai';
 import { BiDetail } from 'react-icons/bi';
 import { useDispatch, useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
+import {
+  changeStatusOrder,
+  getAllAccount,
+  getAllOrder,
+} from '../../store/slices/ScheduleManagementSlice/productReduce';
+import { LoadingButton } from '@mui/lab';
+import { clearStatus } from '../../store/slices/ScheduleManagementSlice/productManagementSlice';
+import { handleLoading } from '../../store/slices/loadingSlice';
 
 const style = {
   position: 'absolute',
@@ -16,7 +24,6 @@ const style = {
   boxShadow: 24,
   borderRadius: '5px',
   p: 4,
-  width: 700,
   overflow: 'scroll',
 };
 
@@ -42,12 +49,27 @@ const OrderList = ({ orderList }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [action, setAction] = useState();
   const [orderView, setOrderView] = useState();
+  const [orderItem, setOrderItem] = useState();
+  const [dataChange, setDataChange] = useState();
   const [total, setTotal] = useState();
   const { status } = useSelector((state) => state.productManagement);
-
+  const { accountList } = useSelector((state) => state.productManagement);
   const dispatch = useDispatch();
-  const handleDelete = (order) => {};
-  const handleEdit = (order) => {};
+
+  useEffect(() => {
+    dispatch(getAllAccount());
+  }, []);
+
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  const handleImage = (image) => {
+    if (image) {
+      const imageUrlWithoutBrackets = image.replace(/\[|\]/g, '');
+      return imageUrlWithoutBrackets;
+    }
+  };
   const handleView = (order) => {
     setAction('view');
     handleOpen();
@@ -60,21 +82,66 @@ const OrderList = ({ orderList }) => {
     setOrderView(orderView);
   };
 
+  const findNameById = (userIdToFind) => {
+    for (const item of accountList) {
+      if (item.userId === userIdToFind) {
+        return item.name;
+      }
+    }
+    return null;
+  };
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const openMenu = Boolean(anchorEl);
+  const handleClickMenu = (event, params) => {
+    setOrderItem(params);
+    setAnchorEl(event.currentTarget);
+  };
+  const handleCloseMenu = (value) => {
+    if (typeof value == 'number') {
+      setAction('change');
+      const data = { status: value, orderId: orderItem?.id };
+      setDataChange(data);
+      handleOpen();
+    }
+    setAnchorEl(null);
+  };
+
+  const handleSubmitDelete = () => {
+    setIsLoading(true);
+    dispatch(changeStatusOrder(dataChange));
+  };
+
+  useEffect(() => {
+    if (
+      status.changeStatusOrder === 'success' ||
+      status.changeStatusOrder === 'error'
+    ) {
+      setIsLoading(false);
+    }
+    if (status.changeStatusOrder === 'success') {
+      dispatch(getAllOrder());
+      dispatch(clearStatus());
+      dispatch(handleLoading(true));
+      handleClose();
+    }
+  }, [status]);
+
   const columns = [
     { field: 'id', headerName: 'ID', width: 70 },
     {
       field: 'orderDate',
-      headerName: 'orderDate',
-      width: 130,
+      headerName: 'Order Date',
+      width: 160,
     },
     {
       field: 'status',
-      headerName: 'status',
+      headerName: 'Status',
       width: 160,
     },
     {
       field: 'userId',
-      headerName: 'userId',
+      headerName: 'User',
       width: 130,
     },
     {
@@ -83,15 +150,23 @@ const OrderList = ({ orderList }) => {
       width: 250,
       renderCell: (params) => (
         <div className='flex gap-2'>
-          <Button variant='outlined' onClick={() => handleDelete(params.row)}>
-            <AiOutlineDelete size={24} />
-          </Button>
-          <Button variant='contained' onClick={() => handleEdit(params.row)}>
-            <AiFillEdit size={24} />
-          </Button>
-          <Button variant='contained' onClick={() => handleView(params.row)}>
-            <BiDetail size={24} />
-          </Button>
+          <Tooltip title='Change Status'>
+            <Button
+              variant='contained'
+              id='basic-button'
+              aria-controls={open ? 'basic-menu' : undefined}
+              aria-haspopup='true'
+              aria-expanded={open ? 'true' : undefined}
+              onClick={(event) => handleClickMenu(event, params.row)}
+            >
+              <AiFillEdit size={24} />
+            </Button>
+          </Tooltip>
+          <Tooltip title='View Order'>
+            <Button variant='contained' onClick={() => handleView(params.row)}>
+              <BiDetail size={24} />
+            </Button>
+          </Tooltip>
         </div>
       ),
     },
@@ -99,7 +174,7 @@ const OrderList = ({ orderList }) => {
 
   const rows = (orderList || []).map((item) => ({
     id: item.orderId,
-    orderDate: item.orderDate,
+    orderDate: item.orderDate.split('T')[0],
     status:
       item.status == 0
         ? 'Confirming'
@@ -108,22 +183,9 @@ const OrderList = ({ orderList }) => {
         : item.status == 2
         ? 'Deliveried'
         : 'Cancel',
-    userId: item.userId,
+    userId: findNameById(item.userId),
     orderDetail: item.orderDetail,
   }));
-
-  console.log(orderView);
-
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
-  const handleImage = (image) => {
-    if (image) {
-      const imageUrlWithoutBrackets = image.replace(/\[|\]/g, '');
-      return imageUrlWithoutBrackets;
-    }
-  };
 
   return (
     <div className='overflow-scroll'>
@@ -144,6 +206,20 @@ const OrderList = ({ orderList }) => {
           pageSizeOptions={[5, 10]}
         />
       </div>
+      <Menu
+        id='basic-menu'
+        anchorEl={anchorEl}
+        open={openMenu}
+        onClose={handleCloseMenu}
+        MenuListProps={{
+          'aria-labelledby': 'basic-button',
+        }}
+      >
+        <MenuItem onClick={() => handleCloseMenu(0)}>Confirming</MenuItem>
+        <MenuItem onClick={() => handleCloseMenu(1)}>Processing</MenuItem>
+        <MenuItem onClick={() => handleCloseMenu(2)}>Deliveried</MenuItem>
+        <MenuItem onClick={() => handleCloseMenu(3)}>Cancel</MenuItem>
+      </Menu>
       <Modal
         open={open}
         onClose={handleClose}
@@ -152,7 +228,7 @@ const OrderList = ({ orderList }) => {
       >
         <Box sx={style}>
           {action === 'view' ? (
-            <div className='text-[#42526e]'>
+            <div className='text-[#42526e] w-[700px]'>
               <h2 className='text-xl mb-4 text-center'>View Order</h2>
               <div className='flex h-[420px] '>
                 <div className='border-r-2 pr-4 pb-4 overflow-scroll flex-1'>
@@ -178,7 +254,31 @@ const OrderList = ({ orderList }) => {
               </div>
             </div>
           ) : (
-            ''
+            <div className='p-5'>
+              <h2 className='text-xl font-bold text-[#42526e]'>
+                Are you sure you want change status to{' '}
+                {dataChange?.status == 0
+                  ? 'Confirming'
+                  : dataChange?.status == 1
+                  ? 'Processing'
+                  : dataChange?.status == 2
+                  ? 'Deliveried'
+                  : 'Cancel'}
+              </h2>
+              <div className='flex justify-between pt-5'>
+                <Button onClick={handleClose} sx={{ color: 'red' }}>
+                  Cancel
+                </Button>
+                <LoadingButton
+                  size='small'
+                  onClick={handleSubmitDelete}
+                  loading={isLoading}
+                  variant='contained'
+                >
+                  <span>Yes</span>
+                </LoadingButton>
+              </div>
+            </div>
           )}
         </Box>
       </Modal>

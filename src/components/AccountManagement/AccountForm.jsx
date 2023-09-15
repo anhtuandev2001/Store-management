@@ -30,7 +30,6 @@ function AccountForm({ action, account, onClose }) {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = (value) => {
-    console.log(value);
     setIsLoading(true);
     dispatch(createUser(value));
   };

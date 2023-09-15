@@ -50,40 +50,40 @@ const updateProduct = createAsyncThunk(
     for (const key in requestData) {
       formData.append(key, requestData[key]);
     }
-    try {
-      const response = await axios.post(`${baseURL}/products`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      console.log('Response:', response.data);
-    } catch (error) {
-      console.error('Error:', error);
-    }
+    const response = await axios.post(`${baseURL}/products`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
   }
 );
+
+const getAllCategory = createAsyncThunk('GET_CATEGORY_LIST', async () => {
+  const result = await axios.get(`${baseURL}/category`);
+  return result.data.data;
+});
 
 const createCategory = createAsyncThunk(
   'CREATE_CATEGORY',
   async (requestData) => {
-    try {
-      const response = await axios.post(`${baseURL}/category`, requestData);
-      console.log('Response:', response.data);
-    } catch (error) {
-      console.error('Error:', error);
-    }
+    const response = await axios.post(`${baseURL}/category`, requestData);
+    console.log('Response:', response.data);
+  }
+);
+
+const updateCategory = createAsyncThunk(
+  'UPDATE_CATEGORY',
+  async (requestData) => {
+    const response = await axios.post(`${baseURL}/category`, requestData);
+    console.log('Response:', response.data);
   }
 );
 
 const deleteCategory = createAsyncThunk(
   'DELETE_CATEGORY',
   async (requestData) => {
-    try {
-      const response = await axios.delete(`${baseURL}/category`, requestData);
-      console.log('Response:', response.data);
-    } catch (error) {
-      console.error('Error:', error);
-    }
+    const response = await axios.delete(`${baseURL}/category/${requestData}`);
+    console.log('Response:', response.data);
   }
 );
 
@@ -93,13 +93,9 @@ const getAllAccount = createAsyncThunk('GET_ACCOUNT_LIST', async () => {
 });
 
 const createUser = createAsyncThunk('CREATE_USER', async (requestData) => {
-  try {
-    const response = await axios.post(`${baseURL}/user/signup`, requestData);
-    console.log('Response:', response.data);
-    return response.data;
-  } catch (error) {
-    console.error('Error:', error);
-  }
+  const response = await axios.post(`${baseURL}/user/signup`, requestData);
+  console.log('Response:', response.data);
+  return response.data;
 });
 
 const getAllOrder = createAsyncThunk('GET_ORDER_LIST', async () => {
@@ -107,14 +103,33 @@ const getAllOrder = createAsyncThunk('GET_ORDER_LIST', async () => {
   return result.data;
 });
 
+const changeStatusOrder = createAsyncThunk(
+  'CHANGE_STATUS_ORDER',
+  async (requestData) => {
+    const response = await axios.post(`${baseURL}/order`, requestData);
+    console.log('Response:', response.data);
+    return response.data;
+  }
+);
+
+const loginUser = createAsyncThunk('LOGIN', async (requestData) => {
+  const response = await axios.post(`${baseURL}/user/login`, requestData);
+  console.log('Response:', response.data);
+  return response.data;
+});
+
 export {
+  changeStatusOrder,
   createCategory,
   createProduct,
   createUser,
   deleteCategory,
   deleteProduct,
   getAllAccount,
-  getAllProduct,
-  updateProduct,
+  getAllCategory,
   getAllOrder,
+  loginUser,
+  getAllProduct,
+  updateCategory,
+  updateProduct,
 };

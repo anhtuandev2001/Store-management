@@ -15,6 +15,7 @@ import useAuth from '../../utils/useAuth';
 import ForgotPasswordPage from '../pages/ForgotPasswordPage';
 import LoadingPage from '../pages/LoadingPage';
 import AuthRoute from './AuthRoute';
+import CategoryPage from '../pages/CategoryPage';
 const Routers = () => {
   const { loading } = useAuth();
   if (loading) {
@@ -30,9 +31,10 @@ const Routers = () => {
           </AuthRoute>
         }
       >
-        <Route path='/' element={<Navigate to='/bill' replace={true} />} />
+        <Route path='/' element={<Navigate to='/product' replace={true} />} />
         <Route path='bill' element={<BillManagementPage />} />
         <Route path='product' element={<ProductPage />} />
+        <Route path='category' element={<CategoryPage />} />
         <Route path='account' element={<AccountPage />} />
         <Route path='*' element={<ErrorPage />} />
       </Route>

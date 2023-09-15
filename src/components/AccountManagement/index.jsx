@@ -1,9 +1,12 @@
+// @ts-nocheck
 import { Box } from '@mui/material';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import AddAccountForm from './AccountForm';
 import AccountList from './AccountList';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllAccount } from '../../store/slices/ScheduleManagementSlice/productReduce';
 
 const style = {
   position: 'absolute',
@@ -18,13 +21,18 @@ const style = {
 };
 
 function AccountManagement() {
-  const accounts = [
-    { id: 1, name: 'Người dùng 1', email: 'user1@example.com', role: 'user' },
-    { id: 2, name: 'Người dùng 2', email: 'user2@example.com', role: 'admin' },
-  ];
+  const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  const { accountList } = useSelector((state) => state.productManagement);
+
+  useEffect(() => {
+    dispatch(getAllAccount());
+  }, []);
+
+  console.log(accountList);
 
   const handleAddAccount = (values) => {
     console.log('Thêm tài khoản:', values);
@@ -33,9 +41,11 @@ function AccountManagement() {
     <div>
       <div className='flex justify-between items-center full-w py-4 text-[#6B778C]'>
         <span>Account Manager</span>
-        <Button variant='contained' onClick={handleOpen}>Add Account</Button>
+        <Button variant='contained' onClick={handleOpen}>
+          Add Account
+        </Button>
       </div>
-      <AccountList accounts={accounts} />
+      <AccountList  />
       <Modal
         // @ts-ignore
         open={open}

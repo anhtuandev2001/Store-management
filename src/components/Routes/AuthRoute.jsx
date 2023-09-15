@@ -12,17 +12,17 @@ const AuthRoute = ({ children, routeType }) => {
 	}
 
 	// if routeType = private so user must be logged in to access this route so if user is not logged in redirect to login page , if not render the children
-	if (routeType === "private") {
-		return isNil(currentUser) ? (
-			<Navigate to="/login" replace={true} />
-		) : (
-			children
-		);
-	}
-	// this line I check route of login and log out.
-	if (routeType === "public") {
-		return isNil(currentUser) ? children : <Navigate to="/" replace={true} />;
-	}
+	// if (routeType === "private") {
+	// 	return isNil(currentUser) ? (
+	// 		<Navigate to="/login" replace={true} />
+	// 	) : (
+	// 		children
+	// 	);
+	// }
+	// // this line I check route of login and log out.
+	// if (routeType === "public") {
+	// 	return isNil(currentUser) ? children : <Navigate to="/product" replace={true} />;
+	// }
 
 	return children;
 };

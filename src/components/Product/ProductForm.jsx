@@ -4,85 +4,110 @@ import { ErrorMessage, Field, Form, Formik } from 'formik';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
-import { createProduct } from '../../store/slices/ScheduleManagementSlice/productReduce';
-import { LoadingButton } from '@mui/lab';
+import {
+  createProduct,
+  getAllProduct,
+  updateProduct,
+} from '../../store/slices/ScheduleManagementSlice/productReduce';
 
-const initialValues = {
-  name: '',
-  price: 0.0,
-  description: '',
-  categoryId: 0,
-  colorsList: '',
-  imagesList: {},
-  createdAt: '',
-};
+import { LoadingButton } from '@mui/lab';
+import { clearStatus } from '../../store/slices/ScheduleManagementSlice/productManagementSlice';
+import { handleLoading } from '../../store/slices/loadingSlice';
+
+const colorOptions = [
+  { label: 'Red', value: 'red' },
+  { label: 'Green', value: 'green' },
+  { label: 'Black', value: 'black' },
+  { label: 'Blue', value: 'blue' },
+  { label: 'Yellow', value: 'yellow' },
+  { label: 'Purple', value: 'purple' },
+  { label: 'Orange', value: 'orange' },
+  { label: 'Pink', value: 'pink' },
+  { label: 'Brown', value: 'brown' },
+  { label: 'Gray', value: 'gray' },
+  { label: 'White', value: 'white' },
+  { label: 'Cyan', value: 'cyan' },
+  { label: 'Magenta', value: 'magenta' },
+  { label: 'Lime', value: 'lime' },
+  { label: 'Teal', value: 'teal' },
+  { label: 'Indigo', value: 'indigo' },
+  { label: 'Slate', value: 'slate' },
+  { label: 'Lavender', value: 'lavender' },
+  { label: 'Maroon', value: 'maroon' },
+  { label: 'Olive', value: 'olive' },
+  { label: 'Other', value: 'other' },
+];
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required('Product name is required'),
-  price: Yup.number().required('Price is required'),
+  price: Yup.string().required('Price is required'),
+  quantity: Yup.string().required('Quantity is required'),
   description: Yup.string().required('Description is required'),
   categoryId: Yup.number().required('Category is required'),
 });
 
-function ProductForm() {
+function ProductForm({ onClose, product, action }) {
+  const initialValues = {
+    name: product ? product.name : '',
+    price: product ? product.price : '',
+    description: product ? product.description : '',
+    categoryId: product ? product.categoryId : '',
+    quantity: product ? product.quantity : '',
+  };
+
   const [selectedColors, setSelectedColors] = useState([]);
   const [inputImg, setInputImg] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const { status } = useSelector((state) => state.productManagement);
-  const handleSubmit = (values) => {
+
+  const handleSubmit = async (values) => {
     const currentTime = new Date();
-    values.createdAt = currentTime;
+    const formattedDate = currentTime.toISOString().split('T')[0];
+    values.createAt = formattedDate;
+
     const uniqueValuesArray = [
       ...new Set(selectedColors.map((color) => color.value)),
     ];
+
     let resultString;
     if (uniqueValuesArray.length > 1) {
-      resultString = uniqueValuesArray.join(', ');
+      resultString = uniqueValuesArray.join(',');
     } else {
       resultString = uniqueValuesArray.toString();
     }
     values.colorsList = resultString;
-    values.imagesList = inputImg;
-    console.log(values);
-    dispatch(createProduct(values));
+
+    values.image = inputImg;
     setIsLoading(true);
+    if (action === 'create') {
+      dispatch(createProduct(values));
+    } else {
+      values = { ...values, productId: product.id };
+      console.log(values);
+      dispatch(updateProduct(values));
+    }
   };
 
   useEffect(() => {
     if (
       status.createProduct === 'success' ||
-      status.createProduct === 'error'
+      status.createProduct === 'error' ||
+      status.updateProduct === 'success' ||
+      status.updateProduct === 'error'
     ) {
       setIsLoading(false);
+      dispatch(clearStatus());
+    }
+    if (
+      status.createProduct === 'success' ||
+      status.updateProduct === 'success'
+    ) {
+      dispatch(handleLoading(true));
+      dispatch(getAllProduct());
+      onClose();
     }
   }, [status]);
-
-  console.log(selectedColors);
-
-  const colorOptions = [
-    { label: 'Red', value: 'red' },
-    { label: 'Green', value: 'green' },
-    { label: 'Black', value: 'black' },
-    { label: 'Blue', value: 'blue' },
-    { label: 'Yellow', value: 'yellow' },
-    { label: 'Purple', value: 'purple' },
-    { label: 'Orange', value: 'orange' },
-    { label: 'Pink', value: 'pink' },
-    { label: 'Brown', value: 'brown' },
-    { label: 'Gray', value: 'gray' },
-    { label: 'White', value: 'white' },
-    { label: 'Cyan', value: 'cyan' },
-    { label: 'Magenta', value: 'magenta' },
-    { label: 'Lime', value: 'lime' },
-    { label: 'Teal', value: 'teal' },
-    { label: 'Indigo', value: 'indigo' },
-    { label: 'Slate', value: 'slate' },
-    { label: 'Lavender', value: 'lavender' },
-    { label: 'Maroon', value: 'maroon' },
-    { label: 'Olive', value: 'olive' },
-    { label: 'Other', value: 'other' },
-  ];
 
   const uniqueColorOptions = Array.from(
     new Set(colorOptions.map((color) => color.value))
@@ -93,12 +118,11 @@ function ProductForm() {
   const handleChangeInputImg = (event) => {
     if (event) {
       setInputImg(event.target.files[0]);
-      console.log(inputImg);
     }
   };
 
   return (
-    <div className='mx-auto p-6 shadow-lg'>
+    <div className='mx-auto p-6 shadow-lg text-[#42526e]'>
       <h1 className='text-2xl font-semibold mb-4'>Create Product</h1>
       <Formik
         initialValues={initialValues}
@@ -128,13 +152,29 @@ function ProductForm() {
               Price:
             </label>
             <Field
-              type='number'
+              type='text'
               id='price'
               name='price'
               className='mt-1 p-2 border border-[#C4C4C4] rounded w-full outline-none'
             />
             <ErrorMessage
               name='price'
+              component='div'
+              className='text-red-500 text-sm'
+            />
+          </div>
+          <div className='mb-4'>
+            <label htmlFor='quantity' className='block text-sm font-medium'>
+              Quantity:
+            </label>
+            <Field
+              type='text'
+              id='quantity'
+              name='quantity'
+              className='mt-1 p-2 border border-[#C4C4C4] rounded w-full outline-none'
+            />
+            <ErrorMessage
+              name='quantity'
               component='div'
               className='text-red-500 text-sm'
             />
@@ -160,7 +200,7 @@ function ProductForm() {
               Category:
             </label>
             <Field
-              type='number'
+              type='text'
               id='categoryId'
               name='categoryId'
               className='mt-1 p-2 border border-[#C4C4C4] rounded w-full outline-none'
@@ -178,10 +218,12 @@ function ProductForm() {
               options={uniqueColorOptions}
               getOptionLabel={(option) => option.label}
               value={selectedColors}
+              isOptionEqualToValue={(option, value) =>
+                option.value === value.value
+              }
               onChange={(_, newValue) => {
                 setSelectedColors(newValue);
               }}
-              isOptionEqualToValue={(option, value) => option.value === value}
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -214,15 +256,17 @@ function ProductForm() {
               className='text-red-500 text-sm'
             />
           </div>
-
-          <LoadingButton
-            size='small'
-            type='submit'
-            loading={isLoading}
-            variant='contained'
-          >
-            <span>Submit</span>
-          </LoadingButton>
+          <div className='flex justify-between'>
+            <Button onClick={onClose}>Discard</Button>
+            <LoadingButton
+              size='small'
+              type='submit'
+              loading={isLoading}
+              variant='contained'
+            >
+              <span>{action === 'create' ? 'Submit' : 'Update'}</span>
+            </LoadingButton>
+          </div>
         </Form>
       </Formik>
     </div>

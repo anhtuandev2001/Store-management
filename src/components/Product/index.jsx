@@ -50,7 +50,7 @@ export function Product() {
         aria-describedby='modal-modal-description'
       >
         <Box sx={style}>
-          <ProductForm />
+          <ProductForm onClose = {handleClose} action = 'create'/>
         </Box>
       </Modal>
     </div>

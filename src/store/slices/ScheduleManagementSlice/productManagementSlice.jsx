@@ -1,14 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { createProduct, deleteProduct, getAllProduct } from './productReduce';
+import { createCategory, createProduct, deleteCategory, deleteProduct, getAllAccount, getAllProduct, updateProduct } from './productReduce';
 import { toast } from 'react-toastify';
 const initialState = {
   productList: [],
+  productImageList: [], 
   createProduct: {},
-  deleteProduct:{},
+  accountList: [],
   status: {
     productInfo: '',
     createProduct: '',
     deleteProduct: '',
+    updateProduct: '',
+    createCategory: '',
+    deleteCategory: '',
+    accountList: '',
   },
 };
 
@@ -21,6 +26,10 @@ const productManagementSlice = createSlice({
         productInfo: '',
         createProduct: '',
         deleteProduct: '',
+        updateProduct: '',
+        createCategory: '',
+        deleteCategory: '',
+        accountList: '',
       };
     },
   },
@@ -33,10 +42,9 @@ const productManagementSlice = createSlice({
           ...state.status,
           createProduct: 'success',
         };
-        state.createProduct = action.payload;
       })
       .addCase(createProduct.rejected, (state) => {
-        toast.error('This room is used on that time');
+        toast.error('Create Error');
         state.status = {
           ...state.status,
           createProduct: 'error',
@@ -61,20 +69,84 @@ const productManagementSlice = createSlice({
       })
 
       //delete Product
-      .addCase(deleteProduct.fulfilled, (state, action) => {
+      .addCase(deleteProduct.fulfilled, (state) => {
+        toast.success('Delete Successfully');
         state.status = {
           ...state.status,
           deleteProduct: 'success',
         };
-        state.deleteProduct = action.payload;
       })
       .addCase(deleteProduct.rejected, (state) => {
-        toast.error('No response from server');
+        toast.error('Delete Error');
         state.status = {
           ...state.status,
           deleteProduct: 'error',
         };
-        state.deleteProduct = [];
+      })
+
+      //updateProduct
+      .addCase(updateProduct.fulfilled, (state, action) => {
+        toast.success('Update Successfully');
+        state.status = {
+          ...state.status,
+          updateProduct: 'success',
+        };
+      })
+      .addCase(updateProduct.rejected, (state) => {
+        toast.error('Update Error');
+        state.status = {
+          ...state.status,
+          updateProduct: 'error',
+        };
+      })
+
+      //createCategory
+      .addCase(createCategory.fulfilled, (state, action) => {
+        toast.success('Create Successfully');
+        state.status = {
+          ...state.status,
+          createCategory: 'success',
+        };
+      })
+      .addCase(createCategory.rejected, (state) => {
+        toast.error('Create Error');
+        state.status = {
+          ...state.status,
+          createCategory: 'error',
+        };
+      })
+
+      //deleteCategory
+      .addCase(deleteCategory.fulfilled, (state, action) => {
+        toast.success('Delete Successfully');
+        state.status = {
+          ...state.status,
+          deleteCategory: 'success',
+        };
+      })
+      .addCase(deleteCategory.rejected, (state) => {
+        toast.error('Delete Error');
+        state.status = {
+          ...state.status,
+          deleteCategory: 'error',
+        };
+      })
+
+      // //get Account List
+      .addCase(getAllAccount.fulfilled, (state, action) => {
+        state.status = {
+          ...state.status,
+          accountList: 'success',
+        };
+        state.accountList = action.payload;
+      })
+      .addCase(getAllAccount.rejected, (state) => {
+        toast.error('No response from server');
+        state.status = {
+          ...state.status,
+          accountList: 'error',
+        };
+        state.accountList = [];
       })
   }
 });

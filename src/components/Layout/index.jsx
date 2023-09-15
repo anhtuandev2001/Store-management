@@ -5,7 +5,7 @@ function LayOut() {
   return (
     <main className='flex '>
       <LeftMenu />
-      <div className='flex-1 pt-14 px-4'>
+      <div className='flex-1 pt-14 px-4 overflow-scroll'>
         <Outlet />
       </div>
     </main>

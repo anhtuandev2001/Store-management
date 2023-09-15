@@ -41,9 +41,7 @@ export function Profile() {
             className='p-0'
             aria-expanded={open ? 'true' : undefined}
           >
-            <Avatar sx={{ width: 32, height: 32, padding: 0 }}>
-              <img alt='avatar' />
-            </Avatar>
+            <Avatar sx={{ width: 32, height: 32, padding: 0 }}></Avatar>
           </IconButton>
         </Tooltip>
       </Box>
@@ -87,15 +85,12 @@ export function Profile() {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <Divider />
-        <div>
-          <MenuItem onClick={logout}>
-            <ListItemIcon>
-              <HiOutlineLogout />
-            </ListItemIcon>
-            Logout
-          </MenuItem>
-        </div>
+        <MenuItem onClick={logout}>
+          <ListItemIcon>
+            <HiOutlineLogout />
+          </ListItemIcon>
+          Logout
+        </MenuItem>
       </Menu>
     </div>
   );

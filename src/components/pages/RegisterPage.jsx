@@ -1,14 +1,63 @@
 // @ts-nocheck
 import { Link } from 'react-router-dom';
-import IconRules from '../../assets/icon/IconForm/IconRules';
 import logo from '../../assets/icon/logoBlueOC.png';
-import Translation from '../Translation';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
+import { useDispatch, useSelector } from 'react-redux';
+import { createUser } from '../../store/slices/ScheduleManagementSlice/productReduce';
+import { useEffect, useState } from 'react';
+import { LoadingButton } from '@mui/lab';
 
 const RegisterPage = () => {
+  const initialValues = {
+    email: '',
+    username: '',
+    password: '',
+    confirmPassword: '',
+  };
+
+  const validationSchema = Yup.object().shape({
+    email: Yup.string()
+      .email('Invalid email address')
+      .required('Email is required'),
+    username: Yup.string().required('Username is required'),
+    password: Yup.string()
+      .min(6, 'Password must be at least 6 characters')
+      .required('Password is required'),
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref('password'), null], 'Passwords must match')
+      .required('Confirm Password is required'),
+  });
+
+  const dispatch = useDispatch();
+  const { status } = useSelector((state) => state.productManagement);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = (values, { setSubmitting }) => {
+    const data = {
+      name: values.username || values.Username,
+      email: values.email,
+      password: values.password,
+    };
+    console.log(data);
+    dispatch(createUser(data));
+    setSubmitting(false);
+    setIsLoading(true);
+  };
+
+  useEffect(() => {
+    if (status.createUser === 'success' || status.createUser === 'error') {
+      setIsLoading(false);
+    }
+    if (status.createUser === 'success') {
+      window.location.href = '/login';
+    }
+  }, [status]);
+
   return (
     <>
       <div className='bg-login '>
-        <div className=' container-small flex flex-col justify-center items-center h-full'>
+        <div className='container-small flex flex-col justify-center items-center h-full'>
           <div>
             <div className='form w-full bg-gradient-to-b from-indigo-500 rounded-2xl shadow-2xl pt-9 pr-9 pl-9 pb-7 '>
               <div className=' flex justify-center items-center pb-9 ml-[135px] mr-[135px]'>
@@ -16,80 +65,114 @@ const RegisterPage = () => {
                   <img src={logo} alt='' className='h-[90px] w-[90px]' />
                 </div>
               </div>
-              <form className='flex flex-col items-center'>
-                <div className=' flex justify-center items-center pb-4 '>
-                  <h2 className='text-[20px] font-bold text-white	'>
-                    registration
-                  </h2>
-                </div>
-                <div className='flex flex-col w-[400px] relative'>
-                  <label className='text-[#2F3F73] font-semibold text-lg'>
-                    email
-                  </label>
-                  <input
-                    placeholder='email'
-                    type='text'
-                    name='email'
-                    className={`w-full mb-[10px] mt-[10px] h-[45px] outline-0 p-[10px] rounded-md`}
-                  />
-                </div>
+              <Formik
+                initialValues={initialValues}
+                validationSchema={validationSchema}
+                onSubmit={handleSubmit}
+              >
+                {({ isSubmitting }) => (
+                  <Form className='flex flex-col items-center'>
+                    <div className=' flex justify-center items-center pb-4 '>
+                      <h2 className='text-[20px] font-bold text-white	'>
+                        Registration
+                      </h2>
+                    </div>
+                    <div className='flex flex-col w-[400px] relative'>
+                      <label className='text-[#2F3F73] font-semibold text-lg'>
+                        Email
+                      </label>
+                      <Field
+                        type='text'
+                        name='email'
+                        placeholder='Email'
+                        className={`w-full mb-[10px] mt-[10px] h-[45px] outline-0 p-[10px] rounded-md`}
+                      />
+                      <ErrorMessage
+                        name='email'
+                        component='div'
+                        className='text-red-500'
+                      />
+                    </div>
 
-                <div className='flex flex-col w-[400px]'>
-                  <label className='text-[#2F3F73] font-semibold text-lg'>
-                    'user-name'
-                  </label>
-                  <input
-                    placeholder='user-name'
-                    type='text'
-                    name='username'
-                    className={`w-full mb-[10px] mt-[10px] h-[45px] outline-0 p-[10px] rounded-md`}
-                  />
-                </div>
-                <div className='flex flex-col w-[400px]'>
-                  <div className='text-[#2F3F73] font-semibold text-lg flex items-center'>
-                    'password'
-                  </div>
-                  <div className='relative'>
-                    <input
-                      placeholder='password'
-                      type='password'
-                      name='password'
-                      autoComplete='new-password'
-                      className={`w-full mb-[10px] mt-[10px] h-[45px] outline-0 border-2 p-[10px] rounded-md `}
-                    />
-                  </div>
-                </div>
-                <div className='flex flex-col w-[400px]'>
-                  <label className='text-[#2F3F73] font-semibold text-lg'>
-                    'confirm-password'
-                  </label>
+                    <div className='flex flex-col w-[400px]'>
+                      <label className='text-[#2F3F73] font-semibold text-lg'>
+                        Username
+                      </label>
+                      <Field
+                        type='text'
+                        name='username'
+                        placeholder='User name'
+                        className={`w-full mb-[10px] mt-[10px] h-[45px] outline-0 p-[10px] rounded-md`}
+                      />
+                      <ErrorMessage
+                        name='username'
+                        component='div'
+                        className='text-red-500'
+                      />
+                    </div>
 
-                  <div className='relative'>
-                    <input
-                      placeholder='confirm-password'
-                      type='password'
-                      name='confirmPassword'
-                      autoComplete='new-password1'
-                      className={`w-full mb-[10px] mt-[10px] h-[45px] outline-0 border-2 p-[10px] rounded-md `}
-                    />
-                  </div>
-                </div>
-                <div className='pt-[5px]'>
-                  <button className='relative inline-flex  items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-cyan-500 to-blue-500 group-hover:from-cyan-500 group-hover:to-blue-500 hover:text-white dark:text-white '>
-                    <span className='relative px-[70px] py-[15px] transition-all ease-in duration-75 bg-white dark:bg-[#2F3F73] rounded-md group-hover:bg-opacity-0'>
-                      'register'
-                    </span>
-                  </button>
-                </div>
-                <h5 className='text-[16px] pt-[1.5rem] mx-auto  '>
-                  'already-have-an-account'
-                  <span className='ml-[5px]'>
-                    <Link className='text-[#2F3F73] font-semibold' to='/login'>
-                      'login'
-                    </Link>
-                  </span>
-                </h5>
-              </form>
+                    <div className='flex flex-col w-[400px]'>
+                      <label className='text-[#2F3F73] font-semibold text-lg'>
+                        Password
+                      </label>
+                      <Field
+                        type='password'
+                        name='password'
+                        placeholder='Password'
+                        autoComplete='new-password'
+                        className={`w-full mb-[10px] mt-[10px] h-[45px] outline-0 border-2 p-[10px] rounded-md`}
+                      />
+                      <ErrorMessage
+                        name='password'
+                        component='div'
+                        className='text-red-500'
+                      />
+                    </div>
+
+                    <div className='flex flex-col w-[400px]'>
+                      <label className='text-[#2F3F73] font-semibold text-lg'>
+                        Confirm Password
+                      </label>
+                      <Field
+                        type='password'
+                        name='confirmPassword'
+                        placeholder='Confirm password'
+                        autoComplete='new-password1'
+                        className={`w-full mb-[10px] mt-[10px] h-[45px] outline-0 border-2 p-[10px] rounded-md`}
+                      />
+                      <ErrorMessage
+                        name='confirmPassword'
+                        component='div'
+                        className='text-red-500'
+                      />
+                    </div>
+
+                    <div className='pt-[5px]'>
+                      <LoadingButton
+                        size='small'
+                        type='submit'
+                        loading={isLoading}
+                        disabled={isSubmitting}
+                        variant='contained'
+                      >
+                        <span> Register</span>
+                      </LoadingButton>
+                    </div>
+
+                    <h5 className='text-[16px] pt-[1.5rem] mx-auto  '>
+                      Already have an account
+                      <span className='ml-[5px]'>
+                        <Link
+                          className='text-[#2F3F73] font-semibold'
+                          to='/login'
+                        >
+                          Login
+                        </Link>
+                      </span>
+                    </h5>
+                  </Form>
+                )}
+              </Formik>
             </div>
           </div>
         </div>

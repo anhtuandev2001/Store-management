@@ -58,13 +58,15 @@ function ProductForm({ onClose, product, action, categoryList }) {
     value: item?.categoryId,
   }));
 
+  console.log(product && categoryList != []);
+
   const [selectedColors, setSelectedColors] = useState(
-    product
+    product && categoryList != []
       ? (colorOptions || []).filter((item) => product.colorsList == item.value)
-      : null
+      : []
   );
   const [selectedCategory, setSelectedCategory] = useState(
-    product
+    product && categoryList != []
       ? (categoryOptions || []).filter(
           (item) => product.categoryId == item.value
         )[0]

@@ -1,6 +1,5 @@
 // @ts-nocheck
 import { Button } from '@mui/material';
-import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import IconMenu from '../../assets/icon/IconMenu';
 import logo from '../../assets/icon/logoBlueOC.png';
@@ -8,7 +7,6 @@ import { handleLeftMenu } from '../../store/slices/leftMenuSlice';
 import Profile from '../Profile';
 
 function Nav() {
-  const { t } = useTranslation();
   const { showMenu } = useSelector((state) => state?.leftMenu);
   const dispatch = useDispatch();
 

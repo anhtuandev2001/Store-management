@@ -1,93 +1,129 @@
-import React from 'react';
-import { TextField, Button } from '@mui/material';
-import { useFormik } from 'formik';
+// @ts-nocheck
+import { LoadingButton } from '@mui/lab';
+import { Button } from '@mui/material';
+import { ErrorMessage, Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  createCategory,
+  createUser,
+  getAllAccount,
+} from '../../store/slices/ScheduleManagementSlice/productReduce';
+import { handleLoading } from '../../store/slices/loadingSlice';
+import { clearStatus } from '../../store/slices/ScheduleManagementSlice/productManagementSlice';
 
-const validationSchema = Yup.object({
-  name: Yup.string().required('Vui lòng nhập tên tài khoản'),
-  email: Yup.string()
-    .email('Email không hợp lệ')
-    .required('Vui lòng nhập email'),
-  password: Yup.string().required('Vui lòng nhập mật khẩu'),
-  role: Yup.string().required('Vui lòng nhập vai trò'),
+const validationSchema = Yup.object().shape({
+  name: Yup.string().required('Product name is required'),
+  email: Yup.string().required('Product name is required'),
+  password: Yup.string().required('Product name is required'),
 });
 
-const AddAccountForm = ({ onSubmit }) => {
-  const formik = useFormik({
-    initialValues: {
-      name: '',
-      email: '',
-      password: '', // Thêm trường password
-      role: '', // Thêm trường role
-    },
-    validationSchema: validationSchema,
-    onSubmit: (values) => {
-      onSubmit(values);
-      formik.resetForm();
+function AccountForm({ action, account, onClose }) {
+  const dispatch = useDispatch();
+  const { status } = useSelector((state) => state.productManagement);
+  const initialValues = {
+    name: account ? account.name : '',
+    email: account ? account.email : '',
+    password: account ? account.password : '',
+  };
+  const [isLoading, setIsLoading] = useState(false);
 
-    },
-  });
+  const handleSubmit = (value) => {
+    console.log(value);
+    setIsLoading(true);
+    dispatch(createUser(value));
+  };
 
+  useEffect(() => {
+    if (status.createUser === 'success' || status.createUser === 'error') {
+      setIsLoading(false);
+    }
+    if (status.createUser === 'success') {
+      dispatch(getAllAccount());
+      dispatch(handleLoading(true));
+      dispatch(clearStatus());
+      onClose();
+    }
+  }, [status]);
   return (
-    <form onSubmit={formik.handleSubmit}>
-      <TextField
-        fullWidth
-        id='name'
-        name='name'
-        label='name'
-        variant='outlined'
-        margin='normal'
-        value={formik.values.name}
-        onChange={formik.handleChange}
-        error={formik.touched.name && Boolean(formik.errors.name)}
-        helperText={formik.touched.name && formik.errors.name}
-      />
-      <TextField
-        fullWidth
-        id='email'
-        name='email'
-        label='Email'
-        variant='outlined'
-        margin='normal'
-        autoComplete="new-password"
-        value={formik.values.email}
-        onChange={formik.handleChange}
-        error={formik.touched.email && Boolean(formik.errors.email)}
-        helperText={formik.touched.email && formik.errors.email}
-      />
-      <TextField
-        fullWidth
-        id='password'
-        name='password'
-        label='Mật khẩu'
-        type='password'
-        variant='outlined'
-        autoComplete="new-password"
-        margin='normal'
-        value={formik.values.password}
-        onChange={formik.handleChange}
-        error={formik.touched.password && Boolean(formik.errors.password)}
-        helperText={formik.touched.password && formik.errors.password}
-      />
+    <div>
+      <div className='mx-auto p-6 shadow-lg text-[#42526e]'>
+        <h1 className='text-2xl font-semibold mb-4'>Create Product</h1>
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={handleSubmit}
+        >
+          <Form>
+            <div className='mb-4'>
+              <label htmlFor='name' className='block text-sm font-medium'>
+                Name:
+              </label>
+              <Field
+                type='text'
+                id='name'
+                name='name'
+                autoComplete='new-password'
+                className='mt-1 p-2 border border-[#C4C4C4] rounded w-full outline-none'
+              />
+              <ErrorMessage
+                name='name'
+                component='div'
+                className='text-red-500 text-sm'
+              />
+            </div>
+            <div className='mb-4'>
+              <label htmlFor='name' className='block text-sm font-medium'>
+                Email:
+              </label>
+              <Field
+                type='text'
+                id='email'
+                name='email'
+                autoComplete='new-password'
+                className='mt-1 p-2 border border-[#C4C4C4] rounded w-full outline-none'
+              />
+              <ErrorMessage
+                name='email'
+                component='div'
+                className='text-red-500 text-sm'
+              />
+            </div>
+            <div className='mb-4'>
+              <label htmlFor='name' className='block text-sm font-medium'>
+                Password:
+              </label>
+              <Field
+                type='text'
+                id='password'
+                name='password'
+                autoComplete='new-password'
+                className='mt-1 p-2 border border-[#C4C4C4] rounded w-full outline-none'
+              />
+              <ErrorMessage
+                name='password'
+                component='div'
+                className='text-red-500 text-sm'
+              />
+            </div>
 
-      <TextField
-        fullWidth
-        id='role'
-        name='role'
-        label='Vai trò'
-        variant='outlined'
-        margin='normal'
-        value={formik.values.role}
-        onChange={formik.handleChange}
-        error={formik.touched.role && Boolean(formik.errors.role)}
-        helperText={formik.touched.role && formik.errors.role}
-      />
-
-      <Button type='submit' variant='contained' color='primary'>
-        Thêm tài khoản
-      </Button>
-    </form>
+            <div className='flex justify-between'>
+              <Button onClick={onClose}>Discard</Button>
+              <LoadingButton
+                size='small'
+                type='submit'
+                loading={isLoading}
+                variant='contained'
+              >
+                <span>{action === 'create' ? 'Submit' : 'Update'}</span>
+              </LoadingButton>
+            </div>
+          </Form>
+        </Formik>
+      </div>
+    </div>
   );
-};
+}
 
-export default AddAccountForm;
+export default AccountForm;

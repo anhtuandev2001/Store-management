@@ -6,7 +6,7 @@ import {
   LoginPage,
   ProductPage,
   RegisterPage,
-  BillManagementPage,
+  OrderManagementPage,
 } from '../pages/index';
 
 import App from '../../App';
@@ -32,7 +32,7 @@ const Routers = () => {
         }
       >
         <Route path='/' element={<Navigate to='/product' replace={true} />} />
-        <Route path='bill' element={<BillManagementPage />} />
+        <Route path='order' element={<OrderManagementPage />} />
         <Route path='product' element={<ProductPage />} />
         <Route path='category' element={<CategoryPage />} />
         <Route path='account' element={<AccountPage />} />

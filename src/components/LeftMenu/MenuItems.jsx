@@ -14,9 +14,9 @@ const menuItems = [
 		title: "Category Management",
 	},
 	{
-		to: "/bill",
+		to: "/order",
 		icon: <FaRegMoneyBillAlt />,
-		title: "Bill Management",
+		title: "Order Management",
 	},
 	{
 		to: "/account",

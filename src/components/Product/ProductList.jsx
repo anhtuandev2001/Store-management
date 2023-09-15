@@ -143,6 +143,7 @@ const ProductList = ({ products }) => {
       ),
     },
     {
+      field: 'action',
       headerName: 'Action',
       width: 160,
       renderCell: (params) => (
@@ -160,7 +161,7 @@ const ProductList = ({ products }) => {
 
   // Hàm renderCell tùy chỉnh để bọc nội dung trong Tooltip
   function renderTooltipCell(params) {
-    return <Tooltip title={params.value || ''}>{params.value}</Tooltip>;
+    return <Tooltip title={params.value.toString() || ''}>{params.value}</Tooltip>;
   }
 
   const rows = (products || []).map((item) => ({

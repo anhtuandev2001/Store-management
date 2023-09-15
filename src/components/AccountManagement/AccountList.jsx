@@ -27,6 +27,11 @@ const dataGridClass = {
     alignItems: 'center',
     justifyContent: 'center',
   },
+  '& .MuiDataGrid-cell': {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 };
 
 const AccountList = ({ accounts }) => {
@@ -39,51 +44,50 @@ const AccountList = ({ accounts }) => {
   const handleEdit = (product) => {};
 
   const columns = [
-    { field: 'id', headerName: 'ID', width: 70, renderCell: renderTooltipCell },
+    { field: 'id', headerName: 'ID', width: 70 },
     {
       field: 'name',
       headerName: 'Name',
       width: 130,
-      renderCell: renderTooltipCell,
     },
     {
       field: 'email',
-      headerName: 'email',
-      width: 130,
-      renderCell: renderTooltipCell,
+      headerName: 'Email',
+      width: 200,
+      renderCell: (params) => (
+        <Tooltip title={params.value}>
+          <span>{params.value}</span>
+        </Tooltip>
+      ),
     },
     {
       field: 'defaultPaymentId',
-      headerName: 'defaultPaymentId',
-      width: 130,
-      renderCell: renderTooltipCell,
+      headerName: 'Default PaymentId',
+      width: 160,
     },
     {
       field: 'defaultShippingId',
-      headerName: 'defaultShippingId',
-      width: 130,
-      renderCell: renderTooltipCell,
+      headerName: 'Default ShippingId',
+      width: 160,
     },
     {
       field: 'favouriteList',
-      headerName: 'favouriteList',
+      headerName: 'Favourite List',
       width: 130,
-      renderCell: renderTooltipCell,
     },
     {
       field: 'cardList',
-      headerName: 'cardList',
+      headerName: 'Card List',
       width: 130,
-      renderCell: renderTooltipCell,
     },
     {
       field: 'password',
-      headerName: 'password',
+      headerName: 'Password',
       width: 130,
-      renderCell: renderTooltipCell,
     },
 
     {
+      field: 'action',
       headerName: 'Action',
       width: 160,
       renderCell: (params) => (
@@ -98,11 +102,6 @@ const AccountList = ({ accounts }) => {
       ),
     },
   ];
-
-  // Hàm renderCell tùy chỉnh để bọc nội dung trong Tooltip
-  function renderTooltipCell(params) {
-    return <Tooltip title={params.value || ''}>{params.value}</Tooltip>;
-  }
 
   const rows = (accounts || []).map((item) => ({
     id: item.userId,
@@ -121,7 +120,7 @@ const AccountList = ({ accounts }) => {
 
   return (
     <div className='overflow-scroll'>
-      <h2 className='text-2xl font-bold mb-4 text-[#42526e]'>Product List</h2>
+      <h2 className='text-2xl font-bold mb-4 text-[#42526e]'>Account Manager</h2>
       <div style={{ height: '600px' }}>
         <DataGrid
           rows={rows}

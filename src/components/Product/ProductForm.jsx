@@ -97,12 +97,12 @@ function ProductForm({ onClose, product, action }) {
       status.updateProduct === 'error'
     ) {
       setIsLoading(false);
-      dispatch(clearStatus());
     }
     if (
       status.createProduct === 'success' ||
       status.updateProduct === 'success'
     ) {
+      dispatch(clearStatus());
       dispatch(handleLoading(true));
       dispatch(getAllProduct());
       onClose();

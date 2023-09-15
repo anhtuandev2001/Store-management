@@ -1,6 +1,6 @@
 // @ts-nocheck
-import axios from 'axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import axios from 'axios';
 const baseURL = 'https://furniturev2-1.onrender.com/api';
 
 const getAllProduct = createAsyncThunk('GET_PRODUCT_LIST', async () => {
@@ -92,4 +92,29 @@ const getAllAccount = createAsyncThunk('GET_ACCOUNT_LIST', async () => {
   return result.data.data;
 });
 
-export { getAllProduct, createProduct, deleteProduct, updateProduct, createCategory, deleteCategory, getAllAccount };
+const createUser = createAsyncThunk('CREATE_USER', async (requestData) => {
+  try {
+    const response = await axios.post(`${baseURL}/user/signup`, requestData);
+    console.log('Response:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error:', error);
+  }
+});
+
+const getAllOrder = createAsyncThunk('GET_ORDER_LIST', async () => {
+  const result = await axios.get(`${baseURL}/order`);
+  return result.data;
+});
+
+export {
+  createCategory,
+  createProduct,
+  createUser,
+  deleteCategory,
+  deleteProduct,
+  getAllAccount,
+  getAllProduct,
+  updateProduct,
+  getAllOrder,
+};

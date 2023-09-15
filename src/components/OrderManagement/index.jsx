@@ -3,11 +3,13 @@ import { Box } from '@mui/material';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import { useEffect, useState } from 'react';
-import AccountList from './AccountList';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllAccount } from '../../store/slices/ScheduleManagementSlice/productReduce';
+import {
+  getAllAccount,
+  getAllOrder,
+} from '../../store/slices/ScheduleManagementSlice/productReduce';
 import { handleLoading } from '../../store/slices/loadingSlice';
-import AccountForm from './AccountForm';
+import OrderList from './OrderList';
 
 const style = {
   position: 'absolute',
@@ -20,34 +22,31 @@ const style = {
   boxShadow: 24,
 };
 
-function AccountManagement() {
+function OrderManagement() {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const { accountList } = useSelector((state) => state.productManagement);
+  const { orderList } = useSelector((state) => state.productManagement);
   const { status } = useSelector((state) => state.productManagement);
 
   useEffect(() => {
-    dispatch(getAllAccount());
+    dispatch(getAllOrder());
     dispatch(handleLoading(true));
   }, []);
 
   useEffect(() => {
-    if (status.accountList === 'success' || status.accountList === 'error')
+    if (status.orderList === 'success' || status.orderList === 'error')
       dispatch(handleLoading(false));
-  }, [accountList]);
+  }, [orderList]);
 
   return (
     <div>
       <div className='flex justify-between items-center full-w py-4 text-[#6B778C]'>
-        <span>Account Manager</span>
-        <Button variant='contained' onClick={handleOpen}>
-          Add Account
-        </Button>
+        <span>Bill Manager</span>
       </div>
-      <AccountList accounts={accountList} />
+      <OrderList orderList={orderList} />
       <Modal
         // @ts-ignore
         open={open}
@@ -55,12 +54,10 @@ function AccountManagement() {
         aria-labelledby='modal-modal-title'
         aria-describedby='modal-modal-description'
       >
-        <Box sx={style}>
-          <AccountForm action='create' onClose={handleClose}/>
-        </Box>
+        <Box sx={style}></Box>
       </Modal>
     </div>
   );
 }
 
-export default AccountManagement;
+export default OrderManagement;

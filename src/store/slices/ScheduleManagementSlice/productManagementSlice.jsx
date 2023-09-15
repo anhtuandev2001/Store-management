@@ -1,11 +1,22 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { createCategory, createProduct, deleteCategory, deleteProduct, getAllAccount, getAllProduct, updateProduct } from './productReduce';
 import { toast } from 'react-toastify';
+import {
+  createCategory,
+  createProduct,
+  createUser,
+  deleteCategory,
+  deleteProduct,
+  getAllAccount,
+  getAllOrder,
+  getAllProduct,
+  updateProduct,
+} from './productReduce';
 const initialState = {
   productList: [],
-  productImageList: [], 
+  productImageList: [],
   createProduct: {},
   accountList: [],
+  orderList: [],
   status: {
     productInfo: '',
     createProduct: '',
@@ -14,6 +25,8 @@ const initialState = {
     createCategory: '',
     deleteCategory: '',
     accountList: '',
+    createUser: '',
+    orderList: '',
   },
 };
 
@@ -30,6 +43,8 @@ const productManagementSlice = createSlice({
         createCategory: '',
         deleteCategory: '',
         accountList: '',
+        createUser: '',
+        orderList: '',
       };
     },
   },
@@ -148,7 +163,50 @@ const productManagementSlice = createSlice({
         };
         state.accountList = [];
       })
-  }
+
+      //createUser
+      .addCase(createUser.fulfilled, (state, action) => {
+        console.log(action);
+        if (action.payload.status === 302) {
+          toast.error('Account has been registered');
+          state.status = {
+            ...state.status,
+            createUser: 'error',
+          };
+        }
+        if (action.payload.status === 200) {
+          toast.success('Create Successfully');
+          state.status = {
+            ...state.status,
+            createUser: 'success',
+          };
+        }
+      })
+      .addCase(createUser.rejected, (state) => {
+        toast.error('Create Error');
+        state.status = {
+          ...state.status,
+          createUser: 'error',
+        };
+      })
+
+      // //get Account List
+      .addCase(getAllOrder.fulfilled, (state, action) => {
+        state.status = {
+          ...state.status,
+          orderList: 'success',
+        };
+        state.orderList = action.payload;
+      })
+      .addCase(getAllOrder.rejected, (state) => {
+        toast.error('No response from server');
+        state.status = {
+          ...state.status,
+          orderList: 'error',
+        };
+        state.orderList = [];
+      });
+  },
 });
 export const { clearStatus } = productManagementSlice.actions;
 export default productManagementSlice.reducer;

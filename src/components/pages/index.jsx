@@ -2,7 +2,7 @@ import ErrorPage from './ErrorPage';
 import LoginPage from './LoginPage';
 import RegisterPage from './RegisterPage';
 import ProductPage from './ProductPage';
-import BillManagementPage from './BillManagement';
+import OrderManagementPage from './OrderManagementPage';
 import AccountPage from './AccountPage';
 
 export {
@@ -10,6 +10,6 @@ export {
   LoginPage,
   RegisterPage,
   ProductPage,
-  BillManagementPage,
+  OrderManagementPage,
   AccountPage,
 };

@@ -25,7 +25,6 @@ const LoginPage = () => {
   };
 
   const onSubmit = (values) => {
-    console.log(values);
     setIsLoading(true);
     dispatch(loginUser(values));
   };

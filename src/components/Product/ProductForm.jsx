@@ -58,8 +58,6 @@ function ProductForm({ onClose, product, action, categoryList }) {
     value: item?.categoryId,
   }));
 
-  console.log(product && categoryList != []);
-
   const [selectedColors, setSelectedColors] = useState(
     product && categoryList != []
       ? (colorOptions || []).filter((item) => product.colorsList == item.value)
@@ -96,7 +94,6 @@ function ProductForm({ onClose, product, action, categoryList }) {
     values.categoryId = selectedCategory.value;
 
     values.image = inputImg;
-    console.log(values);
     setIsLoading(true);
     if (action === 'create') {
       dispatch(createProduct(values));

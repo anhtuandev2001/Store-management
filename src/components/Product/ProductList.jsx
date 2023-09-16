@@ -99,6 +99,18 @@ const ProductList = ({ products, categoryList }) => {
   const columns = [
     { field: 'id', headerName: 'ID', width: 70 },
     {
+      field: 'imagesList',
+      headerName: 'Images',
+      width: 160,
+      renderCell: (params) => (
+        <img
+          src={params.value}
+          alt='Product'
+          style={{ width: '100px', height: '100px' }}
+        />
+      ),
+    },
+    {
       field: 'name',
       headerName: 'Name',
       width: 130,
@@ -136,18 +148,7 @@ const ProductList = ({ products, categoryList }) => {
       headerName: 'Created At',
       width: 150,
     },
-    {
-      field: 'imagesList',
-      headerName: 'Images',
-      width: 160,
-      renderCell: (params) => (
-        <img
-          src={params.value}
-          alt='Product'
-          style={{ width: '100px', height: '100px' }}
-        />
-      ),
-    },
+
     {
       field: 'action',
       headerName: 'Action',

@@ -5,12 +5,12 @@ import { ErrorMessage, Field, Form, Formik } from 'formik';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
+import { clearStatus } from '../../store/slices/ScheduleManagementSlice/productManagementSlice';
 import {
   createCategory,
   getAllCategory,
   updateCategory,
 } from '../../store/slices/ScheduleManagementSlice/productReduce';
-import { clearStatus } from '../../store/slices/ScheduleManagementSlice/productManagementSlice';
 import { handleLoading } from '../../store/slices/loadingSlice';
 
 const validationSchema = Yup.object().shape({
@@ -18,7 +18,6 @@ const validationSchema = Yup.object().shape({
 });
 
 function CategoryForm({ action, category, onClose }) {
-  console.log(category);
   const dispatch = useDispatch();
   const { status } = useSelector((state) => state.productManagement);
   const initialValues = {

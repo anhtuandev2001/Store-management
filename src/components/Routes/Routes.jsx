@@ -1,4 +1,11 @@
-import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
+// @ts-nocheck
+import {
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from 'react-router-dom';
 
 import {
   AccountPage,
@@ -12,10 +19,41 @@ import {
 import App from '../../App';
 
 import CategoryPage from '../pages/CategoryPage';
+import { useEffect, useState } from 'react';
 
 const Routers = () => {
   const loginStatus = localStorage.getItem('login');
   const location = useLocation();
+  const navigate = useNavigate();
+  const [previousPath, setPreviousPath] = useState(null);
+
+  // Lưu lại đường dẫn trước đó khi trạng thái là false và không phải trang register hoặc login.
+  useEffect(() => {
+    if (
+      loginStatus === 'false' &&
+      location.pathname !== '/register' &&
+      location.pathname !== '/login'
+    ) {
+      setPreviousPath(location.pathname);
+    }
+  }, [loginStatus, location]);
+
+  // Hàm này sẽ được gọi khi người dùng đăng nhập thành công.
+  const handleLoginSuccess = () => {
+    // Kiểm tra nếu trạng thái là true và trước đó đã lưu lại đường dẫn.
+    if (loginStatus === 'true' && previousPath) {
+      navigate(previousPath); // Chuyển hướng lại đường dẫn trước đó.
+    } else {
+      navigate('/product'); // Chuyển hướng đến trang product mặc định.
+    }
+  };
+
+  // Kiểm tra nếu đã đăng nhập (loginStatus === 'true') thì không cho truy cập trang đăng nhập (/login).
+  if (loginStatus === 'true' && location.pathname === '/login') {
+    navigate('/product'); // Chuyển hướng người dùng trở lại trang product.
+  }
+
+  // Kiểm tra nếu trạng thái là false và không phải trang register hoặc login, chuyển hướng đến trang login.
   if (
     loginStatus === 'false' &&
     location.pathname !== '/register' &&
@@ -36,7 +74,10 @@ const Routers = () => {
       </Route>
 
       <Route path='/register' element={<RegisterPage />} />
-      <Route path='/login' element={<LoginPage />} />
+      <Route
+        path='/login'
+        element={<LoginPage onLoginSuccess={handleLoginSuccess} />}
+      />
     </Routes>
   );
 };

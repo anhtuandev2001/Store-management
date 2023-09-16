@@ -15,37 +15,26 @@ const createProduct = createAsyncThunk(
     for (const key in requestData) {
       formData.append(key, requestData[key]);
     }
-    try {
-      const response = await axios.post(`${baseURL}/products`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      console.log('Response:', response.data);
-    } catch (error) {
-      console.error('Error:', error);
-    }
+    const response = await axios.post(`${baseURL}/products`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
   }
 );
 
 const deleteProduct = createAsyncThunk('DELETE_PRODUCT', async (formData) => {
-  try {
-    const response = await axios.delete(`${baseURL}/products`, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      data: formData,
-    });
-    console.log('Response:', response.data);
-  } catch (error) {
-    console.error('Error:', error);
-  }
+  const response = await axios.delete(`${baseURL}/products`, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: formData,
+  });
 });
 
 const updateProduct = createAsyncThunk(
   'UPDATE_PRODUCT',
   async (requestData) => {
-    console.log(requestData);
     const formData = new FormData();
     for (const key in requestData) {
       formData.append(key, requestData[key]);
@@ -67,7 +56,6 @@ const createCategory = createAsyncThunk(
   'CREATE_CATEGORY',
   async (requestData) => {
     const response = await axios.post(`${baseURL}/category`, requestData);
-    console.log('Response:', response.data);
   }
 );
 
@@ -75,7 +63,6 @@ const updateCategory = createAsyncThunk(
   'UPDATE_CATEGORY',
   async (requestData) => {
     const response = await axios.post(`${baseURL}/category`, requestData);
-    console.log('Response:', response.data);
   }
 );
 
@@ -83,7 +70,6 @@ const deleteCategory = createAsyncThunk(
   'DELETE_CATEGORY',
   async (requestData) => {
     const response = await axios.delete(`${baseURL}/category/${requestData}`);
-    console.log('Response:', response.data);
   }
 );
 
@@ -94,7 +80,6 @@ const getAllAccount = createAsyncThunk('GET_ACCOUNT_LIST', async () => {
 
 const createUser = createAsyncThunk('CREATE_USER', async (requestData) => {
   const response = await axios.post(`${baseURL}/user/signup`, requestData);
-  console.log('Response:', response.data);
   return response.data;
 });
 
@@ -107,14 +92,12 @@ const changeStatusOrder = createAsyncThunk(
   'CHANGE_STATUS_ORDER',
   async (requestData) => {
     const response = await axios.post(`${baseURL}/order`, requestData);
-    console.log('Response:', response.data);
     return response.data;
   }
 );
 
 const loginUser = createAsyncThunk('LOGIN', async (requestData) => {
   const response = await axios.post(`${baseURL}/user/login`, requestData);
-  console.log('Response:', response.data);
   return response.data;
 });
 

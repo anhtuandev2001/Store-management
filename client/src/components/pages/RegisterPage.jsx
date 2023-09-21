@@ -7,6 +7,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createUser } from '../../store/slices/ScheduleManagementSlice/productReduce';
 import { useEffect, useState } from 'react';
 import { LoadingButton } from '@mui/lab';
+import { clearStatus } from '../../store/slices/ScheduleManagementSlice/productManagementSlice';
+import { toast } from 'react-toastify';
 
 const RegisterPage = () => {
   const initialValues = {
@@ -39,7 +41,6 @@ const RegisterPage = () => {
       email: values.email,
       password: values.password,
     };
-    console.log(data);
     dispatch(createUser(data));
     setSubmitting(false);
     setIsLoading(true);
@@ -50,7 +51,10 @@ const RegisterPage = () => {
       setIsLoading(false);
     }
     if (status.createUser === 'success') {
-      window.location.href = '/login';
+      dispatch(clearStatus());
+      setTimeout(() => {
+        window.location.href = '/login';
+      }, 1000);
     }
   }, [status]);
 

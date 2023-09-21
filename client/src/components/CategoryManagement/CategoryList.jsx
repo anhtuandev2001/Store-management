@@ -122,7 +122,7 @@ function CategoryList({ categoryList }) {
 
   return (
     <div className='overflow-scroll'>
-      <h2 className='text-2xl font-bold mb-4 text-[#42526e]'>Product List</h2>
+      <h2 className='text-2xl font-bold mb-4 text-[#42526e]'>Category List</h2>
       <div style={{ height: '600px' }}>
         <DataGrid
           rows={rows}

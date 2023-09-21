@@ -48,29 +48,24 @@ const AccountList = ({ accounts }) => {
         </Tooltip>
       ),
     },
-    {
-      field: 'defaultPaymentId',
-      headerName: 'Default PaymentId',
-      width: 160,
-    },
-    {
-      field: 'defaultShippingId',
-      headerName: 'Default ShippingId',
-      width: 160,
-    },
-    {
-      field: 'favouriteList',
-      headerName: 'Favourite List',
-      width: 130,
-    },
+    // {
+    //   field: 'defaultPaymentId',
+    //   headerName: 'Default PaymentId',
+    //   width: 160,
+    // },
+    // {
+    //   field: 'defaultShippingId',
+    //   headerName: 'Default ShippingId',
+    //   width: 160,
+    // },
+    // {
+    //   field: 'favouriteList',
+    //   headerName: 'Favourite List',
+    //   width: 130,
+    // },
     {
       field: 'cardList',
       headerName: 'Card List',
-      width: 130,
-    },
-    {
-      field: 'password',
-      headerName: 'Password',
       width: 130,
     },
   ];
@@ -79,11 +74,10 @@ const AccountList = ({ accounts }) => {
     id: item.userId,
     name: item.name,
     email: item.email,
-    defaultPaymentId: item.defaultPaymentId,
-    defaultShippingId: item.defaultShippingId,
-    favouriteList: item.favouriteList,
+    // defaultPaymentId: item.defaultPaymentId,
+    // defaultShippingId: item.defaultShippingId,
+    // favouriteList: item.favouriteList,
     cardList: item.cardList,
-    password: item.password,
   }));
 
   return (

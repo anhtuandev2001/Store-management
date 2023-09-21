@@ -190,7 +190,7 @@ const OrderList = ({ orderList }) => {
   return (
     <div className='overflow-scroll'>
       <h2 className='text-2xl font-bold mb-4 text-[#42526e]'>
-        Account Manager
+        Order Manager
       </h2>
       <div style={{ height: '600px' }}>
         <DataGrid

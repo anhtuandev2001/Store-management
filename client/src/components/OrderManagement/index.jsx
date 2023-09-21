@@ -44,7 +44,7 @@ function OrderManagement() {
   return (
     <div>
       <div className='flex justify-between items-center full-w py-4 text-[#6B778C]'>
-        <span>Bill Manager</span>
+        <span>Order Manager</span>
       </div>
       <OrderList orderList={orderList} />
       <Modal

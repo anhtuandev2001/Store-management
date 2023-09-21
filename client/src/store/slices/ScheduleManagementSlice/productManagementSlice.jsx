@@ -195,14 +195,14 @@ const productManagementSlice = createSlice({
 
       //createUser
       .addCase(createUser.fulfilled, (state, action) => {
-        if (action.payload.status === 302) {
+        if (action.payload.status == 302) {
           toast.error('Account has been registered');
           state.status = {
             ...state.status,
             createUser: 'error',
           };
         }
-        if (action.payload.status === 200) {
+        if (action.payload.status == 200) {
           toast.success('Create Successfully');
           state.status = {
             ...state.status,

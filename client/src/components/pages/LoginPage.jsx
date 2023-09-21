@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../../store/slices/ScheduleManagementSlice/productReduce';
 import { useEffect, useState } from 'react';
 import { LoadingButton } from '@mui/lab';
+import { clearStatus } from '../../store/slices/ScheduleManagementSlice/productManagementSlice';
 
 const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -35,7 +36,10 @@ const LoginPage = () => {
     }
     if (status.loginUser === 'success') {
       localStorage.setItem('login', 'true');
-      window.location.href = '/';
+      dispatch(clearStatus());
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 1000);
     }
   }, [status]);
 

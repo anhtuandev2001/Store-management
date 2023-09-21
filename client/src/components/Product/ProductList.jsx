@@ -119,6 +119,11 @@ const ProductList = ({ products, categoryList }) => {
       field: 'description',
       headerName: 'Description',
       width: 160,
+      renderCell: (params) => (
+        <Tooltip title={params.value}>
+          <span>{params.value}</span>
+        </Tooltip>
+      ),
     },
     {
       field: 'colorList',

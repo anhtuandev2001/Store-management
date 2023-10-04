@@ -1,16 +1,15 @@
 import express from 'express'
-import { body, validationResult } from 'express-validator'
+import { body } from 'express-validator'
 import {
-    userController,
-    studentController,
+    userController
 } from '../controllers/index.js'
 
 const router = express.Router()
 router.get('/:id', userController.getDetailUser)
-router.post('/login', 
+router.post('/login',
     body('email').isEmail(),
     body('password').isLength({ min: 5 }),
-        userController.login
-    )
+    userController.login
+)
 router.post('/register', userController.register)
 export default router

@@ -9,9 +9,9 @@ const menuItems = [
 		title: "Product Management",
 	},
 	{
-		to: "/category",
+		to: "/statistical",
 		icon: <BiCategoryAlt />,
-		title: "Category Management",
+		title: "Statistical Chart",
 	},
 	{
 		to: "/order",

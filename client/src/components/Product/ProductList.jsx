@@ -5,11 +5,11 @@ import { DataGrid } from '@mui/x-data-grid';
 
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { clearStatus } from '../../store/slices/ScheduleManagementSlice/productManagementSlice';
+import { clearStatus } from '../../store/slices/productManagementSlice/productManagementSlice';
 import {
   deleteProduct,
   getAllProduct,
-} from '../../store/slices/ScheduleManagementSlice/productReduce';
+} from '../../store/slices/productManagementSlice/productReduce';
 import { handleLoading } from '../../store/slices/loadingSlice';
 import ProductForm from './ProductForm';
 import { AiOutlineDelete } from 'react-icons/ai';
@@ -43,7 +43,7 @@ const dataGridClass = {
   },
 };
 
-const ProductList = ({ products, categoryList }) => {
+const ProductList = ({ products, categoryList = [] }) => {
   const [itemProduct, setItemProduct] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [action, setAction] = useState();
@@ -172,15 +172,15 @@ const ProductList = ({ products, categoryList }) => {
   ];
 
   const rows = (products || []).map((item) => ({
-    id: item.productId,
+    id: item._id,
     name: item.name,
     description: item.description,
     quantity: item.quantity,
     price: item.price,
     categoryId: findNameCategoryById(item.categoryId),
-    createdAt: item.createdAt.split('T')[0],
+    createdAt: item?.createdAt?.split('T')[0],
     colorList: item.colorsList,
-    imagesList: `https://furniturev2-1.onrender.com/api/products/images/${item.imagesList}`,
+    imagesList: `http://localhost:3000/products/image/${item._id}`,
   }));
 
   return (

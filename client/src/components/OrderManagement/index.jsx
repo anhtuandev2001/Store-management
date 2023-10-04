@@ -4,10 +4,7 @@ import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  getAllAccount,
-  getAllOrder,
-} from '../../store/slices/ScheduleManagementSlice/productReduce';
+import { getAllOrder } from '../../store/slices/productManagementSlice/productReduce';
 import { handleLoading } from '../../store/slices/loadingSlice';
 import OrderList from './OrderList';
 

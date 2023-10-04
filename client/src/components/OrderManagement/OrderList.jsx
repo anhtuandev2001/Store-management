@@ -8,11 +8,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
 import {
   changeStatusOrder,
-  getAllAccount,
   getAllOrder,
-} from '../../store/slices/ScheduleManagementSlice/productReduce';
+} from '../../store/slices/productManagementSlice/productReduce';
 import { LoadingButton } from '@mui/lab';
-import { clearStatus } from '../../store/slices/ScheduleManagementSlice/productManagementSlice';
+import { clearStatus } from '../../store/slices/productManagementSlice/productManagementSlice';
 import { handleLoading } from '../../store/slices/loadingSlice';
 
 const style = {
@@ -189,9 +188,7 @@ const OrderList = ({ orderList }) => {
 
   return (
     <div className='overflow-scroll'>
-      <h2 className='text-2xl font-bold mb-4 text-[#42526e]'>
-        Order Manager
-      </h2>
+      <h2 className='text-2xl font-bold mb-4 text-[#42526e]'>Order Manager</h2>
       <div style={{ height: '600px' }}>
         <DataGrid
           rows={rows}

@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   getAllCategory,
   getAllProduct,
-} from '../../store/slices/ScheduleManagementSlice/productReduce';
+} from '../../store/slices/productManagementSlice/productReduce';
 import { handleLoading } from '../../store/slices/loadingSlice';
 import ProductForm from './ProductForm';
 import ProductList from './ProductList';
@@ -23,13 +23,14 @@ const style = {
 export function Product() {
   const dispatch = useDispatch();
   const { productList } = useSelector((state) => state.productManagement);
+  console.log(productList);
   const { status } = useSelector((state) => state.productManagement);
   const { categoryList } = useSelector((state) => state.productManagement);
 
   useEffect(() => {
     dispatch(handleLoading(true));
     dispatch(getAllProduct());
-    dispatch(getAllCategory());
+    // dispatch(getAllCategory());
   }, []);
   useEffect(() => {
     if (
@@ -51,7 +52,7 @@ export function Product() {
           Add Product
         </Button>
       </div>
-      <ProductList products={productList} categoryList={categoryList} />
+      <ProductList products={productList} />
       <Modal
         // @ts-ignore
         open={open}

@@ -1,10 +1,10 @@
-import {Student} from '../../models/index.js'
-import studentRepository from '../../repositories/student.js'
+import {product} from '../../models/index.js'
+import productRepository from '../../repositories/product.js'
 
 describe('Some CRUD test', () => {
-    it('Test number of students', async () => {
+    it('Test number of products', async () => {
         debugger 
-        let students = await studentRepository.getAllStudents({
+        let products = await productRepository.getAllproducts({
             page: 1,
             size: 20,
             searchString: ''

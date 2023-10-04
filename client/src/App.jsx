@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 import Header from "./components/Header";
-import LayOut from "./components/Layout";
+import LayOut from "./Layout";
 
 function App() {
 	const { isLoading = false } = useSelector((state) => state.loading);

@@ -5,7 +5,7 @@ import CategoryList from './CategoryList';
 import { useDispatch, useSelector } from 'react-redux';
 import CategoryForm from './CategoryForm';
 import { handleLoading } from '../../store/slices/loadingSlice';
-import { getAllCategory } from '../../store/slices/ScheduleManagementSlice/productReduce';
+import { getAllCategory } from '../../store/slices/productManagementSlice/productReduce';
 
 const style = {
   position: 'absolute',

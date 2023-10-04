@@ -2,16 +2,15 @@
 import { LoadingButton } from '@mui/lab';
 import { Button } from '@mui/material';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
-import * as Yup from 'yup';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import * as Yup from 'yup';
+import { handleLoading } from '../../store/slices/loadingSlice';
+import { clearStatus } from '../../store/slices/userManagementSlice/userManagementSlice';
 import {
-  createCategory,
   createUser,
   getAllAccount,
-} from '../../store/slices/ScheduleManagementSlice/productReduce';
-import { handleLoading } from '../../store/slices/loadingSlice';
-import { clearStatus } from '../../store/slices/ScheduleManagementSlice/productManagementSlice';
+} from '../../store/slices/userManagementSlice/userReduce';
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required('Product name is required'),

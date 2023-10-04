@@ -1,7 +1,8 @@
+import productsRouter from './products.js'
+import cartRouter from './carts.js'
 import usersRouter from './users.js'
-import studentsRouter from './students.js'
+import categoryRouter from './categorys.js'
 
 export {
-    usersRouter,
-    studentsRouter,
+    productsRouter, usersRouter, categoryRouter, cartRouter
 }

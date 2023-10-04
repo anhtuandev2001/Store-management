@@ -1,28 +1,38 @@
-import express from 'express'
+import cors from 'cors'
 import * as dotenv from 'dotenv'
-dotenv.config()//must have
-import connect from './database/database.js'
-//authentication middleware
+import express from 'express'
 import checkToken from './authentication/auth.js'
+import connect from './database/database.js'
+
 import {
+    productsRouter,
     usersRouter,
-    studentsRouter,
+    categoryRouter,
+    cartRouter,
 } from './routes/index.js'
-//send test requests => use Postman
+dotenv.config()
 
 const app = express()
-app.use(checkToken) //shield, guard
+app.use(cors());
+app.use(checkToken)
 app.use(express.json())
 const port = process.env.PORT ?? 3000
-//routers
+
+const corsOptions = {
+    origin: 'http://localhost:5173'
+};
+
+app.use(cors(corsOptions));
+
 app.use('/users', usersRouter)
-app.use('/students', studentsRouter)
+app.use('/products', productsRouter)
+app.use('/cart', cartRouter)
+app.use('/category', categoryRouter)
 
-
-app.get('/', (req, res) =>{
+app.get('/', (req, res) => {
     res.send('response from root router')
 })
-app.listen(port, async() => {
+app.listen(port, async () => {
     await connect()
     console.log(`listening on port : ${port}`)
 })

@@ -8,10 +8,10 @@ import {
   createProduct,
   getAllProduct,
   updateProduct,
-} from '../../store/slices/ScheduleManagementSlice/productReduce';
+} from '../../store/slices/productManagementSlice/productReduce';
 
 import { LoadingButton } from '@mui/lab';
-import { clearStatus } from '../../store/slices/ScheduleManagementSlice/productManagementSlice';
+import { clearStatus } from '../../store/slices/productManagementSlice/productManagementSlice';
 import { handleLoading } from '../../store/slices/loadingSlice';
 
 const colorOptions = [
@@ -93,7 +93,7 @@ function ProductForm({ onClose, product, action, categoryList }) {
     values.colorsList = resultString;
     values.categoryId = selectedCategory.value;
 
-    values.image = inputImg;
+    values.imagesList = inputImg;
     setIsLoading(true);
     if (action === 'create') {
       dispatch(createProduct(values));

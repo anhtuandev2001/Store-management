@@ -1,6 +1,10 @@
 import userController from "./user.js"
-import studentController from "./student.js"
+import productController from "./product.js"
+import cartController from "./cart.js"
+import categoryController from "./category.js"
 export {
     userController,
-    studentController
+    productController,
+    categoryController,
+    cartController,
 }

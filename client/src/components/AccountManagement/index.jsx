@@ -5,7 +5,7 @@ import Modal from '@mui/material/Modal';
 import { useEffect, useState } from 'react';
 import AccountList from './AccountList';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllAccount } from '../../store/slices/ScheduleManagementSlice/productReduce';
+import { getAllAccount } from '../../store/slices/userManagementSlice/userReduce';
 import { handleLoading } from '../../store/slices/loadingSlice';
 import AccountForm from './AccountForm';
 

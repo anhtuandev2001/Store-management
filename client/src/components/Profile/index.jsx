@@ -1,19 +1,39 @@
-// @ts-nocheck
-import { Avatar, Box, IconButton, Tooltip } from '@mui/material';
-import Divider from '@mui/material/Divider';
+import { Avatar, Box, Button, IconButton, Modal, Tooltip } from '@mui/material';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import * as React from 'react';
 import { HiOutlineLogout } from 'react-icons/hi';
+import { useDispatch } from 'react-redux';
+import { handleLoadingPage } from '../../store/slices/loadingSlice';
+import { actionLogout } from '../../store/slices/userManagementSlice/userManagementSlice';
+import { LoadingButton } from '@mui/lab';
+
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  bgcolor: 'background.paper',
+  boxShadow: 24,
+  borderRadius: '5px',
+};
 
 export function Profile() {
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [openModal, setOpenModal] = React.useState(false);
+  const dispatch = useDispatch();
   const open = Boolean(anchorEl);
 
   const logout = () => {
-    localStorage.setItem('login', 'false');
-    window.location.href = '/login';
+    dispatch(handleLoadingPage(true));
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+      dispatch(handleLoadingPage(false));
+      dispatch(actionLogout());
+    }, 3000);
   };
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -22,6 +42,11 @@ export function Profile() {
     setAnchorEl(null);
   };
 
+  const handleOpenModal = () => {
+    setOpenModal(true);
+    handleClose();
+  };
+  const handleCloseModal = () => setOpenModal(false);
   return (
     <div>
       <Box
@@ -85,13 +110,40 @@ export function Profile() {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <MenuItem onClick={logout}>
+        <MenuItem onClick={handleOpenModal}>
           <ListItemIcon>
             <HiOutlineLogout />
           </ListItemIcon>
           Logout
         </MenuItem>
       </Menu>
+      <Modal
+        open={openModal}
+        onClose={handleCloseModal}
+        aria-labelledby='modal-modal-title'
+        aria-describedby='modal-modal-description'
+      >
+        <Box sx={style}>
+          <div className='p-5'>
+            <h2 className='text-xl font-bold text-[#42526e]'>
+              Are you sure you want Logout?
+            </h2>
+            <div className='flex justify-between pt-5'>
+              <Button onClick={handleCloseModal} sx={{ color: 'red' }}>
+                Cancel
+              </Button>
+              <LoadingButton
+                size='small'
+                onClick={logout}
+                loading={isLoading}
+                variant='contained'
+              >
+                <span>Yes</span>
+              </LoadingButton>
+            </div>
+          </div>
+        </Box>
+      </Modal>
     </div>
   );
 }

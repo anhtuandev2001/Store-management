@@ -5,7 +5,7 @@ import { DataGrid } from '@mui/x-data-grid';
 
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { clearStatus } from '../../store/slices/ScheduleManagementSlice/productManagementSlice';
+import { clearStatus } from '../../store/slices/productManagementSlice/productManagementSlice';
 import { handleLoading } from '../../store/slices/loadingSlice';
 import { AiOutlineDelete } from 'react-icons/ai';
 import { AiFillEdit } from 'react-icons/ai';
@@ -13,7 +13,7 @@ import CategoryForm from './CategoryForm';
 import {
   deleteCategory,
   getAllCategory,
-} from '../../store/slices/ScheduleManagementSlice/productReduce';
+} from '../../store/slices/productManagementSlice/productReduce';
 
 const style = {
   position: 'absolute',

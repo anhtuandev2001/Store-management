@@ -2,7 +2,7 @@ import mongoose, {Schema, ObjectId } from 'mongoose'
 import isEmail from 'validator/lib/isEmail.js'
 export default mongoose.model('User', 
     new Schema({
-        id: { type: ObjectId},
+        user_id: { type: ObjectId},
         name: {
             type: String,
             required: true, //NOT NULL
@@ -19,19 +19,20 @@ export default mongoose.model('User',
             }
         },
         password: { 
-            //hashed/encrypted password
             type: String, 
             required: true,            
-            //validate ??            
         },     
-        phoneNumber: { 
-            type: String, 
-            required: true,        
-        },
-        address: { 
+        default_shipping_id: { 
             type: String, 
             required: false,        
         },
-
+        favoritesList: { 
+            type: String, 
+            required: false,        
+        },
+        cartList: { 
+            type: String, 
+            required: false,        
+        },
     })
 )

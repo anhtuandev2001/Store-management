@@ -1,6 +1,8 @@
-import studentRepository from "./student.js"
+import cartRepository from "./cart.js"
+import categoryRepository from "./category.js"
+import productRepository from "./product.js"
 import userRepository from "./user.js"
 export {
-    studentRepository,
-    userRepository,
+    cartRepository, categoryRepository, productRepository,
+    userRepository
 }

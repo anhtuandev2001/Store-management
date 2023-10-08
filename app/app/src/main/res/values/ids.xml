@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item type="id" name="navigation_home" />
+    <item type="id" name="navigation_favourite" />
+    <item type="id" name="navigation_order" />
+    <item type="id" name="navigation_person" />
+</resources>

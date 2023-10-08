@@ -6,9 +6,11 @@ import connect from './database/database.js'
 
 import {
     productsRouter,
-    usersRouter,
+    addressRouter,
     categoryRouter,
     cartRouter,
+    orderRouter,
+    usersRouter,
 } from './routes/index.js'
 dotenv.config()
 
@@ -25,8 +27,10 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 app.use('/users', usersRouter)
+app.use('/address', addressRouter)
 app.use('/products', productsRouter)
 app.use('/cart', cartRouter)
+app.use('/order', orderRouter)
 app.use('/category', categoryRouter)
 
 app.get('/', (req, res) => {

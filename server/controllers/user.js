@@ -8,7 +8,6 @@ import {
 } from '../repositories/index.js';
 
 const myEvent = new EventEmitter()
-//listen
 myEvent.on('event.register.user', (params) => {
   console.log(`They talked about : ${JSON.stringify(params)}`)
 })
@@ -21,7 +20,6 @@ const login = async (req, res) => {
     });
   }
   const { email, password } = req.body;
-  //call repository
   try {
     let existingUser = await userRepository.login({ email, password })
     res.status(HttpStatusCode.OK).json({
@@ -35,7 +33,6 @@ const login = async (req, res) => {
   }
 }
 const register = async (req, res) => {
-  //destructuring
   const {
     name,
     email,
@@ -44,7 +41,6 @@ const register = async (req, res) => {
     address
   } = req.body
 
-  //Event Emitter
   myEvent.emit('event.register.user', { email, phoneNumber })
   try {
     debugger
@@ -70,9 +66,25 @@ const register = async (req, res) => {
 const getDetailUser = async (req, res) => {
 
 }
-//many other functions...
+
+async function updateAddressUser(req, res) {
+  try {
+      debugger
+      const user = await userRepository.updateAddressUser(req.body)
+      res.status(HttpStatusCode.OK).json({
+          message: 'Update user successfully',
+          data: user,
+      })
+  } catch (exception) {
+      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
+          message: exception.message,
+      })
+  }
+}
+
 export default {
   login,
   register,
-  getDetailUser
+  getDetailUser,
+  updateAddressUser
 }

@@ -61,20 +61,12 @@ const deleteCategory = async (categoryId) => {
 const updateCategory = async ({
     id,
     name,
-    description,
-    colorList,
-    price,
-    quantity,
-    categoryId,
+    imagesList,
 }) => {
     const category = await Category.findById(id)
     debugger
     category.name = name ?? category.name
-    category.description = description ?? category.description
-    category.colorList = colorList ?? category.colorList
-    category.price = price ?? category.price
-    category.quantity = quantity ?? category.quantity
-    category.categoryId = categoryId ?? category.categoryId
+    category.imagesList = imagesList ?? category.imagesList
     await category.save()
     return category
 }

@@ -6,7 +6,7 @@ const getAllCarts = async () => {
     return allCart
 }
 const getCartByUserId = async (userId) => {
-    const cart = await Cart.find({userId})
+    const cart = await Cart.find({ userId })
     if (!cart) {
         throw new Exception('Cannot find cart with id ' + cartId)
     }
@@ -20,11 +20,16 @@ const insertCart = async ({
     userId,
 }) => {
     try {
-        const existingCart = await Cart.findOne({ productId, color, userId });
+        const existingCart = await Cart.findOne({
+            productId: productId,
+            color: color,
+            userId: userId,
+        });
+
         if (existingCart) {
-            const newQuantity = Number(quantity);
-            const existingQuantity = Number(existingCart.quantity);
-            existingCart.quantity = existingQuantity + newQuantity;
+            const newQuantityRes = Number(quantity) + Number(existingCart.quantity);
+
+            existingCart.quantity = newQuantityRes;
             await existingCart.save();
             return existingCart;
         } else {
@@ -43,6 +48,7 @@ const insertCart = async ({
     }
 }
 
+
 const deleteCart = async (cartId) => {
     try {
         const cart = await Cart.findByIdAndDelete(cartId);
@@ -59,17 +65,12 @@ const deleteCart = async (cartId) => {
 };
 
 const updateCart = async ({
-    productId,
-    userId,
+    id,
     quantity,
-    color,
 }) => {
     const cart = await Cart.findById(id)
     debugger
-    cart.productId = productId ?? cart.productId
     cart.quantity = quantity ?? cart.quantity
-    cart.color = color ?? cart.color
-    cart.userId = userId ?? cart.userId
     await cart.save()
     return cart
 }

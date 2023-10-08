@@ -60,15 +60,28 @@ const register = async ({
   };
 }
 
-const getUserById = async (productId) => {
-  const product = await User.findById(userId)
-  if (!product) {
-      throw new Exception('Cannot find product with id ' + userId)
+const getUserById = async (userId) => {
+  const user = await User.findById(userId)
+  if (!user) {
+    throw new Exception('Cannot find product with id ' + userId)
   }
-  return product
+  return user
 }
+
+const updateAddressUser = async ({
+  id,
+  default_shipping_id,
+}) => {
+  const user = await User.findById(id)
+  debugger
+  user.default_shipping_id = default_shipping_id ?? user.default_shipping_id
+  await user.save()
+  return { ...user._doc, password: "Not show" }
+}
+
 export default {
   login,
   register,
   getUserById,
+  updateAddressUser,
 }

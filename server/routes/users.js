@@ -12,4 +12,5 @@ router.post('/login',
     userController.login
 )
 router.post('/register', userController.register)
+router.patch('/', userController.updateAddressUser)
 export default router

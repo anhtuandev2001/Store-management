@@ -2,12 +2,13 @@ package com.example.store_management.product;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
@@ -18,21 +19,22 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.store_management.R;
-import com.example.store_management.user.UserData;
-import com.example.store_management.user.UserActivity;
-import com.example.store_management.cart.CartActivity;
 import com.example.store_management.api.ApiManager;
+import com.example.store_management.cart.CartActivity;
 import com.example.store_management.category.Category;
 import com.example.store_management.category.CategoryAdapter;
 import com.example.store_management.category.CategoryResponse;
 import com.example.store_management.common.Constants;
 import com.example.store_management.common.DataManager;
 import com.example.store_management.order.OrderActivity;
+import com.example.store_management.user.UserActivity;
+import com.example.store_management.user.UserData;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
@@ -64,6 +66,17 @@ public class ProductActivity extends Activity {
         ImageView btnSearch = findViewById(R.id.btnSearch);
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
 
+        ConstraintLayout mainLayout = findViewById(R.id.mainLayout); // Thay thế bằng ID của ConstraintLayout gốc trong mã XML của bạn
+
+        mainLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Ẩn bàn phím nếu đang mở
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(txtSearch.getWindowToken(), 0);
+            }
+        });
+
         iconCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,13 +90,20 @@ public class ProductActivity extends Activity {
             @Override
             public void onClick(View v) {
                 searchContainer.setVisibility(View.VISIBLE);
+                txtSearch.requestFocus(); // Request focus on txtSearch
+
+                // Show the keyboard
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(txtSearch, InputMethodManager.SHOW_IMPLICIT);
             }
         });
+
 
         btnClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 searchContainer.setVisibility(View.INVISIBLE);
+                txtSearch.setText(""); // Clear the text in txtSearch
 
                 // Close the keyboard
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -108,9 +128,15 @@ public class ProductActivity extends Activity {
                 dataManager.setProductFilterSearchInput(userInput);
                 List<Product> filteredList = new ArrayList<>();
 
+                Log.d("productFilterQuantityIdproductFilterQuantityId", "onTextChanged: " + productFilterQuantityId);
+
                 for (Product product : productList) {
                     String productName = product.getName().toLowerCase();
-                    if (productName.contains(userInput) && productFilterQuantityId.equals(product.getCategoryId())) {
+                    if (!TextUtils.isEmpty(productFilterQuantityId)) {
+                        if (productName.contains(userInput) && productFilterQuantityId.equals(product.getCategoryId())) {
+                            filteredList.add(product);
+                        }
+                    } else if (productName.contains(userInput)) {
                         filteredList.add(product);
                     }
                 }

@@ -1,6 +1,8 @@
 package com.example.store_management.common;
 
 import com.example.store_management.address.Address;
+import com.example.store_management.address.AddressInsertRequest;
+import com.example.store_management.address.AddressUpdateRequest;
 import com.example.store_management.user.UserAddressRequest;
 import com.example.store_management.user.UserData;
 import com.example.store_management.login.LoginRequest;
@@ -23,8 +25,8 @@ public class DataManager {
     // Product-related data
     private List<Product> productList;
 
-    private String productFilterCategoryId;
-    private String productFilterSearchInput;
+    private String productFilterCategoryId = "";
+    private String productFilterSearchInput = "";
     private List<Category> categoryList;
 
     // Cart-related data
@@ -40,6 +42,36 @@ public class DataManager {
     private OrderInsertRequest orderInsertRequest;
     private LoginRequest loginRequest;
     private UserAddressRequest userAddressRequest;
+    private AddressInsertRequest addressInsertRequest;
+
+    private String addressId;
+
+    public String getAddressId() {
+        return addressId;
+    }
+
+    public void setAddressId(String addressId) {
+        this.addressId = addressId;
+    }
+
+    public AddressUpdateRequest getAddressUpdateRequest() {
+        return addressUpdateRequest;
+    }
+
+    public void setAddressUpdateRequest(AddressUpdateRequest addressUpdateRequest) {
+        this.addressUpdateRequest = addressUpdateRequest;
+    }
+
+    private AddressUpdateRequest addressUpdateRequest;
+
+    public AddressInsertRequest getAddressInsertRequest() {
+        return addressInsertRequest;
+    }
+
+    public void setAddressInsertRequest(AddressInsertRequest addressInsertRequest) {
+        this.addressInsertRequest = addressInsertRequest;
+    }
+
     private int checkedPosition;
     private List<Address> addressList;
     private boolean isCheckout = false;

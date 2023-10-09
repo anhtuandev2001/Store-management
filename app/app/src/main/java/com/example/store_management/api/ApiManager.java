@@ -1,7 +1,9 @@
 package com.example.store_management.api;
 
+import com.example.store_management.address.AddressInsertRequest;
 import com.example.store_management.address.AddressInsertResponse;
 import com.example.store_management.address.AddressResponse;
+import com.example.store_management.address.AddressUpdateRequest;
 import com.example.store_management.cart.CartInsertRequest;
 import com.example.store_management.cart.CartInsertResponse;
 import com.example.store_management.cart.CartRequest;
@@ -103,6 +105,24 @@ public class ApiManager {
     public void getAddressById(Callback<AddressInsertResponse> callback) {
         String id = DataManager.getInstance().getUserData().getDefault_shipping_id();
         Call<AddressInsertResponse> call = apiService.getAddressById(id);
+        call.enqueue(callback);
+    }
+
+    public void insertAddress(Callback<AddressInsertResponse> callback) {
+        AddressInsertRequest addressInsertRequest = DataManager.getInstance().getAddressInsertRequest();
+        Call<AddressInsertResponse> call = apiService.inserAddress(addressInsertRequest);
+        call.enqueue(callback);
+    }
+
+    public void updateAddress(Callback<AddressInsertResponse> callback) {
+        AddressUpdateRequest addressUpdateRequest = DataManager.getInstance().getAddressUpdateRequest();
+        Call<AddressInsertResponse> call = apiService.updateAddress(addressUpdateRequest);
+        call.enqueue(callback);
+    }
+
+    public void deleteAddress(Callback<AddressInsertResponse> callback) {
+        String addressId = DataManager.getInstance().getAddressId();
+        Call<AddressInsertResponse> call = apiService.deleteAddress(addressId);
         call.enqueue(callback);
     }
 }

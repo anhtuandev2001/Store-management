@@ -1,14 +1,20 @@
 package com.example.store_management.address;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,15 +38,19 @@ import retrofit2.Response;
 public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressViewHolder> {
     private Context mContext;
     private List<Address> mAddressList;
+    private Context context;
+
     private DataManager dataManager = DataManager.getInstance();
     private UserData userData = dataManager.getUserData();
     private ProgressDialog progressDialog;
+    private LayoutInflater inflater;
     private ApiManager apiManager = new ApiManager(Constants.BASE_URL, userData.getToken());
 
-    public AddressAdapter(Context context, List<Address> addressList) {
+    public AddressAdapter(Context context, List<Address> addressList, LayoutInflater inflater) {
         mContext = context;
         mAddressList = addressList;
-
+        this.inflater = inflater;
+        this.context = context;
         // Khởi tạo ProgressDialog và cấu hình
         progressDialog = new ProgressDialog(mContext);
         progressDialog.setMessage("Loading...");
@@ -82,6 +92,22 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
                         fetchApi(addressId);
                     }
                 }
+            }
+        });
+
+        holder.btnEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Ấn vào btnEdit, hiển thị modal chỉnh sửa với dữ liệu đầy đủ
+                showEditAddressDialog(address);
+            }
+        });
+
+        holder.btnDeleteAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Ấn vào btnEdit, hiển thị modal chỉnh sửa với dữ liệu đầy đủ
+                showDeleteAddressConfirmationDialog(address);
             }
         });
     }
@@ -126,11 +152,151 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
         dialog.show();
     }
 
+    private void showEditAddressDialog(Address address) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        LayoutInflater inflater = LayoutInflater.from(mContext); // Sử dụng LayoutInflater.from(mContext) để lấy LayoutInflater
+        View dialogView = inflater.inflate(R.layout.dialog_add_address, null);
+        builder.setView(dialogView);
+
+
+        EditText editTextFullName = dialogView.findViewById(R.id.editTextFullName);
+        EditText editTextAddress = dialogView.findViewById(R.id.editTextAddress);
+        Button btnSubmit = dialogView.findViewById(R.id.btnSubmit);
+
+        // Tự động điền dữ liệu từ đối tượng Address vào EditText
+        editTextFullName.setText(address.getFullName());
+        editTextAddress.setText(address.getAddress());
+
+        final Dialog dialog = builder.create();
+
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String fullName = editTextFullName.getText().toString();
+                String addressText = editTextAddress.getText().toString();
+
+                // Kiểm tra xem fullName và address có dữ liệu không
+                if (!fullName.isEmpty() && !addressText.isEmpty()) {
+                    // Xử lý chỉnh sửa dữ liệu ở đây (có thể gọi API để lưu dữ liệu)
+                    UserData userData = dataManager.getUserData();
+                    AddressUpdateRequest addressUpdateRequest = new AddressUpdateRequest(fullName, address.getId(), addressText);
+                    dataManager.setAddressUpdateRequest(addressUpdateRequest);
+                    ApiManager apiManager = new ApiManager(Constants.BASE_URL, userData.getToken());
+                    // Hiển thị ProgressDialog khi bắt đầu gọi API
+                    progressDialog.show();
+                    Log.d("asdfasdf", "onClick: " + addressUpdateRequest);
+                    apiManager.updateAddress(new Callback<AddressInsertResponse>() {
+                        @Override
+                        public void onResponse(Call<AddressInsertResponse> call, Response<AddressInsertResponse> response) {
+                            Log.d("asdfasdf", "onClick: " + response);
+
+                            // Ẩn ProgressDialog khi có kết quả hoặc xảy ra lỗi
+                            progressDialog.dismiss();
+                            Log.d("responseresponseresponse", "response: " + response);
+                            if (response.isSuccessful()) {
+                                // Hiển thị thông báo "Add address successfully"
+                                // Gửi broadcast để thông báo cập nhật thành công
+                                Intent intent = new Intent("ADDRESS_UPDATED");
+                                mContext.sendBroadcast(intent);
+                                // Đóng dialog
+                                dialog.dismiss();
+                                // Làm mới hoạt động
+                            } else {
+                                // Xử lý lỗi khi gọi API không thành công
+                                showErrorMessage("Failed to fetch product data");
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<AddressInsertResponse> call, Throwable t) {
+                            Log.d("responseresponseresponse", "t: " + t);
+                            // Ẩn ProgressDialog khi có lỗi
+                            progressDialog.dismiss();
+                            // Xử lý lỗi khi gọi API thất bại
+                            showErrorMessage("Network error. Please try again later.");
+                        }
+                        // Đóng dialog
+                    });
+                } else {
+                    // Hiển thị thông báo lỗi nếu fullName hoặc address trống
+                    showErrorMessage("Full Name and Address are required.");
+                }
+            }
+        });
+
+        editTextFullName.requestFocus();
+
+        // Hiển thị bàn phím ảo
+        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(editTextFullName, InputMethodManager.SHOW_IMPLICIT);
+
+        dialog.show();
+    }
+
+    private void fetchApiDelete(Address address) {
+        UserData userData = dataManager.getUserData();
+        String addressId = address.getId();
+        dataManager.setAddressId(addressId);
+        ApiManager apiManager = new ApiManager(Constants.BASE_URL, userData.getToken());
+        // Hiển thị ProgressDialog khi bắt đầu gọi API
+        progressDialog.show();
+        apiManager.deleteAddress(new Callback<AddressInsertResponse>() {
+            @Override
+            public void onResponse(Call<AddressInsertResponse> call, Response<AddressInsertResponse> response) {
+                Log.d("asdfasdf", "onClick: " + response);
+
+                // Ẩn ProgressDialog khi có kết quả hoặc xảy ra lỗi
+                progressDialog.dismiss();
+                Log.d("responseresponseresponse", "response: " + response);
+                if (response.isSuccessful()) {
+                    // Hiển thị thông báo "Add address successfully"
+                    Intent intent = new Intent("ADDRESS_UPDATED");
+                    mContext.sendBroadcast(intent);
+                } else {
+                    // Xử lý lỗi khi gọi API không thành công
+                    showErrorMessage("Failed to fetch product data");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AddressInsertResponse> call, Throwable t) {
+                Log.d("responseresponseresponse", "t: " + t);
+                // Ẩn ProgressDialog khi có lỗi
+                progressDialog.dismiss();
+                // Xử lý lỗi khi gọi API thất bại
+                showErrorMessage("Network error. Please try again later.");
+            }
+        });
+    }
+
+    private void showDeleteAddressConfirmationDialog(Address address) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setMessage("Are you sure you want to delete this address?")
+                .setTitle("Confirm Deletion")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // Xác nhận người dùng muốn xóa địa chỉ
+                        fetchApiDelete(address);
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // Đóng hộp thoại xác nhận xóa nếu người dùng không muốn xóa
+                        dialog.dismiss();
+                    }
+                });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+
     public class AddressViewHolder extends RecyclerView.ViewHolder {
         CheckBox checkBox;
         TextView txtNameUser;
         TextView txtAddress;
         ImageView btnEdit;
+        ImageView btnDeleteAddress;
 
         public AddressViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -139,6 +305,7 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
             txtNameUser = itemView.findViewById(R.id.txtNameUser);
             txtAddress = itemView.findViewById(R.id.txtAddress);
             btnEdit = itemView.findViewById(R.id.btnEdit);
+            btnDeleteAddress = itemView.findViewById(R.id.btnDeleteAddress);
         }
     }
 }

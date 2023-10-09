@@ -3,6 +3,7 @@ package com.example.store_management.login;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -119,7 +120,8 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
                 progressDialog.dismiss(); // Ẩn ProgressDialog sau khi có kết quả
-
+                Log.d("adsfasd", "onResponse: "+response);
+                Log.d("adsfasd", "onResponse: "+registerRequest);
                 if (response.isSuccessful()) {
                     RegisterResponse registerResponse = response.body();
                     if (registerResponse != null && registerResponse.getMessage().equals("Register user successfully")) {

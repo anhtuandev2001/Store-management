@@ -1,7 +1,9 @@
 package com.example.store_management.api;
 
+import com.example.store_management.address.AddressInsertRequest;
 import com.example.store_management.address.AddressInsertResponse;
 import com.example.store_management.address.AddressResponse;
+import com.example.store_management.address.AddressUpdateRequest;
 import com.example.store_management.cart.CartInsertRequest;
 import com.example.store_management.cart.CartInsertResponse;
 import com.example.store_management.cart.CartRequest;
@@ -65,4 +67,13 @@ public interface ApiService {
 
     @GET("address/id/{id}")
     Call<AddressInsertResponse> getAddressById(@Path("id") String id);
+
+    @POST("address")
+    Call<AddressInsertResponse> inserAddress(@Body AddressInsertRequest addressInsertRequest);
+
+    @PATCH("address")
+    Call<AddressInsertResponse> updateAddress(@Body AddressUpdateRequest addressUpdateRequest);
+
+    @DELETE("address/{id}")
+    Call<AddressInsertResponse> deleteAddress(@Path("id") String id);
 }

@@ -2,6 +2,7 @@ package com.example.store_management.category;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -73,18 +74,40 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
                 DataManager dataManager = DataManager.getInstance();
                 List<Product> productList = dataManager.getProductList();
                 List<Product> newProductList = new ArrayList<>();
+                String productFilterSearchInput = dataManager.getProductFilterSearchInput();
+
+                Log.d("productFilterSearchInput", "onClick: " + productFilterSearchInput);
+                Log.d("productFilterSearchInput", "onClick: " + (TextUtils.isEmpty(productFilterSearchInput)));
 
                 if (selectedPosition == 0) {
-                    productActivity.setRecycleViewProduct(productList);
+                    dataManager.setProductFilterCategoryId("");
+                    if (TextUtils.isEmpty(productFilterSearchInput)) {
+                        // Case 1: No category selected and no search input
+                        newProductList.addAll(productList);
+                    } else {
+                        // Case 2: No category selected, but there is a search inputproductName.contains(userInput)
+                        for (Product product : productList) {
+                            String productName = product.getName().toLowerCase();
+                            if (productName.contains(productFilterSearchInput)) {
+                                newProductList.add(product);
+                            }
+                        }
+                    }
+                    productActivity.setRecycleViewProduct(newProductList);
                 } else {
-                    String productFilterSearchInput = dataManager.getProductFilterSearchInput();
+                    dataManager.setProductFilterCategoryId(categoryId);
+                    // Case 3: A category is selected
                     for (Product product : productList) {
-                        if (categoryId.equals(product.getCategoryId()) && productFilterSearchInput.equals(product.getName())) {
-                            newProductList.add(product);
+                        if (categoryId.equals(product.getCategoryId())) {
+                            String productName = product.getName().toLowerCase();
+                            if (TextUtils.isEmpty(productFilterSearchInput) || productName.contains(productFilterSearchInput)) {
+                                newProductList.add(product);
+                            }
                         }
                     }
                     productActivity.setRecycleViewProduct(newProductList);
                 }
+
             }
         });
     }

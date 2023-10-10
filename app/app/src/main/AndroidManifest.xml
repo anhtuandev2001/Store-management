@@ -16,6 +16,15 @@
         android:theme="@style/AppTheme"
         tools:targetApi="31">
         <activity
+            android:name=".address.AddressDetailActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".user.SettingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".favourite.FavoutiteActivity"
+            android:exported="false" />
+        <activity
             android:name=".address.AddressActivity"
             android:exported="false" />
         <activity

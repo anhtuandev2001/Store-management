@@ -1,5 +1,7 @@
 package com.example.store_management.api;
 
+import android.util.Log;
+
 import com.example.store_management.address.AddressInsertRequest;
 import com.example.store_management.address.AddressInsertResponse;
 import com.example.store_management.address.AddressResponse;
@@ -15,6 +17,7 @@ import com.example.store_management.order.OrderInsertResponse;
 import com.example.store_management.order.OrderResponse;
 import com.example.store_management.product.ProductResponse;
 import com.example.store_management.user.UserAddressRequest;
+import com.example.store_management.user.UserFavoriteRequest;
 import com.example.store_management.user.UserResponse;
 
 import okhttp3.OkHttpClient;
@@ -42,6 +45,26 @@ public class ApiManager {
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(new TokenInterceptor(token));
         return httpClient.build();
+    }
+
+    public void getUserById(Callback<UserResponse> callback) {
+        String id = DataManager.getInstance().getUserData().getId();
+        Log.d("akjfjkash", "onCreate: " + id);
+        Call<UserResponse> call = apiService.getUser(id);
+        call.enqueue(callback);
+    }
+
+    public void updateAddressDefautl(Callback<UserResponse> callback) {
+        UserAddressRequest userAddressRequest = DataManager.getInstance().getUserAddressRequest();
+        Call<UserResponse> call = apiService.updateAddress(userAddressRequest);
+        call.enqueue(callback);
+    }
+
+    public void updateFavoriteUser(Callback<UserResponse> callback) {
+        UserFavoriteRequest userFavoriteRequest = DataManager.getInstance().getUserFavoriteRequest();
+        Log.d("klajflkasjd", "updateFavoriteUser: "+userFavoriteRequest);
+        Call<UserResponse> call = apiService.updateFavoriteUser(userFavoriteRequest);
+        call.enqueue(callback);
     }
 
     public void getProducts(Callback<ProductResponse> callback) {
@@ -93,12 +116,6 @@ public class ApiManager {
     public void getAddress(Callback<AddressResponse> callback) {
         String userId = DataManager.getInstance().getUserData().getId();
         Call<AddressResponse> call = apiService.getAddress(userId);
-        call.enqueue(callback);
-    }
-
-    public void updateAddressDefautl(Callback<UserResponse> callback) {
-        UserAddressRequest userAddressRequest = DataManager.getInstance().getUserAddressRequest();
-        Call<UserResponse> call = apiService.updateAddress(userAddressRequest);
         call.enqueue(callback);
     }
 

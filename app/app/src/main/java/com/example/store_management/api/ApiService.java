@@ -18,6 +18,7 @@ import com.example.store_management.product.ProductResponse;
 import com.example.store_management.login.RegisterRequest;
 import com.example.store_management.login.RegisterResponse;
 import com.example.store_management.user.UserAddressRequest;
+import com.example.store_management.user.UserFavoriteRequest;
 import com.example.store_management.user.UserResponse;
 
 import retrofit2.Call;
@@ -35,6 +36,9 @@ public interface ApiService {
     @POST("users/register")
     Call<RegisterResponse> registerUser(@Body RegisterRequest registerRequest);
 
+    @GET("users/{userId}")
+    Call<UserResponse> getUser(@Path("userId") String userId);
+
     @GET("products")
     Call<ProductResponse> getProducts();
 
@@ -46,6 +50,9 @@ public interface ApiService {
 
     @PATCH("users")
     Call<UserResponse> updateAddress(@Body UserAddressRequest userAddressRequest);
+
+    @PATCH("users/favorite")
+    Call<UserResponse> updateFavoriteUser(@Body UserFavoriteRequest userFavoriteRequest);
 
     @PATCH("cart")
     Call<CartResponse> updateCart(@Body CartRequest cartRequest);

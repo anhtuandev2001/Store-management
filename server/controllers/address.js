@@ -70,12 +70,14 @@ const insertAddress = async (req, res) => {
             fullName,
             address,
             userId,
+            phoneNumber,
         } = req.body;
 
         const addressSever = await addressRepository.insertAddress({
             fullName,
             address,
             userId,
+            phoneNumber,
         });
 
         res.status(HttpStatusCode.INSERT_OK).json({

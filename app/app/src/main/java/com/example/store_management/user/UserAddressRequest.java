@@ -4,9 +4,9 @@ public class UserAddressRequest {
     private String id;
     private String default_shipping_id;
 
-    public UserAddressRequest(String id, String default_shipping_id) {
+    public UserAddressRequest(String id, String favoritesList) {
         this.id = id;
-        this.default_shipping_id = default_shipping_id;
+        this.default_shipping_id = favoritesList;
     }
 
     public String toString() {

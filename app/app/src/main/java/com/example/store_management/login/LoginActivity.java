@@ -108,6 +108,7 @@ public class LoginActivity extends Activity {
 
                     DataManager dataManager = DataManager.getInstance();
                     dataManager.setUserData(userData);
+                    dataManager.setToken(userData.getToken());
 
                     if (loginResponse != null && loginResponse.getMessage().equals("Login user successfully")) {
                         Toast.makeText(getApplicationContext(), "Login successful", Toast.LENGTH_LONG).show();

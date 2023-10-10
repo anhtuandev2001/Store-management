@@ -68,9 +68,9 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
 
         private String getStatusString(String status) {
             switch (status) {
-                case "0":
-                    return "Delivered";
                 case "1":
+                    return "Delivered";
+                case "0":
                     return "Processing";
                 case "2":
                     return "Canceled";

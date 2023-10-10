@@ -5,9 +5,12 @@ public class AddressInsertRequest {
     private String userId;
     private String address;
 
-    public AddressInsertRequest(String fullName, String userId,String address) {
+    private String phoneNumber;
+
+    public AddressInsertRequest(String fullName, String userId,String address, String phoneNumber) {
         this.fullName = fullName;
         this.address = address;
+        this.phoneNumber = phoneNumber;
         this.userId = userId;
     }
 

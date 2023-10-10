@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.store_management.favourite.FavoutiteActivity;
 import com.example.store_management.user.UserData;
 import com.example.store_management.product.ProductActivity;
 import com.example.store_management.R;
@@ -70,6 +71,9 @@ public class OrderActivity extends AppCompatActivity {
                     return true;
                 } else if (item.getItemId() == R.id.navigation_favourite) {
                     // Xử lý khi item "navigation_favourite" được chọn
+                    Intent intent = new Intent(OrderActivity.this, FavoutiteActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(0, 0);
                     return true;
                 } else if (item.getItemId() == R.id.navigation_order) {
                     Intent intent = new Intent(OrderActivity.this, OrderActivity.class);
@@ -90,7 +94,7 @@ public class OrderActivity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-                statusActive = "0";
+                statusActive = "1";
                 orderList = dataManager.getOrderList();
                 handleActiveStatus();
                 handleFilterStatus();
@@ -102,7 +106,7 @@ public class OrderActivity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-                statusActive = "1";
+                statusActive = "0";
                 orderList = dataManager.getOrderList();
                 handleActiveStatus();
                 handleFilterStatus();
@@ -136,7 +140,7 @@ public class OrderActivity extends AppCompatActivity {
 
     public void fetchDataFromApi() {
         UserData userData = dataManager.getUserData();
-        ApiManager apiManager = new ApiManager(Constants.BASE_URL, userData.getToken());
+        ApiManager apiManager = new ApiManager(Constants.BASE_URL, dataManager.getToken());
         apiManager.getOrder(new Callback<OrderResponse>() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
@@ -194,12 +198,12 @@ public class OrderActivity extends AppCompatActivity {
         }
 
         switch (statusActive) {
-            case "0": {
+            case "1": {
                 btnDelivered.setTextColor(0xFF303030);
                 btnDelivered.setTypeface(customFontActive);
                 break;
             }
-            case "1": {
+            case "0": {
                 btnProcessing.setTextColor(0xFF303030);
                 btnProcessing.setTypeface(customFontActive);
                 break;

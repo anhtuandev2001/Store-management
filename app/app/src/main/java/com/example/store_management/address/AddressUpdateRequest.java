@@ -4,10 +4,12 @@ public class AddressUpdateRequest {
     private String fullName;
     private String id;
     private String address;
+    private String phoneNumber;
 
-    public AddressUpdateRequest(String fullName, String id, String address) {
+    public AddressUpdateRequest(String fullName, String id, String address, String phoneNumber) {
         this.fullName = fullName;
         this.address = address;
+        this.phoneNumber = phoneNumber;
         this.id = id;
     }
 

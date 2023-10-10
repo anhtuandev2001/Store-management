@@ -165,7 +165,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             CartRequest cartRequest = new CartRequest(cartId, String.valueOf(quantity));
             dataManager.setCartRequest(cartRequest);
             UserData userData = dataManager.getUserData();
-            ApiManager apiManager = new ApiManager(Constants.BASE_URL, userData.getToken());
+            ApiManager apiManager = new ApiManager(Constants.BASE_URL, dataManager.getToken());
 
             apiManager.updateCart(new Callback<CartResponse>() {
                 @Override
@@ -185,7 +185,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
                 String cartId = cart.getCartId();
                 dataManager.setCartId(cartId);
                 UserData userData = dataManager.getUserData();
-                ApiManager apiManager = new ApiManager(Constants.BASE_URL, userData.getToken());
+                ApiManager apiManager = new ApiManager(Constants.BASE_URL, dataManager.getToken());
 
                 apiManager.deleteCart(new Callback<CartInsertResponse>() {
                     @Override

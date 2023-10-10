@@ -80,7 +80,9 @@ public class AddressActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Hiển thị dialog khi nhấn vào btnAddContainer
-                showAddAddressDialog();
+                Intent intent = new Intent(AddressActivity.this, AddressDetailActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
 
@@ -123,7 +125,7 @@ public class AddressActivity extends AppCompatActivity {
 
     private void fetchApi() {
         UserData userData = dataManager.getUserData();
-        ApiManager apiManager = new ApiManager(Constants.BASE_URL, userData.getToken());
+        ApiManager apiManager = new ApiManager(Constants.BASE_URL, dataManager.getToken());
         // Hiển thị ProgressDialog khi bắt đầu gọi API
         progressDialog.show();
 
@@ -137,6 +139,7 @@ public class AddressActivity extends AppCompatActivity {
                     AddressResponse addressResponse = response.body();
                     if (addressResponse != null) {
                         addressList = addressResponse.getAddressList();
+                        dataManager.setAddressList(addressList);
                         // Lưu vào DataManager
                         setRecycleViewAddress();
                     } else {
@@ -171,82 +174,6 @@ public class AddressActivity extends AppCompatActivity {
                 });
 
         AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-
-    private void showAddAddressDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        LayoutInflater inflater = getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.dialog_add_address, null);
-        builder.setView(dialogView);
-
-        EditText editTextFullName = dialogView.findViewById(R.id.editTextFullName);
-        EditText editTextAddress = dialogView.findViewById(R.id.editTextAddress);
-        Button btnSubmit = dialogView.findViewById(R.id.btnSubmit);
-
-        final Dialog dialog = builder.create();
-
-        btnSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String fullName = editTextFullName.getText().toString();
-                String address = editTextAddress.getText().toString();
-
-                // Kiểm tra xem fullName và address có dữ liệu không
-                if (!fullName.isEmpty() && !address.isEmpty()) {
-                    // Log giá trị
-                    Log.d("AddressActivity", "Full Name: " + fullName);
-                    Log.d("AddressActivity", "Address: " + address);
-
-                    // Đóng dialog
-                    UserData userData = dataManager.getUserData();
-                    AddressInsertRequest addressInsertRequest = new AddressInsertRequest(fullName, userData.getId(), address);
-                    dataManager.setAddressInsertRequest(addressInsertRequest);
-                    ApiManager apiManager = new ApiManager(Constants.BASE_URL, userData.getToken());
-                    // Hiển thị ProgressDialog khi bắt đầu gọi API
-                    progressDialog.show();
-
-                    apiManager.insertAddress(new Callback<AddressInsertResponse>() {
-                        @Override
-                        public void onResponse(Call<AddressInsertResponse> call, Response<AddressInsertResponse> response) {
-                            // Ẩn ProgressDialog khi có kết quả hoặc xảy ra lỗi
-                            progressDialog.dismiss();
-                            Log.d("responseresponseresponse", "response: " + response);
-                            if (response.isSuccessful()) {
-                                // Hiển thị thông báo "Add address successfully"
-                                showSuccessMessage("Add address successfully");
-                                // Đóng dialog
-                                dialog.dismiss();
-                                // Làm mới hoạt động
-                                recreate();
-                            } else {
-                                // Xử lý lỗi khi gọi API không thành công
-                                showErrorMessage("Failed to fetch product data");
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<AddressInsertResponse> call, Throwable t) {
-                            Log.d("responseresponseresponse", "t: " + t);
-                            // Ẩn ProgressDialog khi có lỗi
-                            progressDialog.dismiss();
-                            // Xử lý lỗi khi gọi API thất bại
-                            showErrorMessage("Network error. Please try again later.");
-                        }
-                    });
-                } else {
-                    // Hiển thị thông báo lỗi nếu fullName hoặc address trống
-                    showErrorMessage("Full Name and Address are required.");
-                }
-            }
-        });
-
-        editTextFullName.requestFocus();
-
-        // Hiển thị bàn phím ảo
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(editTextFullName, InputMethodManager.SHOW_IMPLICIT);
-
         dialog.show();
     }
 

@@ -64,21 +64,48 @@ const register = async (req, res) => {
 
 }
 const getDetailUser = async (req, res) => {
-
+  try {
+    debugger
+    const userId = req.params.id;
+    const user = await userRepository.getUserById(userId)
+    res.status(HttpStatusCode.OK).json({
+      message: 'get user successfully',
+      data: user,
+    })
+  } catch (exception) {
+    res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
+      message: exception.message,
+    })
+  }
 }
 
 async function updateAddressUser(req, res) {
   try {
-      debugger
-      const user = await userRepository.updateAddressUser(req.body)
-      res.status(HttpStatusCode.OK).json({
-          message: 'Update user successfully',
-          data: user,
-      })
+    debugger
+    const user = await userRepository.updateAddressUser(req.body)
+    res.status(HttpStatusCode.OK).json({
+      message: 'Update user successfully',
+      data: user,
+    })
   } catch (exception) {
-      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
-          message: exception.message,
-      })
+    res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
+      message: exception.message,
+    })
+  }
+}
+
+async function updateFavoriteUser(req, res) {
+  try {
+    debugger
+    const user = await userRepository.updateFavoriteUser(req.body)
+    res.status(HttpStatusCode.OK).json({
+      message: 'Update user successfully',
+      data: user,
+    })
+  } catch (exception) {
+    res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
+      message: exception.message,
+    })
   }
 }
 
@@ -86,5 +113,6 @@ export default {
   login,
   register,
   getDetailUser,
-  updateAddressUser
+  updateAddressUser,
+  updateFavoriteUser
 }

@@ -1,13 +1,15 @@
 package com.example.store_management.user;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.cardview.widget.CardView;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -23,6 +25,7 @@ import com.example.store_management.address.AddressResponse;
 import com.example.store_management.api.ApiManager;
 import com.example.store_management.common.Constants;
 import com.example.store_management.common.DataManager;
+import com.example.store_management.favourite.FavoutiteActivity;
 import com.example.store_management.login.LoginActivity;
 import com.example.store_management.order.OrderActivity;
 import com.example.store_management.product.ProductActivity;
@@ -38,6 +41,8 @@ public class UserActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private List<Address> addressList;
     private TextView txtAddress;
+    private TextView txtEmail;
+    private TextView txtName;
     private DataManager dataManager = DataManager.getInstance();
 
     @Override
@@ -45,9 +50,12 @@ public class UserActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_activity);
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
-        ConstraintLayout navigateAddress = findViewById(R.id.navigateAddress);
+        CardView navigateAddress = findViewById(R.id.navigateAddress);
+        CardView navigateSetting = findViewById(R.id.setting);
         ImageView btnLogout = findViewById(R.id.btnLogout);
         txtAddress = findViewById(R.id.txtAddress);
+        txtName = findViewById(R.id.txtName);
+        txtEmail = findViewById(R.id.txtEmail);
 
         // Khởi tạo ProgressDialog và cấu hình
         progressDialog = new ProgressDialog(this);
@@ -60,6 +68,15 @@ public class UserActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(UserActivity.this, AddressActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        navigateSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(UserActivity.this, SettingActivity.class);
                 startActivity(intent);
                 finish();
             }
@@ -98,6 +115,9 @@ public class UserActivity extends AppCompatActivity {
                     return true;
                 } else if (item.getItemId() == R.id.navigation_favourite) {
                     // Xử lý khi item "navigation_favourite" được chọn
+                    Intent intent = new Intent(UserActivity.this, FavoutiteActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(0, 0);
                     return true;
                 } else if (item.getItemId() == R.id.navigation_order) {
                     // Xử lý khi item "navigation_order" được chọn
@@ -118,9 +138,42 @@ public class UserActivity extends AppCompatActivity {
 
     private void fetchApiAddress(){
         UserData userData = dataManager.getUserData();
-        ApiManager apiManager = new ApiManager(Constants.BASE_URL, userData.getToken());
+        ApiManager apiManager = new ApiManager(Constants.BASE_URL, dataManager.getToken());
         // Hiển thị ProgressDialog khi bắt đầu gọi API
         progressDialog.show();
+
+        apiManager.getUserById(new Callback<UserResponse>() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+                Log.d("akjfjkash", "onCreate: " + response);
+
+                if (response.isSuccessful()) {
+                    UserResponse userResponse = response.body();
+                    if (userResponse != null) {
+                        UserData userData = userResponse.getUserData();
+                        progressDialog.dismiss();
+                        dataManager.setUserData(userData);
+
+                        txtEmail.setText(userData.getEmail());
+                        txtName.setText(userData.getName());
+
+                        String favouriteListUser = userData.getFavoritesList();
+                        Log.d("akjfjkash", "onCreate: " + favouriteListUser);
+
+                    }
+                } else {
+                    // Xử lý lỗi khi API request không thành công
+                    progressDialog.dismiss();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserResponse> call, Throwable t) {
+                Log.d("akjfjkash", "onCreate: " + t);
+                progressDialog.dismiss();
+            }
+        });
 
         apiManager.getAddress(new Callback<AddressResponse>() {
             @Override

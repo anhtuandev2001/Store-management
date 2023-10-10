@@ -40,7 +40,7 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.register_activity);
 
         // Ánh xạ các phần tử giao diện người dùng
-        txtName = findViewById(R.id.txtName);
+        txtName = findViewById(R.id.txtEmail);
         txtEmail = findViewById(R.id.txtEmail);
         txtPassword = findViewById(R.id.txtPassword);
         txtConfirmPassword = findViewById(R.id.txtConfirmPassword);

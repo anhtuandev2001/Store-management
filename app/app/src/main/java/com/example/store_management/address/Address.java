@@ -10,6 +10,7 @@ public class Address implements Serializable {
     private String address;
 
     private String userId;
+    private String phoneNumber;
 
     private boolean isChecked;
 
@@ -54,11 +55,20 @@ public class Address implements Serializable {
         return userId;
     }
 
-    public Address(String _id, String fullName, String address, String userId) {
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public Address(String _id, String fullName, String address, String userId, String phoneNumber) {
         this._id = _id;
         this.fullName = fullName;
         this.address = address;
         this.userId = userId;
+        this.phoneNumber = phoneNumber;
     }
 
 }

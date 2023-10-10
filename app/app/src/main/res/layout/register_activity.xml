@@ -50,7 +50,7 @@
             android:layout_height="wrap_content">
 
             <EditText
-                android:id="@+id/txtName"
+                android:id="@+id/txtEmail"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
@@ -83,7 +83,7 @@
                 android:textColorHint=" #909090"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtName" />
+                app:layout_constraintTop_toBottomOf="@+id/txtEmail" />
 
             <EditText
                 android:id="@+id/txtPassword"

@@ -25,6 +25,7 @@ import com.example.store_management.R;
 import com.example.store_management.api.ApiManager;
 import com.example.store_management.common.Constants;
 import com.example.store_management.common.DataManager;
+import com.example.store_management.product.ProductDetailActivity;
 import com.example.store_management.user.UserAddressRequest;
 import com.example.store_management.user.UserData;
 import com.example.store_management.user.UserResponse;
@@ -44,7 +45,7 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
     private UserData userData = dataManager.getUserData();
     private ProgressDialog progressDialog;
     private LayoutInflater inflater;
-    private ApiManager apiManager = new ApiManager(Constants.BASE_URL, userData.getToken());
+    private ApiManager apiManager = new ApiManager(Constants.BASE_URL, dataManager.getToken());
 
     public AddressAdapter(Context context, List<Address> addressList, LayoutInflater inflater) {
         mContext = context;
@@ -70,6 +71,7 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
 
         holder.txtNameUser.setText(address.getFullName());
         holder.txtAddress.setText(address.getAddress());
+        holder.txtPhoneNumber.setText(address.getPhoneNumber());
 
         holder.checkBox.setOnCheckedChangeListener(null); // Remove the listener temporarily
         boolean defaultChecked = address.getId().equals(userData.getDefault_shipping_id());
@@ -99,7 +101,9 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
             @Override
             public void onClick(View v) {
                 // Ấn vào btnEdit, hiển thị modal chỉnh sửa với dữ liệu đầy đủ
-                showEditAddressDialog(address);
+                Intent intent = new Intent(mContext, AddressDetailActivity.class);
+                intent.putExtra("addressId", address.getId());
+                mContext.startActivity(intent);
             }
         });
 
@@ -152,92 +156,11 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
         dialog.show();
     }
 
-    private void showEditAddressDialog(Address address) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        LayoutInflater inflater = LayoutInflater.from(mContext); // Sử dụng LayoutInflater.from(mContext) để lấy LayoutInflater
-        View dialogView = inflater.inflate(R.layout.dialog_add_address, null);
-        builder.setView(dialogView);
-
-
-        EditText editTextFullName = dialogView.findViewById(R.id.editTextFullName);
-        EditText editTextAddress = dialogView.findViewById(R.id.editTextAddress);
-        Button btnSubmit = dialogView.findViewById(R.id.btnSubmit);
-
-        // Tự động điền dữ liệu từ đối tượng Address vào EditText
-        editTextFullName.setText(address.getFullName());
-        editTextAddress.setText(address.getAddress());
-
-        final Dialog dialog = builder.create();
-
-        btnSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String fullName = editTextFullName.getText().toString();
-                String addressText = editTextAddress.getText().toString();
-
-                // Kiểm tra xem fullName và address có dữ liệu không
-                if (!fullName.isEmpty() && !addressText.isEmpty()) {
-                    // Xử lý chỉnh sửa dữ liệu ở đây (có thể gọi API để lưu dữ liệu)
-                    UserData userData = dataManager.getUserData();
-                    AddressUpdateRequest addressUpdateRequest = new AddressUpdateRequest(fullName, address.getId(), addressText);
-                    dataManager.setAddressUpdateRequest(addressUpdateRequest);
-                    ApiManager apiManager = new ApiManager(Constants.BASE_URL, userData.getToken());
-                    // Hiển thị ProgressDialog khi bắt đầu gọi API
-                    progressDialog.show();
-                    Log.d("asdfasdf", "onClick: " + addressUpdateRequest);
-                    apiManager.updateAddress(new Callback<AddressInsertResponse>() {
-                        @Override
-                        public void onResponse(Call<AddressInsertResponse> call, Response<AddressInsertResponse> response) {
-                            Log.d("asdfasdf", "onClick: " + response);
-
-                            // Ẩn ProgressDialog khi có kết quả hoặc xảy ra lỗi
-                            progressDialog.dismiss();
-                            Log.d("responseresponseresponse", "response: " + response);
-                            if (response.isSuccessful()) {
-                                // Hiển thị thông báo "Add address successfully"
-                                // Gửi broadcast để thông báo cập nhật thành công
-                                Intent intent = new Intent("ADDRESS_UPDATED");
-                                mContext.sendBroadcast(intent);
-                                // Đóng dialog
-                                dialog.dismiss();
-                                // Làm mới hoạt động
-                            } else {
-                                // Xử lý lỗi khi gọi API không thành công
-                                showErrorMessage("Failed to fetch product data");
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<AddressInsertResponse> call, Throwable t) {
-                            Log.d("responseresponseresponse", "t: " + t);
-                            // Ẩn ProgressDialog khi có lỗi
-                            progressDialog.dismiss();
-                            // Xử lý lỗi khi gọi API thất bại
-                            showErrorMessage("Network error. Please try again later.");
-                        }
-                        // Đóng dialog
-                    });
-                } else {
-                    // Hiển thị thông báo lỗi nếu fullName hoặc address trống
-                    showErrorMessage("Full Name and Address are required.");
-                }
-            }
-        });
-
-        editTextFullName.requestFocus();
-
-        // Hiển thị bàn phím ảo
-        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(editTextFullName, InputMethodManager.SHOW_IMPLICIT);
-
-        dialog.show();
-    }
-
     private void fetchApiDelete(Address address) {
         UserData userData = dataManager.getUserData();
         String addressId = address.getId();
         dataManager.setAddressId(addressId);
-        ApiManager apiManager = new ApiManager(Constants.BASE_URL, userData.getToken());
+        ApiManager apiManager = new ApiManager(Constants.BASE_URL, dataManager.getToken());
         // Hiển thị ProgressDialog khi bắt đầu gọi API
         progressDialog.show();
         apiManager.deleteAddress(new Callback<AddressInsertResponse>() {
@@ -295,6 +218,7 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
         CheckBox checkBox;
         TextView txtNameUser;
         TextView txtAddress;
+        TextView txtPhoneNumber;
         ImageView btnEdit;
         ImageView btnDeleteAddress;
 
@@ -304,6 +228,7 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
             checkBox = itemView.findViewById(R.id.checkBox);
             txtNameUser = itemView.findViewById(R.id.txtNameUser);
             txtAddress = itemView.findViewById(R.id.txtAddress);
+            txtPhoneNumber = itemView.findViewById(R.id.txtPhoneNumber);
             btnEdit = itemView.findViewById(R.id.btnEdit);
             btnDeleteAddress = itemView.findViewById(R.id.btnDeleteAddress);
         }

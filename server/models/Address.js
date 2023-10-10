@@ -15,6 +15,10 @@ const addressSchema = new Schema({
         type: String,
         required: true,
     },
+    phoneNumber: {
+        type: String,
+        required: true,
+    },
 });
 
 const address = mongoose.model('Address', addressSchema);

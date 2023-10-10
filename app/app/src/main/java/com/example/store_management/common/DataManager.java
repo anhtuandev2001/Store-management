@@ -13,6 +13,7 @@ import com.example.store_management.cart.Cart;
 import com.example.store_management.cart.CartInsertRequest;
 import com.example.store_management.cart.CartRequest;
 import com.example.store_management.category.Category;
+import com.example.store_management.user.UserFavoriteRequest;
 
 import java.util.List;
 
@@ -42,6 +43,25 @@ public class DataManager {
     private OrderInsertRequest orderInsertRequest;
     private LoginRequest loginRequest;
     private UserAddressRequest userAddressRequest;
+    private String token;
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public UserFavoriteRequest getUserFavoriteRequest() {
+        return userFavoriteRequest;
+    }
+
+    public void setUserFavoriteRequest(UserFavoriteRequest userFavoriteRequest) {
+        this.userFavoriteRequest = userFavoriteRequest;
+    }
+
+    private UserFavoriteRequest userFavoriteRequest;
     private AddressInsertRequest addressInsertRequest;
 
     private String addressId;

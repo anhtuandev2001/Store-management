@@ -46,10 +46,11 @@ public class CheckoutActivity extends AppCompatActivity {
     private UserData userData = dataManager.getUserData();
     private double deliveryPrice = 5.00;
     private double totalPrice;
-    private ApiManager apiManager = new ApiManager(Constants.BASE_URL, userData.getToken());
+    private ApiManager apiManager = new ApiManager(Constants.BASE_URL, dataManager.getToken());
     private Address address;
     private TextView txtNameUser;
     private TextView txtAddress;
+    private boolean isAddress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,7 +107,11 @@ public class CheckoutActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // Show the confirmation dialog when the "Submit" button is clicked
-                showConfirmationDialog();
+                if (isAddress) {
+                    showConfirmationDialog();
+                } else {
+                    showNoDefaultAddressDialog();
+                }
             }
         });
     }
@@ -189,15 +194,17 @@ public class CheckoutActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<AddressInsertResponse> call, Response<AddressInsertResponse> response) {
                 progressDialog.dismiss();
+                Log.d("jaskdjalskd", "onResponse: " + response);
 
                 if (response.isSuccessful()) {
+                    isAddress = true;
                     AddressInsertResponse addressInsertResponse = response.body();
                     address = addressInsertResponse.getAddress();
                     txtNameUser.setText(address.getFullName());
                     txtAddress.setText(address.getAddress());
                 } else {
                     // Handle the case where the API call fails
-                    showSubmissionErrorDialog();
+                    isAddress = false;
                 }
             }
 
@@ -209,4 +216,27 @@ public class CheckoutActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void showNoDefaultAddressDialog() {
+        String message = "You don't have a default address yet. Please add default address.";
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Warning")
+                .setMessage(message)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Người dùng đã xem cảnh báo
+                        dataManager.setCheckout(true);
+                        Intent intent = new Intent(CheckoutActivity.this, AddressActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Người dùng hủy bỏ cảnh báo
+                    }
+                })
+                .show();
+    }
+
 }

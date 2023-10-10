@@ -10,8 +10,12 @@ const getOrderByUserId = async (userId) => {
     if (!order) {
         throw new Exception('Cannot find Order with id ' + userId)
     }
-    return order
+    
+    const reversedOrder = order.reverse();
+    
+    return reversedOrder;
 }
+
 
 const insertOrder = async ({
     orderDate,

@@ -35,7 +35,7 @@ public class CartActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private DataManager dataManager = DataManager.getInstance();
     private UserData userData = dataManager.getUserData();
-    private ApiManager apiManager = new ApiManager(Constants.BASE_URL, userData.getToken());
+    private ApiManager apiManager = new ApiManager(Constants.BASE_URL, dataManager.getToken());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

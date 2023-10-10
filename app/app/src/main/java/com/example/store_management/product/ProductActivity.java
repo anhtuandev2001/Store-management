@@ -32,6 +32,7 @@ import com.example.store_management.category.CategoryAdapter;
 import com.example.store_management.category.CategoryResponse;
 import com.example.store_management.common.Constants;
 import com.example.store_management.common.DataManager;
+import com.example.store_management.favourite.FavoutiteActivity;
 import com.example.store_management.order.OrderActivity;
 import com.example.store_management.user.UserActivity;
 import com.example.store_management.user.UserData;
@@ -180,6 +181,9 @@ public class ProductActivity extends Activity {
                     return true;
                 } else if (item.getItemId() == R.id.navigation_favourite) {
                     // Xử lý khi item "navigation_favourite" được chọn
+                    Intent intent = new Intent(ProductActivity.this, FavoutiteActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(0, 0);
                     return true;
                 } else if (item.getItemId() == R.id.navigation_order) {
                     // Xử lý khi item "navigation_order" được chọn
@@ -199,8 +203,7 @@ public class ProductActivity extends Activity {
     }
 
     private void fetchCategoryAndProductData() {
-        UserData userData = dataManager.getUserData();
-        ApiManager apiManager = new ApiManager(Constants.BASE_URL, userData.getToken());
+        ApiManager apiManager = new ApiManager(Constants.BASE_URL, dataManager.getToken());
         // Hiển thị ProgressDialog khi bắt đầu gọi API
         progressDialog.show();
 

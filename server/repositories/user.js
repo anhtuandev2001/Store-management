@@ -65,7 +65,7 @@ const getUserById = async (userId) => {
   if (!user) {
     throw new Exception('Cannot find product with id ' + userId)
   }
-  return user
+  return { ...user._doc, password: "Not show" }
 }
 
 const updateAddressUser = async ({
@@ -79,9 +79,21 @@ const updateAddressUser = async ({
   return { ...user._doc, password: "Not show" }
 }
 
+const updateFavoriteUser = async ({
+  id,
+  favoritesList,
+}) => {
+  const user = await User.findById(id)
+  debugger
+  user.favoritesList = favoritesList ?? user.favoritesList
+  await user.save()
+  return { ...user._doc, password: "Not show" }
+}
+
 export default {
   login,
   register,
   getUserById,
   updateAddressUser,
+  updateFavoriteUser,
 }

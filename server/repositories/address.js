@@ -27,12 +27,14 @@ const insertAddress = async ({
     fullName,
     address,
     userId,
+    phoneNumber,
 }) => {
     try {
         const addressModal = await Address.create({
             fullName,
             address,
             userId,
+            phoneNumber,
         });
         return addressModal;
     } catch (exception) {
@@ -62,10 +64,12 @@ const updateAddress = async ({
     id,
     fullName,
     address,
+    phoneNumber,
 }) => {
     const addressSever = await Address.findById(id)
     addressSever.fullName = fullName ?? Address.fullName
     addressSever.address = address ?? Address.address
+    addressSever.phoneNumber = phoneNumber ?? Address.phoneNumber
     await addressSever.save()
     return addressSever
 }

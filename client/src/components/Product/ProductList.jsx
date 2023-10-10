@@ -59,7 +59,7 @@ const ProductList = ({ products, categoryList = [] }) => {
   };
 
   const handleEdit = (product) => {
-    const productEdit = products.filter((item) => item.productId == product.id);
+    const productEdit = products.filter((item) => item._id == product.id);
     setItemProduct(productEdit[0]);
     setAction('edit');
     handleOpen();
@@ -100,7 +100,7 @@ const ProductList = ({ products, categoryList = [] }) => {
 
 
   const columns = [
-    { field: 'id', headerName: 'ID', width: 70 },
+    { field: 'id', headerName: 'ID', width: 130 },
     {
       field: 'imagesList',
       headerName: 'Images',
@@ -181,7 +181,7 @@ const ProductList = ({ products, categoryList = [] }) => {
     quantity: item.quantity,
     price: item.price,
     categoryId: findNameCategoryById(item.categoryId),
-    createdAt: item?.createdAt?.split('T')[0],
+    createdAt: item?.createAt,
     colorList: item.colorList,
     imagesList: item.image,
   }));

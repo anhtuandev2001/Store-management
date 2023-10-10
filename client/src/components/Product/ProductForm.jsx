@@ -59,10 +59,11 @@ function ProductForm({ onClose, product, action, categoryList }) {
   }));
 
   const [selectedColors, setSelectedColors] = useState(
-    product && categoryList != []
-      ? (colorOptions || []).filter((item) => product.colorsList == item.value)
-      : []
+    (product?.colorList?.split(',') || []).map((color) => ({
+      label: color.charAt(0).toUpperCase() + color.slice(1),
+    }))
   );
+
   const [selectedCategory, setSelectedCategory] = useState(
     product && categoryList != []
       ? (categoryOptions || []).filter(
@@ -77,7 +78,12 @@ function ProductForm({ onClose, product, action, categoryList }) {
 
   const handleSubmit = async (values) => {
     const currentTime = new Date();
-    const formattedDate = currentTime.toISOString().split('T')[0];
+    const day = currentTime.getDate().toString().padStart(2, '0');
+    const month = (currentTime.getMonth() + 1).toString().padStart(2, '0'); // Lưu ý: Tháng bắt đầu từ 0
+    const year = currentTime.getFullYear();
+
+    // Tạo chuỗi định dạng "10-10-2023"
+    const formattedDate = `${day}-${month}-${year}`;
     values.createAt = formattedDate;
 
     const uniqueValuesArray = [
@@ -90,7 +96,7 @@ function ProductForm({ onClose, product, action, categoryList }) {
     } else {
       resultString = uniqueValuesArray.toString();
     }
-    values.colorsList = resultString;
+    values.colorList = resultString;
     values.categoryId = selectedCategory.value;
 
     values.imagesList = inputImg;

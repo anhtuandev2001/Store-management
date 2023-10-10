@@ -26,6 +26,9 @@ const productSchema = new Schema({
     imagesList: {
         type: Buffer,
     },
+    createAt: {
+        type: String,
+    },
 });
 
 const product = mongoose.model('Product', productSchema);

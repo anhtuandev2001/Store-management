@@ -18,7 +18,16 @@ async function getAllCategory(req, res) {
 async function updateCategory(req, res) {
     try {
         debugger
-        const category = await CategoryRepository.updateCategory(req.body)
+        const { file } = req;
+        const {
+            name,
+            id,
+        } = req.body;
+        const category = await categoryRepository.updateCategory({
+            id,
+            name,
+            imagesList: file.buffer,
+        })
         res.status(HttpStatusCode.OK).json({
             message: 'Update Category successfully',
             data: category,

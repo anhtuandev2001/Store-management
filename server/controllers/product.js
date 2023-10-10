@@ -41,6 +41,7 @@ const insertProduct = async (req, res) => {
             price,
             quantity,
             categoryId,
+            createAt,
         } = req.body;
 
         const product = await productRepository.insertProduct({
@@ -50,6 +51,7 @@ const insertProduct = async (req, res) => {
             price,
             quantity,
             categoryId,
+            createAt,
             imagesList: file.buffer,
         });
 

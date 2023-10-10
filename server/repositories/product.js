@@ -27,6 +27,7 @@ const insertProduct = async ({
     quantity,
     categoryId,
     imagesList,
+    createAt,
 }) => {
     try {
         debugger
@@ -38,6 +39,7 @@ const insertProduct = async ({
             quantity,
             categoryId,
             imagesList,
+            createAt,
         })
         return {
             ...product._doc,

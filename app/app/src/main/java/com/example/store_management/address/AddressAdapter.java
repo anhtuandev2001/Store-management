@@ -157,7 +157,6 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
     }
 
     private void fetchApiDelete(Address address) {
-        UserData userData = dataManager.getUserData();
         String addressId = address.getId();
         dataManager.setAddressId(addressId);
         ApiManager apiManager = new ApiManager(Constants.BASE_URL, dataManager.getToken());
@@ -194,8 +193,8 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
 
     private void showDeleteAddressConfirmationDialog(Address address) {
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setMessage("Are you sure you want to delete this address?")
-                .setTitle("Confirm Deletion")
+        builder.setMessage("Are you sure you want to delete this address??")
+                .setTitle("Confirm Delete")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // Xác nhận người dùng muốn xóa địa chỉ
@@ -212,6 +211,7 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
 
 
     public class AddressViewHolder extends RecyclerView.ViewHolder {

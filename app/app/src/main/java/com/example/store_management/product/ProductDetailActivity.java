@@ -170,7 +170,6 @@ public class ProductDetailActivity extends Activity {
                         favoriteListItems.remove(product.getId());
                         isFavorite = false;
                         setActiveFavorite();
-                        Toast.makeText(ProductDetailActivity.this, "Remove product to favorite successfully", Toast.LENGTH_SHORT).show();
                         // Chuyển danh sách đã chỉnh sửa thành một chuỗi mới
                         newFavoriteList = TextUtils.join(",", favoriteListItems);
                     } else {
@@ -178,7 +177,6 @@ public class ProductDetailActivity extends Activity {
                         newFavoriteList = favoriteList + "," + product.getId();
                         isFavorite = true;
                         setActiveFavorite();
-                        Toast.makeText(ProductDetailActivity.this, "Add product to favorite successfully", Toast.LENGTH_SHORT).show();
                     }
                 }
 

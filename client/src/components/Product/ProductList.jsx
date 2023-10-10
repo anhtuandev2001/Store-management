@@ -43,15 +43,17 @@ const dataGridClass = {
   },
 };
 
+
 const ProductList = ({ products, categoryList = [] }) => {
   const [itemProduct, setItemProduct] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [action, setAction] = useState();
   const { status } = useSelector((state) => state.productManagement);
 
+
   const dispatch = useDispatch();
   const handleDelete = (product) => {
-    setItemProduct({ productId: product?.id });
+    setItemProduct(product?.id);
     setAction('delete');
     handleOpen();
   };
@@ -89,12 +91,13 @@ const ProductList = ({ products, categoryList = [] }) => {
 
   const findNameCategoryById = (userIdToFind) => {
     for (const item of categoryList) {
-      if (item.categoryId === userIdToFind) {
-        return item.categoryName;
+      if (item._id === userIdToFind) {
+        return item.name;
       }
     }
     return null;
   };
+
 
   const columns = [
     { field: 'id', headerName: 'ID', width: 70 },
@@ -179,8 +182,8 @@ const ProductList = ({ products, categoryList = [] }) => {
     price: item.price,
     categoryId: findNameCategoryById(item.categoryId),
     createdAt: item?.createdAt?.split('T')[0],
-    colorList: item.colorsList,
-    imagesList: `http://localhost:3000/products/image/${item._id}`,
+    colorList: item.colorList,
+    imagesList: item.image,
   }));
 
   return (

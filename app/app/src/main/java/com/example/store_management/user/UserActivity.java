@@ -25,7 +25,7 @@ import com.example.store_management.address.AddressResponse;
 import com.example.store_management.api.ApiManager;
 import com.example.store_management.common.Constants;
 import com.example.store_management.common.DataManager;
-import com.example.store_management.favourite.FavoutiteActivity;
+import com.example.store_management.favourite.FavouriteActivity;
 import com.example.store_management.login.LoginActivity;
 import com.example.store_management.order.OrderActivity;
 import com.example.store_management.product.ProductActivity;
@@ -115,7 +115,7 @@ public class UserActivity extends AppCompatActivity {
                     return true;
                 } else if (item.getItemId() == R.id.navigation_favourite) {
                     // Xử lý khi item "navigation_favourite" được chọn
-                    Intent intent = new Intent(UserActivity.this, FavoutiteActivity.class);
+                    Intent intent = new Intent(UserActivity.this, FavouriteActivity.class);
                     startActivity(intent);
                     overridePendingTransition(0, 0);
                     return true;

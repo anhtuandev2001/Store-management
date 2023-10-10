@@ -54,8 +54,8 @@ function ProductForm({ onClose, product, action, categoryList }) {
   };
 
   const categoryOptions = (categoryList || []).map((item) => ({
-    label: item?.categoryName,
-    value: item?.categoryId,
+    label: item?.name,
+    value: item?._id,
   }));
 
   const [selectedColors, setSelectedColors] = useState(
@@ -94,6 +94,7 @@ function ProductForm({ onClose, product, action, categoryList }) {
     values.categoryId = selectedCategory.value;
 
     values.imagesList = inputImg;
+    console.log(values);
     setIsLoading(true);
     if (action === 'create') {
       dispatch(createProduct(values));

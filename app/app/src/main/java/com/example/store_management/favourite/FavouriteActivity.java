@@ -19,7 +19,6 @@ import com.example.store_management.api.ApiManager;
 import com.example.store_management.common.Constants;
 import com.example.store_management.common.DataManager;
 import com.example.store_management.order.OrderActivity;
-import com.example.store_management.order.OrderResponse;
 import com.example.store_management.product.Product;
 import com.example.store_management.product.ProductActivity;
 import com.example.store_management.user.UserActivity;
@@ -35,7 +34,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class FavoutiteActivity extends AppCompatActivity {
+public class FavouriteActivity extends AppCompatActivity {
     private RecyclerView favouritesRecyclerView;
     private List<Product> filteredProductList = new ArrayList<>();
     private DataManager dataManager = DataManager.getInstance();
@@ -65,24 +64,24 @@ public class FavoutiteActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if (item.getItemId() == R.id.navigation_home) {
                     // Chuyển đến ProductActivity khi item "navigation_home" được chọn
-                    Intent intent = new Intent(FavoutiteActivity.this, ProductActivity.class);
+                    Intent intent = new Intent(FavouriteActivity.this, ProductActivity.class);
                     startActivity(intent);
                     overridePendingTransition(0, 0);
                     return true;
                 } else if (item.getItemId() == R.id.navigation_favourite) {
                     // Xử lý khi item "navigation_favourite" được chọn
-                    Intent intent = new Intent(FavoutiteActivity.this, FavoutiteActivity.class);
+                    Intent intent = new Intent(FavouriteActivity.this, FavouriteActivity.class);
                     startActivity(intent);
                     overridePendingTransition(0, 0);
                     return true;
                 } else if (item.getItemId() == R.id.navigation_order) {
                     // Xử lý khi item "navigation_order" được chọn
-                    Intent intent = new Intent(FavoutiteActivity.this, OrderActivity.class);
+                    Intent intent = new Intent(FavouriteActivity.this, OrderActivity.class);
                     startActivity(intent);
                     overridePendingTransition(0, 0);
                     return true;
                 } else if (item.getItemId() == R.id.navigation_person) {
-                    Intent intent = new Intent(FavoutiteActivity.this, UserActivity.class);
+                    Intent intent = new Intent(FavouriteActivity.this, UserActivity.class);
                     startActivity(intent);
                     overridePendingTransition(0, 0);
                     return true;

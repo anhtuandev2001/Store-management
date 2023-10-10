@@ -104,6 +104,8 @@ public class AddressActivity extends AppCompatActivity {
             }
         });
 
+        progressDialog.show();
+
         fetchApi();
     }
 
@@ -124,10 +126,8 @@ public class AddressActivity extends AppCompatActivity {
     }
 
     private void fetchApi() {
-        UserData userData = dataManager.getUserData();
         ApiManager apiManager = new ApiManager(Constants.BASE_URL, dataManager.getToken());
         // Hiển thị ProgressDialog khi bắt đầu gọi API
-        progressDialog.show();
 
         apiManager.getAddress(new Callback<AddressResponse>() {
             @Override
@@ -135,10 +135,15 @@ public class AddressActivity extends AppCompatActivity {
                 // Ẩn ProgressDialog khi có kết quả hoặc xảy ra lỗi
                 progressDialog.dismiss();
                 Log.d("responseresponseresponse", "response: " + response);
+                Log.d("responseresponseresponse", "response: " + response.isSuccessful());
                 if (response.isSuccessful()) {
                     AddressResponse addressResponse = response.body();
+                    Log.d("responseresponseresponse", "addressResponse: " + response);
+
                     if (addressResponse != null) {
                         addressList = addressResponse.getAddressList();
+                        Log.d("responseresponseresponse", "addressList: " + addressList);
+
                         dataManager.setAddressList(addressList);
                         // Lưu vào DataManager
                         setRecycleViewAddress();

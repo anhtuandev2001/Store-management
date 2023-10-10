@@ -16,7 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.store_management.favourite.FavoutiteActivity;
+import com.example.store_management.favourite.FavouriteActivity;
 import com.example.store_management.user.UserData;
 import com.example.store_management.product.ProductActivity;
 import com.example.store_management.R;
@@ -71,7 +71,7 @@ public class OrderActivity extends AppCompatActivity {
                     return true;
                 } else if (item.getItemId() == R.id.navigation_favourite) {
                     // Xử lý khi item "navigation_favourite" được chọn
-                    Intent intent = new Intent(OrderActivity.this, FavoutiteActivity.class);
+                    Intent intent = new Intent(OrderActivity.this, FavouriteActivity.class);
                     startActivity(intent);
                     overridePendingTransition(0, 0);
                     return true;

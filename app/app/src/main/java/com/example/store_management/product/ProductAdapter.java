@@ -3,6 +3,7 @@ package com.example.store_management.product;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,12 +36,14 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
         Product product = mProducts.get(position);
 
+        Log.d("jflajflkasdf", "onBindViewHolder: "+product.getImagesList());
+
         holder.nameTextView.setText(product.getName());
         holder.priceTextView.setText("$ "+String.valueOf(product.getPrice()));
         Glide.with(mContext)
                 .load(product.getImagesList())
                 .placeholder(R.drawable.placeholder_product)
-                .error(R.drawable.product)
+                .error(R.drawable.placeholder_product_error)
                 .fitCenter()
                 .into(holder.imageView);
 

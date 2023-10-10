@@ -32,10 +32,9 @@ import com.example.store_management.category.CategoryAdapter;
 import com.example.store_management.category.CategoryResponse;
 import com.example.store_management.common.Constants;
 import com.example.store_management.common.DataManager;
-import com.example.store_management.favourite.FavoutiteActivity;
+import com.example.store_management.favourite.FavouriteActivity;
 import com.example.store_management.order.OrderActivity;
 import com.example.store_management.user.UserActivity;
-import com.example.store_management.user.UserData;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
@@ -181,7 +180,7 @@ public class ProductActivity extends Activity {
                     return true;
                 } else if (item.getItemId() == R.id.navigation_favourite) {
                     // Xử lý khi item "navigation_favourite" được chọn
-                    Intent intent = new Intent(ProductActivity.this, FavoutiteActivity.class);
+                    Intent intent = new Intent(ProductActivity.this, FavouriteActivity.class);
                     startActivity(intent);
                     overridePendingTransition(0, 0);
                     return true;
@@ -222,6 +221,7 @@ public class ProductActivity extends Activity {
                     ProductResponse productResponse = response.body();
                     if (productResponse != null) {
                         productList = productResponse.getProductList();
+                        Log.d("productlisttest", "onResponse: "+productList);
                         // Lưu vào DataManager
                         dataManager.setProductList(productList);
                         setRecycleViewProduct(productList);

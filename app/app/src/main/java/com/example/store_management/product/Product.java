@@ -64,6 +64,7 @@ public class Product implements Serializable {
                 ", name='" + name + '\'' +
                 ", price=" + price +
                 ", color='" + colorList + '\'' +
+                ", image='" + image + '\'' +
                 // Các thông tin khác
                 '}';
     }

@@ -1,12 +1,11 @@
 // @ts-nocheck
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-const baseURL = 'http://localhost:3000/products';
+const baseURL = 'http://192.168.1.16:3000';
+const token = localStorage.getItem('jwtToken');
 
 const getAllProduct = createAsyncThunk('GET_PRODUCT_LIST', async () => {
-  const token = localStorage.getItem('token');
-  console.log(token);
-  const result = await axios.get(`${baseURL}`, {
+  const result = await axios.get(`${baseURL}/products`, {
     headers: {
       // Thêm token vào header
       Authorization: `Bearer ${token}`,
@@ -22,20 +21,22 @@ const createProduct = createAsyncThunk(
     for (const key in requestData) {
       formData.append(key, requestData[key]);
     }
+    console.log(formData);
     const response = await axios.post(`${baseURL}/products`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${token}`,
       },
     });
   }
 );
 
-const deleteProduct = createAsyncThunk('DELETE_PRODUCT', async (formData) => {
-  const response = await axios.delete(`${baseURL}/products`, {
+const deleteProduct = createAsyncThunk('DELETE_PRODUCT', async (productId) => {
+  const response = await axios.delete(`${baseURL}/${productId}`, {
     headers: {
-      'Content-Type': 'application/json',
+      // Thêm token vào header
+      Authorization: `Bearer ${token}`,
     },
-    data: formData,
   });
 });
 
@@ -55,7 +56,12 @@ const updateProduct = createAsyncThunk(
 );
 
 const getAllCategory = createAsyncThunk('GET_CATEGORY_LIST', async () => {
-  const result = await axios.get(`${baseURL}/category`);
+  const result = await axios.get(`${baseURL}/category`, {
+    headers: {
+      // Thêm token vào header
+      Authorization: `Bearer ${token}`,
+    },
+  });
   return result.data.data;
 });
 

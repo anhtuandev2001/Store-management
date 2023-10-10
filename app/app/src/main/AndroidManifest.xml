@@ -22,7 +22,7 @@
             android:name=".user.SettingActivity"
             android:exported="false" />
         <activity
-            android:name=".favourite.FavoutiteActivity"
+            android:name=".favourite.FavouriteActivity"
             android:exported="false" />
         <activity
             android:name=".address.AddressActivity"

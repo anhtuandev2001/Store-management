@@ -23,14 +23,13 @@ const style = {
 export function Product() {
   const dispatch = useDispatch();
   const { productList } = useSelector((state) => state.productManagement);
-  console.log(productList);
   const { status } = useSelector((state) => state.productManagement);
   const { categoryList } = useSelector((state) => state.productManagement);
 
   useEffect(() => {
     dispatch(handleLoading(true));
     dispatch(getAllProduct());
-    // dispatch(getAllCategory());
+    dispatch(getAllCategory());
   }, []);
   useEffect(() => {
     if (
@@ -40,6 +39,8 @@ export function Product() {
     )
       dispatch(handleLoading(false));
   }, [productList]);
+
+  console.log(categoryList);
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -52,7 +53,7 @@ export function Product() {
           Add Product
         </Button>
       </div>
-      <ProductList products={productList} />
+      <ProductList products={productList} categoryList={categoryList}/>
       <Modal
         // @ts-ignore
         open={open}

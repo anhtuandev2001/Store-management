@@ -13,7 +13,7 @@ router.use('/image/:categoryId', (req, res, next) => {
 });
 
 router.get('/', categoryController.getAllCategory);
-router.patch('/', categoryController.updateCategory);
+router.patch('/', upload.single('imagesList'), categoryController.updateCategory);
 router.post('/', upload.single('imagesList'), categoryController.insertCategory);
 router.delete('/:categoryId', categoryController.deleteCategory);
 router.get('/image/:categoryId', categoryController.getCategoryImage);

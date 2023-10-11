@@ -20,7 +20,7 @@ const validationSchema = Yup.object().shape({
 
 function AccountForm({ action, account, onClose }) {
   const dispatch = useDispatch();
-  const { status } = useSelector((state) => state.productManagement);
+  const { status } = useSelector((state) => state.userManagement);
   const initialValues = {
     name: account ? account.name : '',
     email: account ? account.email : '',
@@ -32,6 +32,8 @@ function AccountForm({ action, account, onClose }) {
     setIsLoading(true);
     dispatch(createUser(value));
   };
+
+  console.log(status);
 
   useEffect(() => {
     if (status.createUser === 'success' || status.createUser === 'error') {

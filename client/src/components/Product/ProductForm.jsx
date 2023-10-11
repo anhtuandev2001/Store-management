@@ -100,7 +100,6 @@ function ProductForm({ onClose, product, action, categoryList }) {
     values.categoryId = selectedCategory.value;
 
     values.imagesList = inputImg;
-    console.log(values);
     setIsLoading(true);
     if (action === 'create') {
       dispatch(createProduct(values));

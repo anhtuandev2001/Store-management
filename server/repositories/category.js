@@ -68,7 +68,10 @@ const updateCategory = async ({
     category.name = name ?? category.name
     category.imagesList = imagesList ?? category.imagesList
     await category.save()
-    return category
+    return {
+        ...category._doc,
+        imagesList: null,
+    }
 }
 
 export default {

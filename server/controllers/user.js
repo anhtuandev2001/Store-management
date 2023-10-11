@@ -79,6 +79,21 @@ const getDetailUser = async (req, res) => {
   }
 }
 
+const getAllUser = async (req, res) => {
+  try {
+    debugger
+    const user = await userRepository.getAllUser()
+    res.status(HttpStatusCode.OK).json({
+      message: 'get user successfully',
+      data: user,
+    })
+  } catch (exception) {
+    res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
+      message: exception.message,
+    })
+  }
+}
+
 async function updateAddressUser(req, res) {
   try {
     debugger
@@ -110,6 +125,7 @@ async function updateFavoriteUser(req, res) {
 }
 
 export default {
+  getAllUser,
   login,
   register,
   getDetailUser,

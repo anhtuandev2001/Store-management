@@ -32,7 +32,7 @@ const dataGridClass = {
 
 const AccountList = ({ accounts }) => {
   const columns = [
-    { field: 'id', headerName: 'ID', width: 70 },
+    { field: 'id', headerName: 'ID', width: 220 },
     {
       field: 'name',
       headerName: 'Name',
@@ -41,42 +41,32 @@ const AccountList = ({ accounts }) => {
     {
       field: 'email',
       headerName: 'Email',
-      width: 200,
+      width: 220,
       renderCell: (params) => (
         <Tooltip title={params.value}>
           <span>{params.value}</span>
         </Tooltip>
       ),
     },
-    // {
-    //   field: 'defaultPaymentId',
-    //   headerName: 'Default PaymentId',
-    //   width: 160,
-    // },
-    // {
-    //   field: 'defaultShippingId',
-    //   headerName: 'Default ShippingId',
-    //   width: 160,
-    // },
-    // {
-    //   field: 'favouriteList',
-    //   headerName: 'Favourite List',
-    //   width: 130,
-    // },
     {
-      field: 'cardList',
-      headerName: 'Card List',
-      width: 130,
+      field: 'defaultShippingId',
+      headerName: 'Default ShippingId',
+      width: 220,
+    },
+    {
+      field: 'favoritesList',
+      headerName: 'Favorite List',
+      width: 220,
     },
   ];
 
   const rows = (accounts || []).map((item) => ({
-    id: item.userId,
+    id: item._id,
     name: item.name,
     email: item.email,
-    // defaultPaymentId: item.defaultPaymentId,
-    // defaultShippingId: item.defaultShippingId,
-    // favouriteList: item.favouriteList,
+    defaultPaymentId: item.defaultPaymentId,
+    defaultShippingId: item.default_shipping_id,
+    favoritesList: item.favoritesList,
     cardList: item.cardList,
   }));
 

@@ -53,7 +53,6 @@ const Register = () => {
     setIsLoading(true);
   };
 
-  console.log(status);
 
   useEffect(() => {
     if (status.createUser === 'success' || status.createUser === 'error') {

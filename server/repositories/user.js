@@ -34,7 +34,8 @@ const register = async ({
   email,
   password,
   phoneNumber,
-  address
+  address,
+  role
 }) => {
   debugger;
   const existingUser = await User.findOne({ email }).exec();
@@ -53,6 +54,7 @@ const register = async ({
     password: hashedPassword,
     phoneNumber,
     address,
+    role: role ?? 'user'
   });
   return {
     ...newUser._doc,
@@ -66,6 +68,30 @@ const getUserById = async (userId) => {
     throw new Exception('Cannot find product with id ' + userId)
   }
   return { ...user._doc, password: "Not show" }
+}
+
+const deleteUser = async (userId) => {
+  try {
+    const user = await User.findByIdAndDelete(userId);
+    if (!user) {
+      throw new Error('User not found');
+    }
+    return {
+      message: 'User deleted successfully',
+      data: null,
+    };
+  } catch (exception) {
+    throw new Error('Error deleting user: ' + exception.message);
+  }
+}
+
+const getAllUser = async () => {
+  const user = await User.find()
+  if (!user) {
+    throw new Exception('Cannot find user')
+  }
+  const newUsers = user.map((item) => ({ ...item._doc, password: 'Not show' }))
+  return newUsers
 }
 
 const updateAddressUser = async ({
@@ -91,6 +117,8 @@ const updateFavoriteUser = async ({
 }
 
 export default {
+  deleteUser,
+  getAllUser,
   login,
   register,
   getUserById,

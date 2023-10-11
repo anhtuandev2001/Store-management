@@ -6,17 +6,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
 import {
   createCategory,
-  getAllProduct,
-  updateCategory
+  getAllCategory,
+  updateCategory,
 } from '../../store/slices/productManagementSlice/productReduce';
 
 import { LoadingButton } from '@mui/lab';
 import { handleLoading } from '../../store/slices/loadingSlice';
 import { clearStatus } from '../../store/slices/productManagementSlice/productManagementSlice';
 
-
 const validationSchema = Yup.object().shape({
-  name: Yup.string().required('Product name is required'),
+  name: Yup.string().required('Category name is required'),
 });
 
 function CategoryForm({ onClose, category, action }) {
@@ -29,52 +28,43 @@ function CategoryForm({ onClose, category, action }) {
   const dispatch = useDispatch();
   const { status } = useSelector((state) => state.productManagement);
 
+
   const handleSubmit = async (values) => {
-    values.imageList = inputImg;
-    console.log(values);
-    
+    values.imagesList = inputImg;
+    setIsLoading(true)
+
     if (action === 'create') {
       dispatch(createCategory(values));
     } else {
-      values = { ...values, id: category.id };
+      values = { ...values, id: category._id };
       dispatch(updateCategory(values));
     }
   };
 
   useEffect(() => {
     if (
-      status.createProduct === 'success' ||
-      status.createProduct === 'error' ||
-      status.updateProduct === 'success' ||
-      status.updateProduct === 'error'
+      status.createCategory === 'success' ||
+      status.createCategory === 'error' ||
+      status.updateCategory === 'success' ||
+      status.updateCategory === 'error'
     ) {
       setIsLoading(false);
     }
     if (
-      status.createProduct === 'success' ||
-      status.updateProduct === 'success'
+      status.createCategory === 'success' ||
+      status.updateCategory === 'success'
     ) {
       dispatch(clearStatus());
       dispatch(handleLoading(true));
-      dispatch(getAllProduct());
+      dispatch(getAllCategory());
       onClose();
     }
   }, [status]);
-
 
   const handleChangeInputImg = (event) => {
     if (event) {
       setInputImg(event.target.files[0]);
     }
-  };
-
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
-  const handleSubmitDelete = () => {
-    setIsLoading(true);
-    dispatch(deleteProduct(itemProduct));
   };
 
   return (
@@ -88,7 +78,7 @@ function CategoryForm({ onClose, category, action }) {
         <Form>
           <div className='mb-4'>
             <label htmlFor='name' className='block text-sm font-medium'>
-              Product Name:
+              Category Name:
             </label>
             <Field
               type='text'
@@ -103,7 +93,7 @@ function CategoryForm({ onClose, category, action }) {
               className='text-red-500 text-sm'
             />
           </div>
-          
+
           <div className='mb-4'>
             <label htmlFor='imagesList' className='block text-sm font-medium'>
               Image:
@@ -134,7 +124,6 @@ function CategoryForm({ onClose, category, action }) {
           </div>
         </Form>
       </Formik>
-      
     </div>
   );
 }

@@ -26,8 +26,8 @@ function AccountManagement() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const { accountList } = useSelector((state) => state.productManagement);
-  const { status } = useSelector((state) => state.productManagement);
+  const { accountList } = useSelector((state) => state.userManagement);
+  const { status } = useSelector((state) => state.userManagement);
 
   useEffect(() => {
     dispatch(getAllAccount());

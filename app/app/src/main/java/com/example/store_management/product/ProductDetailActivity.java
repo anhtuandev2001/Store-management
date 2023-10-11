@@ -397,9 +397,9 @@ public class ProductDetailActivity extends Activity {
 
     private void setActiveFavorite() {
         if (isFavorite) {
-            btnFavorite.setImageResource(R.drawable.favourite_checked);
+            btnFavorite.setImageResource(R.drawable.favorited);
         } else {
-            btnFavorite.setImageResource(R.drawable.favourite_detail);
+            btnFavorite.setImageResource(R.drawable.favorite1);
         }
     }
 }

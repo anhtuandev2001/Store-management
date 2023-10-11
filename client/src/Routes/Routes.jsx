@@ -4,6 +4,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import App from '../App';
 import LoadingPage from '../pages/LoadingPage';
 import {
+  AccountPage,
   ChartManagementPage,
   ErrorPage,
   LoginPage,
@@ -30,6 +31,7 @@ const Routers = () => {
       >
         <Route path='/' element={<Navigate to='/product' replace={true} />} />
         <Route path='product' element={<ProductPage />} />
+        <Route path='account' element={<AccountPage />} />
         <Route path='statistical' element={<ChartManagementPage />} />
         <Route path='*' element={<ErrorPage />} />
       </Route>

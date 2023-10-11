@@ -5,7 +5,7 @@ import { baseURL } from '../../../assets/enum/constants';
 const token = localStorage.getItem('jwtToken');
 
 const getAllProduct = createAsyncThunk('GET_PRODUCT_LIST', async () => {
-  const result = await axios.get(`${baseURL}/products`, {
+  const result = await axios.get(`${baseURL}products`, {
     headers: {
       // Thêm token vào header
       Authorization: `Bearer ${token}`,
@@ -21,8 +21,7 @@ const createProduct = createAsyncThunk(
     for (const key in requestData) {
       formData.append(key, requestData[key]);
     }
-    console.log(formData);
-    const response = await axios.post(`${baseURL}/products`, formData, {
+    const response = await axios.post(`${baseURL}products`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${token}`,
@@ -32,7 +31,7 @@ const createProduct = createAsyncThunk(
 );
 
 const deleteProduct = createAsyncThunk('DELETE_PRODUCT', async (productId) => {
-  const response = await axios.delete(`${baseURL}/products/${productId}`, {
+  const response = await axios.delete(`${baseURL}products/${productId}`, {
     headers: {
       // Thêm token vào header
       Authorization: `Bearer ${token}`,
@@ -47,7 +46,7 @@ const updateProduct = createAsyncThunk(
     for (const key in requestData) {
       formData.append(key, requestData[key]);
     }
-    const response = await axios.post(`${baseURL}/products`, formData, {
+    const response = await axios.post(`${baseURL}products`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -56,7 +55,7 @@ const updateProduct = createAsyncThunk(
 );
 
 const getAllCategory = createAsyncThunk('GET_CATEGORY_LIST', async () => {
-  const result = await axios.get(`${baseURL}/category`, {
+  const result = await axios.get(`${baseURL}category`, {
     headers: {
       // Thêm token vào header
       Authorization: `Bearer ${token}`,
@@ -68,16 +67,22 @@ const getAllCategory = createAsyncThunk('GET_CATEGORY_LIST', async () => {
 const createCategory = createAsyncThunk(
   'CREATE_CATEGORY',
   async (requestData) => {
-    const response = await axios.post(`${baseURL}/category`, requestData);
+    const response = await axios.post(`${baseURL}category`, requestData, {
+      headers: {
+        // Thêm token vào header
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${token}`,
+      },
+    });
   }
 );
 
 const updateCategory = createAsyncThunk(
   'UPDATE_CATEGORY',
   async (requestData) => {
-    const response = await axios.post(`${baseURL}/category`, requestData, {
+    const response = await axios.post(`${baseURL}category`, requestData, {
       headers: {
-        // Thêm token vào header
+        'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${token}`,
       },
     });
@@ -87,19 +92,23 @@ const updateCategory = createAsyncThunk(
 const deleteCategory = createAsyncThunk(
   'DELETE_CATEGORY',
   async (requestData) => {
-    const response = await axios.delete(`${baseURL}/category/${requestData}`);
+    const response = await axios.delete(`${baseURL}category/${requestData}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
   }
 );
 
 const getAllOrder = createAsyncThunk('GET_ORDER_LIST', async () => {
-  const result = await axios.get(`${baseURL}/order`);
+  const result = await axios.get(`${baseURL}order`);
   return result.data;
 });
 
 const changeStatusOrder = createAsyncThunk(
   'CHANGE_STATUS_ORDER',
   async (requestData) => {
-    const response = await axios.post(`${baseURL}/order`, requestData);
+    const response = await axios.post(`${baseURL}order`, requestData);
     return response.data;
   }
 );

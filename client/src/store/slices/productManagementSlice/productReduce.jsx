@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-const baseURL = 'http://192.168.10.11:3000';
+import { baseURL } from '../../../assets/enum/constants';
 const token = localStorage.getItem('jwtToken');
 
 const getAllProduct = createAsyncThunk('GET_PRODUCT_LIST', async () => {

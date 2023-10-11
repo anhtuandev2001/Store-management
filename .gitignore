@@ -12,7 +12,7 @@ node_modules
 dist
 dist-ssr
 constants.js
-app\app\src\main\java\com\example\store_management\common\Constants.java
+Constants.java
 *.local
 
 # Editor directories and files

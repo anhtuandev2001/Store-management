@@ -11,9 +11,7 @@ node_modules
 .env
 dist
 dist-ssr
-server/Global/constants.js
-app\app\src\main\java\com\example\store_management\common\Constants.java
-client\src\assets\enum\constants.js
+constants.js
 *.local
 
 # Editor directories and files

@@ -1,20 +1,18 @@
 // @ts-nocheck
-import { Autocomplete, Button, TextField } from '@mui/material';
+import { Button } from '@mui/material';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
 import {
   createCategory,
-  createProduct,
   getAllProduct,
-  updateCategory,
-  updateProduct,
+  updateCategory
 } from '../../store/slices/productManagementSlice/productReduce';
 
 import { LoadingButton } from '@mui/lab';
-import { clearStatus } from '../../store/slices/productManagementSlice/productManagementSlice';
 import { handleLoading } from '../../store/slices/loadingSlice';
+import { clearStatus } from '../../store/slices/productManagementSlice/productManagementSlice';
 
 
 const validationSchema = Yup.object().shape({
@@ -26,7 +24,6 @@ function CategoryForm({ onClose, category, action }) {
     name: category ? category.name : '',
   };
 
-  
   const [inputImg, setInputImg] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
@@ -39,7 +36,7 @@ function CategoryForm({ onClose, category, action }) {
     if (action === 'create') {
       dispatch(createCategory(values));
     } else {
-      values = { ...values, id: product.productId };
+      values = { ...values, id: category.id };
       dispatch(updateCategory(values));
     }
   };
@@ -69,6 +66,15 @@ function CategoryForm({ onClose, category, action }) {
     if (event) {
       setInputImg(event.target.files[0]);
     }
+  };
+
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  const handleSubmitDelete = () => {
+    setIsLoading(true);
+    dispatch(deleteProduct(itemProduct));
   };
 
   return (
@@ -128,6 +134,7 @@ function CategoryForm({ onClose, category, action }) {
           </div>
         </Form>
       </Formik>
+      
     </div>
   );
 }

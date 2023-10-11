@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-const baseURL = 'http://192.168.1.16:3000';
+const baseURL = 'http://192.168.10.11:3000';
 const token = localStorage.getItem('jwtToken');
 
 const getAllProduct = createAsyncThunk('GET_PRODUCT_LIST', async () => {
@@ -32,7 +32,7 @@ const createProduct = createAsyncThunk(
 );
 
 const deleteProduct = createAsyncThunk('DELETE_PRODUCT', async (productId) => {
-  const response = await axios.delete(`${baseURL}/${productId}`, {
+  const response = await axios.delete(`${baseURL}/products/${productId}`, {
     headers: {
       // Thêm token vào header
       Authorization: `Bearer ${token}`,
@@ -75,7 +75,12 @@ const createCategory = createAsyncThunk(
 const updateCategory = createAsyncThunk(
   'UPDATE_CATEGORY',
   async (requestData) => {
-    const response = await axios.post(`${baseURL}/category`, requestData);
+    const response = await axios.post(`${baseURL}/category`, requestData, {
+      headers: {
+        // Thêm token vào header
+        Authorization: `Bearer ${token}`,
+      },
+    });
   }
 );
 

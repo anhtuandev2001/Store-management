@@ -33,7 +33,6 @@ export function Product() {
   const [modalType, setModalType] = useState();
   const [categoryItem, setCategoryItem] = useState();
 
-
   useEffect(() => {
     dispatch(handleLoading(true));
     dispatch(getAllProduct());
@@ -42,7 +41,8 @@ export function Product() {
   useEffect(() => {
     if (
       status.productInfo === 'success' ||
-      (status.productInfo === 'error' && status.categoryList === 'success') ||
+      status.productInfo === 'error' ||
+      status.categoryList === 'success' ||
       status.categoryList === 'error'
     )
       dispatch(handleLoading(false));
@@ -71,15 +71,56 @@ export function Product() {
     setModalType('category');
     handleOpen();
   };
+  const CategoryList = () => {
+    const handleEditCategory = (category) => {
+      console.log(category);
+      handleCategory();
+      handleCloseMenu();
+      setCategoryItem(category);
+    };
 
-  const handleEditCategory = (category) =>{
-    console.log(category);
-    handleCategory();
-    handleCloseMenu();
-    setCategoryItem(category)
-  }
+    const handleDeleteCategory = (item) => {};
 
-  console.log(categoryItem);
+    return (
+      <Menu
+        id='basic-menu'
+        anchorEl={anchorEl}
+        open={openMenu}
+        onClose={handleCloseMenu}
+        MenuListProps={{
+          'aria-labelledby': 'basic-button',
+        }}
+      >
+        {(categoryList || []).map((item) => (
+          <MenuItem key={uuidv4()}>
+            <div className='w-full flex gap-4 justify-between'>
+              <span>{item.name}</span>
+              <div className='flex gap-2'>
+                <Button
+                  className='min-w-[20px]'
+                  sx={{
+                    minWidth: 'unset',
+                  }}
+                  onClick={() => handleDeleteCategory(item)}
+                >
+                  <AiOutlineDelete />
+                </Button>
+                <Button
+                  className='min-w-[20px]'
+                  sx={{
+                    minWidth: 'unset',
+                  }}
+                  onClick={() => handleEditCategory(item)}
+                >
+                  <AiFillEdit />
+                </Button>
+              </div>
+            </div>
+          </MenuItem>
+        ))}
+      </Menu>
+    );
+  };
 
   return (
     <div>
@@ -100,47 +141,10 @@ export function Product() {
             Add Product
           </Button>
         </div>
-        <Menu
-          id='basic-menu'
-          anchorEl={anchorEl}
-          open={openMenu}
-          onClose={handleCloseMenu}
-          MenuListProps={{
-            'aria-labelledby': 'basic-button',
-          }}
-        >
-          {(categoryList || []).map((item) => (
-            <MenuItem key={uuidv4()}>
-              <div className='w-full flex gap-4 justify-between'>
-                <span>{item.name}</span>
-                <div className='flex gap-2'>
-                  <Button
-                    className='min-w-[20px]'
-                    sx={{
-                      minWidth: 'unset',
-                    }}
-                    onClick={() => handleEditCategory(item)}
-                  >
-                    <AiOutlineDelete />
-                  </Button>
-                  <Button
-                    className='min-w-[20px]'
-                    sx={{
-                      minWidth: 'unset',
-                    }}
-                    onClick={() => handleEditCategory(item)}
-                  >
-                    <AiFillEdit />
-                  </Button>
-                </div>
-              </div>
-            </MenuItem>
-          ))}
-        </Menu>
       </div>
       <ProductList products={productList} categoryList={categoryList} />
+      <CategoryList />
       <Modal
-        // @ts-ignore
         open={open}
         onClose={handleClose}
         aria-labelledby='modal-modal-title'
@@ -154,7 +158,11 @@ export function Product() {
               categoryList={categoryList}
             />
           ) : (
-            <CategoryForm onClose={handleClose} category={categoryItem} action='update'/>
+            <CategoryForm
+              onClose={handleClose}
+              category={categoryItem}
+              action='update'
+            />
           )}
         </Box>
       </Modal>

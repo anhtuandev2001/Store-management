@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
 import { handleLoading } from '../../store/slices/loadingSlice';
-import { clearStatus } from '../../store/slices/userManagementSlice/userManagementSlice';
+import { clearStatusUser } from '../../store/slices/userManagementSlice/userManagementSlice';
 import {
   createUser,
   getAllAccount,
@@ -20,7 +20,7 @@ const validationSchema = Yup.object().shape({
 
 function AccountForm({ action, account, onClose }) {
   const dispatch = useDispatch();
-  const { status } = useSelector((state) => state.userManagement);
+  const { statusUser } = useSelector((state) => state.userManagement);
   const initialValues = {
     name: account ? account.name : '',
     email: account ? account.email : '',
@@ -33,19 +33,19 @@ function AccountForm({ action, account, onClose }) {
     dispatch(createUser(value));
   };
 
-  console.log(status);
+  console.log(statusUser);
 
   useEffect(() => {
-    if (status.createUser === 'success' || status.createUser === 'error') {
+    if (statusUser.createUser === 'success' || statusUser.createUser === 'error') {
       setIsLoading(false);
     }
-    if (status.createUser === 'success') {
+    if (statusUser.createUser === 'success') {
       dispatch(getAllAccount());
       dispatch(handleLoading(true));
-      dispatch(clearStatus());
+      dispatch(clearStatusUser());
       onClose();
     }
-  }, [status]);
+  }, [statusUser]);
   return (
     <div>
       <div className='mx-auto p-6 shadow-lg text-[#42526e]'>

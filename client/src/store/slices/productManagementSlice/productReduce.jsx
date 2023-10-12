@@ -101,8 +101,13 @@ const deleteCategory = createAsyncThunk(
 );
 
 const getAllOrder = createAsyncThunk('GET_ORDER_LIST', async () => {
-  const result = await axios.get(`${baseURL}order`);
-  return result.data;
+  const result = await axios.get(`${baseURL}order`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    },
+  });
+  console.log(result.data.data);
+  return result.data.data;
 });
 
 const changeStatusOrder = createAsyncThunk(

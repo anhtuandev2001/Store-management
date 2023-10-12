@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import * as Yup from 'yup';
 import logo from '../../assets/icon/logoBlueOC.png';
-import { clearStatus } from '../../store/slices/userManagementSlice/userManagementSlice';
+import { clearStatusUser } from '../../store/slices/userManagementSlice/userManagementSlice';
 import { createUser } from '../../store/slices/userManagementSlice/userReduce';
 
 const Register = () => {

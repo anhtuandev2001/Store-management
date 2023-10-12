@@ -5,7 +5,7 @@ const initialState = {
   accountList: [],
   token: localStorage.getItem('jwtToken') || null,
   login: {},
-  status: {
+  statusUser: {
     loginUser: '',
     accountList: '',
     createUser: '',
@@ -16,8 +16,8 @@ const userManagementSlice = createSlice({
   name: 'userManagement',
   initialState,
   reducers: {
-    clearStatus: (state) => {
-      state.status = {
+    clearStatusUser: (state) => {
+      state.statusUser = {
         loginUser: '',
         accountList: '',
         createUser: '',
@@ -36,16 +36,16 @@ const userManagementSlice = createSlice({
     builder
       // //get Account List
       .addCase(getAllAccount.fulfilled, (state, action) => {
-        state.status = {
-          ...state.status,
+        state.statusUser = {
+          ...state.statusUser,
           accountList: 'success',
         };
         state.accountList = action.payload;
       })
       .addCase(getAllAccount.rejected, (state) => {
         toast.error('No response from server');
-        state.status = {
-          ...state.status,
+        state.statusUser = {
+          ...state.statusUser,
           accountList: 'error',
         };
         state.accountList = [];
@@ -54,15 +54,15 @@ const userManagementSlice = createSlice({
       //createUser
       .addCase(createUser.fulfilled, (state, action) => {
         toast.success('Create Successfully');
-        state.status = {
-          ...state.status,
+        state.statusUser = {
+          ...state.statusUser,
           createUser: 'success',
         };
       })
       .addCase(createUser.rejected, (state) => {
         toast.error('Create Error');
-        state.status = {
-          ...state.status,
+        state.statusUser = {
+          ...state.statusUser,
           createUser: 'error',
         };
       })
@@ -70,21 +70,21 @@ const userManagementSlice = createSlice({
       // login
       .addCase(loginUser.fulfilled, (state, action) => {
         toast.success('Login Success');
-        state.status = {
-          ...state.status,
+        state.statusUser = {
+          ...state.statusUser,
           loginUser: 'success',
         };
         state.login = action.payload.data;
       })
       .addCase(loginUser.rejected, (state) => {
         toast.error('Login Error');
-        state.status = {
-          ...state.status,
+        state.statusUser = {
+          ...state.statusUser,
           loginUser: 'error',
         };
       });
   },
 });
-export const { clearStatus, actionLogin, actionLogout } =
+export const { clearStatusUser, actionLogin, actionLogout } =
   userManagementSlice.actions;
 export default userManagementSlice.reducer;

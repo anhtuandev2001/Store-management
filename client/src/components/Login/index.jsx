@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import * as Yup from 'yup';
 import logo from '../../assets/icon/logoBlueOC.png';
 import {
-  clearStatus,
+  clearStatusUser,
   actionLogin,
 } from '../../store/slices/userManagementSlice/userManagementSlice';
 import { loginUser } from '../../store/slices/userManagementSlice/userReduce';

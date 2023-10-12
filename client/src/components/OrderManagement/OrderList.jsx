@@ -11,8 +11,9 @@ import {
   getAllOrder,
 } from '../../store/slices/productManagementSlice/productReduce';
 import { LoadingButton } from '@mui/lab';
-import { clearStatus } from '../../store/slices/productManagementSlice/productManagementSlice';
+import { clearStatusUser } from '../../store/slices/userManagementSlice/userManagementSlice';
 import { handleLoading } from '../../store/slices/loadingSlice';
+import { getAllAccount } from '../../store/slices/userManagementSlice/userReduce';
 
 const style = {
   position: 'absolute',
@@ -52,12 +53,10 @@ const OrderList = ({ orderList }) => {
   const [dataChange, setDataChange] = useState();
   const [total, setTotal] = useState();
   const { status } = useSelector((state) => state.productManagement);
-  const { accountList } = useSelector((state) => state.productManagement);
+  const { accountList } = useSelector((state) => state.userManagement);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(getAllAccount());
-  }, []);
+  useEffect(() => {}, []);
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -81,10 +80,12 @@ const OrderList = ({ orderList }) => {
     setOrderView(orderView);
   };
 
+  console.log(accountList);
+
   const findNameById = (userIdToFind) => {
     for (const item of accountList) {
-      if (item.userId === userIdToFind) {
-        return item.name;
+      if (item._id === userIdToFind) {
+        return item.email;
       }
     }
     return null;
@@ -127,7 +128,7 @@ const OrderList = ({ orderList }) => {
   }, [status]);
 
   const columns = [
-    { field: 'id', headerName: 'ID', width: 70 },
+    { field: 'id', headerName: 'ID', width: 220 },
     {
       field: 'orderDate',
       headerName: 'Order Date',
@@ -141,7 +142,7 @@ const OrderList = ({ orderList }) => {
     {
       field: 'userId',
       headerName: 'User',
-      width: 130,
+      width: 220,
     },
     {
       field: 'action',
@@ -171,20 +172,20 @@ const OrderList = ({ orderList }) => {
     },
   ];
 
-  const rows = (orderList || []).map((item) => ({
-    id: item.orderId,
-    orderDate: item.orderDate.split('T')[0],
-    status:
-      item.status == 0
-        ? 'Confirming'
-        : item.status == 1
-        ? 'Processing'
-        : item.status == 2
-        ? 'Deliveried'
-        : 'Cancel',
-    userId: findNameById(item.userId),
-    orderDetail: item.orderDetail,
-  }));
+  const rows =
+    orderList &&
+    orderList.map((item) => ({
+      id: item._id,
+      orderDate: item.orderDate.split('T')[0],
+      status:
+        item.status == 0
+          ? 'Processing'
+          : item.status == 1
+          ? 'Deliveried'
+          : 'Cancel',
+      userId: findNameById(item.userId),
+      orderDetail: item.orderDetail,
+    }));
 
   return (
     <div className='overflow-scroll'>

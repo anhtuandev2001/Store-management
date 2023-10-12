@@ -60,7 +60,7 @@ export function Product() {
       <div className='flex justify-between items-center full-w py-4 text-[#6B778C]'>
         <span>Product Manager</span>
         <div className='flex gap-2'>
-          <Button id='basic-button' onClick={handleClickMenu}>
+          <Button variant='contained' id='basic-button' onClick={handleClickMenu}>
             Category
           </Button>
           <Button variant='contained' onClick={handleOpenModal}>

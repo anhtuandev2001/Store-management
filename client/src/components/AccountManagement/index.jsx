@@ -27,7 +27,7 @@ function AccountManagement() {
   const handleClose = () => setOpen(false);
 
   const { accountList } = useSelector((state) => state.userManagement);
-  const { status } = useSelector((state) => state.userManagement);
+  const { statusUser } = useSelector((state) => state.userManagement);
 
   useEffect(() => {
     dispatch(getAllAccount());
@@ -35,7 +35,7 @@ function AccountManagement() {
   }, []);
 
   useEffect(() => {
-    if (status.accountList === 'success' || status.accountList === 'error')
+    if (statusUser.accountList === 'success' || statusUser.accountList === 'error')
       dispatch(handleLoading(false));
   }, [accountList]);
 

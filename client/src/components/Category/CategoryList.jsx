@@ -96,16 +96,9 @@ const CategoryList = ({
           'aria-labelledby': 'basic-button',
         }}
       >
-        <MenuItem>
-          <Button
-            className='min-w-[20px]'
-            sx={{
-              minWidth: 'unset',
-            }}
-            onClick={handleAddCategory}
-          >
-            <IoAddSharp />
-          </Button>
+        <MenuItem onClick={handleAddCategory} className='flex gap-4'>
+          <IoAddSharp />
+          Add New Category
         </MenuItem>
         {(categoryList || []).map((item) => (
           <MenuItem key={uuidv4()}>
@@ -151,7 +144,7 @@ const CategoryList = ({
             <CategoryForm
               onClose={handleCloseModal}
               category={categoryItem}
-              action= {action}
+              action={action}
             />
           ) : (
             <div className='p-5'>

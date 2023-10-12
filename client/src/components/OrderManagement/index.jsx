@@ -1,11 +1,11 @@
 // @ts-nocheck
 import { Box } from '@mui/material';
-import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllOrder } from '../../store/slices/productManagementSlice/productReduce';
 import { handleLoading } from '../../store/slices/loadingSlice';
+import { getAllOrder } from '../../store/slices/productManagementSlice/productReduce';
+import { getAllAccount } from '../../store/slices/userManagementSlice/userReduce';
 import OrderList from './OrderList';
 
 const style = {
@@ -27,16 +27,23 @@ function OrderManagement() {
 
   const { orderList } = useSelector((state) => state.productManagement);
   const { status } = useSelector((state) => state.productManagement);
+  const { statusUser } = useSelector((state) => state.userManagement);
 
   useEffect(() => {
+    dispatch(getAllAccount());
     dispatch(getAllOrder());
     dispatch(handleLoading(true));
   }, []);
 
+  console.log(status, statusUser);
+
   useEffect(() => {
-    if (status.orderList === 'success' || status.orderList === 'error')
+    if (
+      (status.orderList == 'success' || status.orderList == 'error') &&
+      (statusUser.accountList == 'success' || statusUser.accountList == 'error')
+    )
       dispatch(handleLoading(false));
-  }, [orderList]);
+  }, [orderList, status, statusUser]);
 
   return (
     <div>
@@ -45,7 +52,6 @@ function OrderManagement() {
       </div>
       <OrderList orderList={orderList} />
       <Modal
-        // @ts-ignore
         open={open}
         onClose={handleClose}
         aria-labelledby='modal-modal-title'

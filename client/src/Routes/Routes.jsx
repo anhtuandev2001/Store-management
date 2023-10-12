@@ -8,6 +8,7 @@ import {
   ChartManagementPage,
   ErrorPage,
   LoginPage,
+  OrderManagementPage,
   ProductPage,
   RegisterPage,
 } from '../pages/index';
@@ -32,6 +33,7 @@ const Routers = () => {
         <Route path='/' element={<Navigate to='/product' replace={true} />} />
         <Route path='product' element={<ProductPage />} />
         <Route path='account' element={<AccountPage />} />
+        <Route path='order' element={<OrderManagementPage />} />
         <Route path='statistical' element={<ChartManagementPage />} />
         <Route path='*' element={<ErrorPage />} />
       </Route>

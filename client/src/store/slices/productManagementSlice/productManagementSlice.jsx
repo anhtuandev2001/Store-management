@@ -7,6 +7,7 @@ import {
   deleteCategory,
   deleteProduct,
   getAllCategory,
+  getAllOrder,
   getAllProduct,
   updateCategory,
   updateProduct,
@@ -165,22 +166,6 @@ const productManagementSlice = createSlice({
         };
       })
 
-      //change status order
-      .addCase(changeStatusOrder.fulfilled, (state, action) => {
-        toast.success('Change Successfully');
-        state.status = {
-          ...state.status,
-          changeStatusOrder: 'success',
-        };
-      })
-      .addCase(changeStatusOrder.rejected, (state) => {
-        toast.error('Change Error');
-        state.status = {
-          ...state.status,
-          changeStatusOrder: 'error',
-        };
-      })
-
       // //get Category List
       .addCase(getAllCategory.fulfilled, (state, action) => {
         state.status = {
@@ -196,7 +181,40 @@ const productManagementSlice = createSlice({
           categoryList: 'error',
         };
         state.categoryList = [];
-      });
+      })
+
+      //get order List
+      .addCase(getAllOrder.fulfilled, (state, action) => {
+        state.status = {
+          ...state.status,
+          orderList: 'success',
+        };
+        state.orderList = action.payload;
+      })
+      .addCase(getAllOrder.rejected, (state) => {
+        toast.error('No response from server');
+        state.status = {
+          ...state.status,
+          orderList: 'error',
+        };
+        state.orderList = [];
+      })
+
+      //change status order
+      .addCase(changeStatusOrder.fulfilled, (state, action) => {
+        toast.success('Change Successfully');
+        state.status = {
+          ...state.status,
+          changeStatusOrder: 'success',
+        };
+      })
+      .addCase(changeStatusOrder.rejected, (state) => {
+        toast.error('Change Error');
+        state.status = {
+          ...state.status,
+          changeStatusOrder: 'error',
+        };
+      })
   },
 });
 export const { clearStatus } = productManagementSlice.actions;

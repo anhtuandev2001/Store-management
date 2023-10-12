@@ -124,7 +124,20 @@ async function updateFavoriteUser(req, res) {
   }
 }
 
+async function deleteUser(req, res) {
+  try {
+      const id = req.params.id;
+      const result = await userRepository.deleteUser(id);
+      res.status(HttpStatusCode.OK).json(result);
+  } catch (exception) {
+      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
+          message: 'Cannot delete product:' + exception.message,
+      });
+  }
+}
+
 export default {
+  deleteUser,
   getAllUser,
   login,
   register,

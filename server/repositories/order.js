@@ -1,5 +1,5 @@
 import Exception from "../exceptions/Exception.js"
-import { Cart, Order, Product } from "../models/index.js"
+import { Cart, Order, OrderItem, Product } from "../models/index.js"
 
 const getAllOrders = async () => {
     const allOrder = await Order.find()
@@ -27,7 +27,6 @@ const insertOrder = async ({
     addressId,
 }) => {
     try {
-        debugger
         const order = await Order.create({
             orderDate,
             quantity,
@@ -37,26 +36,30 @@ const insertOrder = async ({
             cartList,
             addressId,
         });
+
         const newCartList = cartList.split(',');
+
         for (const cartId of newCartList) {
-            const cart = await Cart.findByIdAndDelete(cartId);
-            const product = await Product.findById(cart.productId);
-            const quantityDeleted = product.quantity - cart.quantity;
-            if (quantityDeleted < 0) {
-                throw new Exception('Out of stock in stock');
+            const cart = await Cart.findById(cartId);
+            if (cart) {
+                await OrderItem.create({
+                    productId: cart.productId,
+                    userId: cart.userId,
+                    quantity: cart.quantity,
+                    color: cart.color
+                });
+                await Cart.findByIdAndDelete(cartId);
             }
-            product.quantity = quantityDeleted ? quantityDeleted : product.quantity
-            await product.save();
         }
 
         return order;
     } catch (exception) {
-        if (exception.errors) {
-            throw new Error('Input error', exception.errors);
+        if (!!exception.errors) {
+            throw new Exception('Input error', exception.errors);
         }
-        throw exception; // Ném ngoại lệ gốc nếu có lỗi khác
     }
 }
+
 
 const deleteOrder = async (OrderId) => {
     try {

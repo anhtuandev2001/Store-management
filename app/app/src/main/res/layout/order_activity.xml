@@ -27,14 +27,12 @@
         android:id="@+id/btnProcessing"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="28dp"
         android:layout_marginTop="32dp"
         android:fontFamily="@font/nunito_400"
         android:text="Processing"
         android:textColor="#909090"
-        app:layout_constraintEnd_toStartOf="@+id/btnDelivered"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btnConfirm"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <TextView
@@ -47,6 +45,8 @@
         android:text="Canceled"
         android:textColor="#909090"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/btnDelivered"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -66,12 +66,12 @@
         android:id="@+id/btnDelivered"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
         android:layout_marginTop="32dp"
-        android:layout_marginEnd="96dp"
         android:fontFamily="@font/nunito_400"
         android:text="Delivered"
         android:textColor="#909090"
-        app:layout_constraintEnd_toStartOf="@+id/btnCanceled"
+        app:layout_constraintStart_toEndOf="@+id/btnProcessing"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -87,4 +87,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:menu="@menu/bottom_navigation_menu" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:id="@+id/btnConfirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="32dp"
+        android:fontFamily="@font/nunito_400"
+        android:text="Confirming"
+        android:textColor="#909090"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

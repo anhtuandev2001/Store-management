@@ -6,6 +6,7 @@ import {
   createProduct,
   deleteCategory,
   deleteProduct,
+  getAllCart,
   getAllCategory,
   getAllOrder,
   getAllProduct,
@@ -15,11 +16,13 @@ import {
 const initialState = {
   productList: [],
   productImageList: [],
+  cartList: [],
   createProduct: {},
   categoryList: [],
   orderList: [],
   status: {
     productInfo: '',
+    cartList: '',
     createProduct: '',
     deleteProduct: '',
     updateProduct: '',
@@ -41,6 +44,7 @@ const productManagementSlice = createSlice({
         productInfo: '',
         createProduct: '',
         deleteProduct: '',
+        cartList: '',
         updateProduct: '',
         createCategory: '',
         deleteCategory: '',
@@ -215,6 +219,23 @@ const productManagementSlice = createSlice({
           changeStatusOrder: 'error',
         };
       })
+
+      //get order List
+      .addCase(getAllCart.fulfilled, (state, action) => {
+        state.status = {
+          ...state.status,
+          cartList: 'success',
+        };
+        state.cartList = action.payload;
+      })
+      .addCase(getAllCart.rejected, (state) => {
+        toast.error('No response from server');
+        state.status = {
+          ...state.status,
+          cartList: 'error',
+        };
+        state.cartList = [];
+      });
   },
 });
 export const { clearStatus } = productManagementSlice.actions;

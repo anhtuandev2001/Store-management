@@ -5,7 +5,7 @@ import { baseURL } from '../../../assets/enum/constants';
 const token = localStorage.getItem('jwtToken');
 
 const getAllAccount = createAsyncThunk('GET_ACCOUNT_LIST', async () => {
-  const result = await axios.get(`${baseURL}users`,{
+  const result = await axios.get(`${baseURL}users`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -22,4 +22,13 @@ const loginUser = createAsyncThunk('LOGIN', async (requestData) => {
   return response.data;
 });
 
-export { createUser, getAllAccount, loginUser };
+const getAllAddress = createAsyncThunk('GET_ADDRESS_LIST', async () => {
+  const result = await axios.get(`${baseURL}address`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return result.data.data;
+});
+
+export { createUser, getAllAccount, loginUser, getAllAddress };

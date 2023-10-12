@@ -2,6 +2,7 @@ package com.example.store_management.cart;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,15 +10,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.store_management.user.UserData;
+import com.example.store_management.R;
+import com.example.store_management.api.ApiManager;
 import com.example.store_management.common.Constants;
 import com.example.store_management.common.DataManager;
 import com.example.store_management.product.Product;
-import com.example.store_management.R;
-import com.example.store_management.api.ApiManager;
+import com.example.store_management.product.ProductDetailActivity;
+import com.example.store_management.user.UserData;
 
 import java.util.List;
 
@@ -75,6 +78,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         ImageView minusButton;
         ImageView plusButton;
         ImageView close;
+        ConstraintLayout cartItem;
 
         public CartViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -86,6 +90,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             minusButton = itemView.findViewById(R.id.minusButton);
             plusButton = itemView.findViewById(R.id.plusButton);
             close = itemView.findViewById(R.id.close);
+            cartItem = itemView.findViewById(R.id.cartItem);
         }
 
         public void bindProductData(Product product, Cart cart, int quantity) {
@@ -94,13 +99,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             colorTextView.setText(cart.getColor());
             quantityTextView.setText(String.valueOf(quantity));
 
-            Glide.with(mContext)
-                    .load(product.getImagesList())
-                    .placeholder(R.drawable.placeholder_product)
-                    .error(R.drawable.placeholder_product_error)
-                    .override(200, 200)
-                    .fitCenter()
-                    .into(imageView);
+            Glide.with(mContext).load(product.getImagesList()).placeholder(R.drawable.placeholder_product).error(R.drawable.placeholder_product_error).override(200, 200).fitCenter().into(imageView);
         }
 
         public void bindListeners(Product product, Cart cart) {
@@ -122,6 +121,15 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
                 @Override
                 public void onClick(View v) {
                     deleteCart(cart);
+                }
+            });
+
+            cartItem.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(mContext, ProductDetailActivity.class);
+                    intent.putExtra("productId", product.getId());
+                    mContext.startActivity(intent);
                 }
             });
         }

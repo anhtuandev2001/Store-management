@@ -67,6 +67,7 @@ public class ProductActivity extends Activity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
 
         ConstraintLayout mainLayout = findViewById(R.id.mainLayout); // Thay thế bằng ID của ConstraintLayout gốc trong mã XML của bạn
+        dataManager.setPositionProductBack("product");
 
         mainLayout.setOnClickListener(new View.OnClickListener() {
             @Override

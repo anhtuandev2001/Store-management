@@ -30,7 +30,18 @@ const dataGridClass = {
   },
 };
 
-const AccountList = ({ accounts }) => {
+const AccountList = ({ accounts, addressList }) => {
+
+  const findAddressById = (id) => {
+    for (const item of addressList) {
+      console.log(item._id, id);
+      if (item._id === id) {
+        return item.address;
+      }
+    }
+    return null;
+  };
+
   const columns = [
     { field: 'id', headerName: 'ID', width: 220 },
     {
@@ -50,12 +61,7 @@ const AccountList = ({ accounts }) => {
     },
     {
       field: 'defaultShippingId',
-      headerName: 'Default ShippingId',
-      width: 220,
-    },
-    {
-      field: 'favoritesList',
-      headerName: 'Favorite List',
+      headerName: 'Default Shipping',
       width: 220,
     },
   ];
@@ -65,9 +71,7 @@ const AccountList = ({ accounts }) => {
     name: item.name,
     email: item.email,
     defaultPaymentId: item.defaultPaymentId,
-    defaultShippingId: item.default_shipping_id,
-    favoritesList: item.favoritesList,
-    cardList: item.cardList,
+    defaultShippingId: findAddressById(item.default_shipping_id)
   }));
 
   return (

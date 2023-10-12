@@ -103,22 +103,36 @@ const deleteCategory = createAsyncThunk(
 const getAllOrder = createAsyncThunk('GET_ORDER_LIST', async () => {
   const result = await axios.get(`${baseURL}order`, {
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
     },
   });
-  console.log(result.data.data);
   return result.data.data;
 });
 
 const changeStatusOrder = createAsyncThunk(
   'CHANGE_STATUS_ORDER',
   async (requestData) => {
-    const response = await axios.post(`${baseURL}order`, requestData);
+    const response = await axios.patch(`${baseURL}order`, requestData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return response.data;
   }
 );
 
+const getAllCart = createAsyncThunk('GET_CART_LIST', async () => {
+  const result = await axios.get(`${baseURL}cart`, {
+    headers: {
+      // Thêm token vào header
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return result.data.data;
+});
+
 export {
+  getAllCart,
   changeStatusOrder,
   createCategory,
   createProduct,

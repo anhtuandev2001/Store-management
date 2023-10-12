@@ -7,6 +7,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -16,11 +18,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.store_management.R;
 import com.example.store_management.api.ApiManager;
+import com.example.store_management.cart.CartActivity;
 import com.example.store_management.common.Constants;
 import com.example.store_management.common.DataManager;
 import com.example.store_management.order.OrderActivity;
 import com.example.store_management.product.Product;
 import com.example.store_management.product.ProductActivity;
+import com.example.store_management.product.ProductDetailActivity;
 import com.example.store_management.user.UserActivity;
 import com.example.store_management.user.UserData;
 import com.example.store_management.user.UserResponse;
@@ -41,7 +45,6 @@ public class FavouriteActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private UserData userData = dataManager.getUserData();
     private BottomNavigationView bottomNavigationView;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +59,8 @@ public class FavouriteActivity extends AppCompatActivity {
 
         progressDialog.show();
         fetchDataFromApi();
+
+        dataManager.setPositionProductBack("favorite");
 
         bottomNavigationView.setSelectedItemId(R.id.navigation_favourite);
         // Thiết lập lắng nghe sự kiện khi item được chọn

@@ -1,19 +1,18 @@
 // @ts-nocheck
-import React, { useEffect, useState } from 'react';
-import { Tooltip, Button, Modal, Box, Menu, MenuItem } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
+import { Box, Button, Menu, MenuItem, Modal, Tooltip } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-import { AiFillEdit, AiOutlineDelete } from 'react-icons/ai';
+import React, { useEffect, useState } from 'react';
+import { AiFillEdit } from 'react-icons/ai';
 import { BiDetail } from 'react-icons/bi';
 import { useDispatch, useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
+import { handleLoading } from '../../store/slices/loadingSlice';
+import { clearStatus } from '../../store/slices/productManagementSlice/productManagementSlice';
 import {
   changeStatusOrder,
   getAllOrder,
 } from '../../store/slices/productManagementSlice/productReduce';
-import { LoadingButton } from '@mui/lab';
-import { clearStatusUser } from '../../store/slices/userManagementSlice/userManagementSlice';
-import { handleLoading } from '../../store/slices/loadingSlice';
-import { getAllAccount } from '../../store/slices/userManagementSlice/userReduce';
 
 const style = {
   position: 'absolute',
@@ -45,6 +44,13 @@ const dataGridClass = {
   },
 };
 
+const statusListDefault = [
+  { value: 0, name: 'Confirming' },
+  { value: 1, name: 'Processing' },
+  { value: 2, name: 'Delivered' },
+  { value: 3, name: 'Cancel' },
+];
+
 const OrderList = ({ orderList }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [action, setAction] = useState();
@@ -54,33 +60,23 @@ const OrderList = ({ orderList }) => {
   const [total, setTotal] = useState();
   const { status } = useSelector((state) => state.productManagement);
   const { accountList } = useSelector((state) => state.userManagement);
+  const { addressList } = useSelector((state) => state.userManagement);
+  const { cartList } = useSelector((state) => state.productManagement);
+  const { productList } = useSelector((state) => state.productManagement);
+  const [statusList, setStatusList] = useState(statusListDefault);
   const dispatch = useDispatch();
-
-  useEffect(() => {}, []);
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const handleImage = (image) => {
-    if (image) {
-      const imageUrlWithoutBrackets = image.replace(/\[|\]/g, '');
-      return imageUrlWithoutBrackets;
-    }
-  };
+  console.log(cartList);
+  console.log(productList);
+
   const handleView = (order) => {
     setAction('view');
     handleOpen();
-    const orderView = JSON.parse(order.orderDetail);
-    const totalPrice = orderView.reduce(
-      (accumulator, currentValue) => accumulator + currentValue.price,
-      0
-    );
-    setTotal(totalPrice);
-    setOrderView(orderView);
   };
-
-  console.log(accountList);
 
   const findNameById = (userIdToFind) => {
     for (const item of accountList) {
@@ -91,16 +87,38 @@ const OrderList = ({ orderList }) => {
     return null;
   };
 
+  const findAddressById = (id) => {
+    for (const item of addressList) {
+      if (item._id === id) {
+        return item.address;
+      }
+    }
+    return null;
+  };
+
+  const findPhoneNumberById = (id) => {
+    for (const item of addressList) {
+      if (item._id === id) {
+        return item.phoneNumber;
+      }
+    }
+    return null;
+  };
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const openMenu = Boolean(anchorEl);
   const handleClickMenu = (event, params) => {
+    const newStatusList = statusListDefault.filter(
+      (item) => item.name != params.status
+    );
+    setStatusList(newStatusList);
     setOrderItem(params);
     setAnchorEl(event.currentTarget);
   };
   const handleCloseMenu = (value) => {
     if (typeof value == 'number') {
       setAction('change');
-      const data = { status: value, orderId: orderItem?.id };
+      const data = { status: value, id: orderItem?.id };
       setDataChange(data);
       handleOpen();
     }
@@ -110,6 +128,7 @@ const OrderList = ({ orderList }) => {
   const handleSubmitDelete = () => {
     setIsLoading(true);
     dispatch(changeStatusOrder(dataChange));
+    dispatch(handleLoading(true));
   };
 
   useEffect(() => {
@@ -135,6 +154,16 @@ const OrderList = ({ orderList }) => {
       width: 160,
     },
     {
+      field: 'quantity',
+      headerName: 'Quantity',
+      width: 120,
+    },
+    {
+      field: 'total',
+      headerName: 'Total',
+      width: 120,
+    },
+    {
       field: 'status',
       headerName: 'Status',
       width: 160,
@@ -143,6 +172,16 @@ const OrderList = ({ orderList }) => {
       field: 'userId',
       headerName: 'User',
       width: 220,
+    },
+    {
+      field: 'address',
+      headerName: 'Address',
+      width: 150,
+    },
+    {
+      field: 'phoneNumber',
+      headerName: 'Phone Number',
+      width: 150,
     },
     {
       field: 'action',
@@ -179,13 +218,121 @@ const OrderList = ({ orderList }) => {
       orderDate: item.orderDate.split('T')[0],
       status:
         item.status == 0
-          ? 'Processing'
+          ? 'Confirming'
           : item.status == 1
-          ? 'Deliveried'
+          ? 'Processing'
+          : item.status == 2
+          ? 'Delivered'
           : 'Cancel',
       userId: findNameById(item.userId),
       orderDetail: item.orderDetail,
+      quantity: item.quantity,
+      total: item.total,
+      address: findAddressById(item.addressId),
+      phoneNumber: findPhoneNumberById(item.addressId),
     }));
+
+  const rowsDetail =
+    orderList &&
+    orderList.map((item) => ({
+      id: item._id,
+      orderDate: item.orderDate.split('T')[0],
+      status:
+        item.status == 0
+          ? 'Confirming'
+          : item.status == 1
+          ? 'Processing'
+          : item.status == 2
+          ? 'Delivered'
+          : 'Cancel',
+      userId: findNameById(item.userId),
+      orderDetail: item.orderDetail,
+      quantity: item.quantity,
+      total: item.total,
+      address: findAddressById(item.addressId),
+      phoneNumber: findPhoneNumberById(item.addressId),
+    }));
+
+  const columnsDetail = [
+    { field: 'id', headerName: 'ID', width: 220 },
+    {
+      field: 'name',
+      headerName: 'Name',
+      width: 160,
+    },
+    {
+      field: 'quantity',
+      headerName: 'Quantity',
+      width: 120,
+    },
+    {
+      field: 'price',
+      headerName: 'Price',
+      width: 120,
+    },
+    {
+      field: 'total',
+      headerName: 'Total',
+      width: 120,
+    },
+  ];
+
+  const OrderDetail = () => {
+    return (
+      <div className='text-[#42526e] w-[700px]'>
+        <h2 className='text-xl mb-4 text-center'>View Order</h2>
+        <div>Bills code:</div>
+        <div>
+          <span>name</span>
+          <span>phoneNumber</span>
+        </div>
+        <div>
+          <span>address</span>
+          <span>date</span>
+        </div>
+        <div className='flex h-[420px] '>
+          <div className='pr-4 pb-4 overflow-scroll flex-1'>
+            <DataGrid
+              rows={rowsDetail}
+              columns={columnsDetail}
+              rowHeight={100}
+              sx={dataGridClass}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const ChangeStatus = () => {
+    return (
+      <div className='p-5'>
+        <h2 className='text-xl font-bold text-[#42526e]'>
+          Are you sure you want change status to{' '}
+          {dataChange?.status == 0
+            ? 'Confirming'
+            : dataChange?.status == 1
+            ? 'Processing'
+            : dataChange?.status == 2
+            ? 'Deliveried'
+            : 'Cancel'}
+        </h2>
+        <div className='flex justify-between pt-5'>
+          <Button onClick={handleClose} sx={{ color: 'red' }}>
+            Cancel
+          </Button>
+          <LoadingButton
+            size='small'
+            onClick={handleSubmitDelete}
+            loading={isLoading}
+            variant='contained'
+          >
+            <span>Yes</span>
+          </LoadingButton>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className='overflow-scroll'>
@@ -213,10 +360,10 @@ const OrderList = ({ orderList }) => {
           'aria-labelledby': 'basic-button',
         }}
       >
-        <MenuItem onClick={() => handleCloseMenu(0)}>Confirming</MenuItem>
-        <MenuItem onClick={() => handleCloseMenu(1)}>Processing</MenuItem>
-        <MenuItem onClick={() => handleCloseMenu(2)}>Deliveried</MenuItem>
-        <MenuItem onClick={() => handleCloseMenu(3)}>Cancel</MenuItem>
+        {statusList &&
+          statusList.map(({ value, name }) => (
+            <MenuItem onClick={() => handleCloseMenu(value)}>{name}</MenuItem>
+          ))}
       </Menu>
       <Modal
         open={open}
@@ -225,59 +372,7 @@ const OrderList = ({ orderList }) => {
         aria-describedby='modal-modal-description'
       >
         <Box sx={style}>
-          {action === 'view' ? (
-            <div className='text-[#42526e] w-[700px]'>
-              <h2 className='text-xl mb-4 text-center'>View Order</h2>
-              <div className='flex h-[420px] '>
-                <div className='border-r-2 pr-4 pb-4 overflow-scroll flex-1'>
-                  {(orderView || []).map((item) => (
-                    <div key={uuidv4()} className='flex gap-4 pb-3'>
-                      <img
-                        src={handleImage(item.image)}
-                        alt={item.name}
-                        className='w-[200px] rounded-sm h-[200px] object-cover'
-                      />
-                      <div className='flex flex-col gap-2'>
-                        <span className='font-bold text-lg'>{item.name}</span>
-                        <span>${item.price}USD</span>
-                        <span>Color: {item.color}</span>
-                        <span>Quantity: {item.quantity}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div className='w-[200px] text-xl text-black text-center'>
-                  Total: ${total}USD
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className='p-5'>
-              <h2 className='text-xl font-bold text-[#42526e]'>
-                Are you sure you want change status to{' '}
-                {dataChange?.status == 0
-                  ? 'Confirming'
-                  : dataChange?.status == 1
-                  ? 'Processing'
-                  : dataChange?.status == 2
-                  ? 'Deliveried'
-                  : 'Cancel'}
-              </h2>
-              <div className='flex justify-between pt-5'>
-                <Button onClick={handleClose} sx={{ color: 'red' }}>
-                  Cancel
-                </Button>
-                <LoadingButton
-                  size='small'
-                  onClick={handleSubmitDelete}
-                  loading={isLoading}
-                  variant='contained'
-                >
-                  <span>Yes</span>
-                </LoadingButton>
-              </div>
-            </div>
-          )}
+          {action === 'view' ? <OrderDetail /> : <ChangeStatus />}
         </Box>
       </Modal>
     </div>

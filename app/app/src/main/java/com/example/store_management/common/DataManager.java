@@ -44,6 +44,15 @@ public class DataManager {
     private LoginRequest loginRequest;
     private UserAddressRequest userAddressRequest;
     private String token;
+    private String positionProductBack = "product";
+
+    public String getPositionProductBack() {
+        return positionProductBack;
+    }
+
+    public void setPositionProductBack(String positionProductBack) {
+        this.positionProductBack = positionProductBack;
+    }
 
     public String getToken() {
         return token;

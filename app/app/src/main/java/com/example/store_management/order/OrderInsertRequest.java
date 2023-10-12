@@ -18,4 +18,17 @@ public class OrderInsertRequest {
         this.cartList = cartList;
         this.addressId = addressId;
     }
+
+    public String toString() {
+        return "Product{" +
+                "orderDate='" + orderDate + '\'' +
+                ", quantity='" + quantity + '\'' +
+                ", total=" + total +
+                ", costatuslor='" + status + '\'' +
+                ", userId='" + userId + '\'' +
+                ", cartList='" + cartList + '\'' +
+                ", addressId='" + addressId + '\'' +
+                // Các thông tin khác
+                '}';
+    }
 }

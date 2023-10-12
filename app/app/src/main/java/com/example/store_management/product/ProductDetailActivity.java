@@ -13,7 +13,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
@@ -26,6 +25,7 @@ import com.example.store_management.cart.CartInsertRequest;
 import com.example.store_management.cart.CartInsertResponse;
 import com.example.store_management.common.Constants;
 import com.example.store_management.common.DataManager;
+import com.example.store_management.favourite.FavouriteActivity;
 import com.example.store_management.user.UserData;
 import com.example.store_management.user.UserFavoriteRequest;
 import com.example.store_management.user.UserResponse;
@@ -119,7 +119,26 @@ public class ProductDetailActivity extends Activity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ProductDetailActivity.this, ProductActivity.class);
+                String positionProductBack = dataManager.getPositionProductBack();
+                Intent intent = null;
+                switch (positionProductBack){
+                    case "product":{
+                        intent = new Intent(ProductDetailActivity.this, ProductActivity.class);
+                        break;
+                    }
+                    case "favorite":{
+                        intent = new Intent(ProductDetailActivity.this, FavouriteActivity.class);
+                        break;
+                    }
+                    case "cart":{
+                        intent = new Intent(ProductDetailActivity.this, CartActivity.class);
+                        break;
+                    }
+                    default:{
+                        break;
+                    }
+                }
+
                 startActivity(intent);
                 finish();
             }

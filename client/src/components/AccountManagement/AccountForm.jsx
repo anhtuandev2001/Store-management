@@ -33,8 +33,6 @@ function AccountForm({ action, account, onClose }) {
     dispatch(createUser(value));
   };
 
-  console.log(statusUser);
-
   useEffect(() => {
     if (statusUser.createUser === 'success' || statusUser.createUser === 'error') {
       setIsLoading(false);

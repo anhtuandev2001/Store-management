@@ -1,11 +1,18 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
-import { createUser, getAllAccount, loginUser } from './userReduce';
+import {
+  createUser,
+  getAllAccount,
+  getAllAddress,
+  loginUser,
+} from './userReduce';
 const initialState = {
   accountList: [],
+  addressList: [],
   token: localStorage.getItem('jwtToken') || null,
   login: {},
   statusUser: {
+    addressList: '',
     loginUser: '',
     accountList: '',
     createUser: '',
@@ -18,6 +25,7 @@ const userManagementSlice = createSlice({
   reducers: {
     clearStatusUser: (state) => {
       state.statusUser = {
+        addressList: '',
         loginUser: '',
         accountList: '',
         createUser: '',
@@ -82,6 +90,23 @@ const userManagementSlice = createSlice({
           ...state.statusUser,
           loginUser: 'error',
         };
+      })
+
+      // get address List
+      .addCase(getAllAddress.fulfilled, (state, action) => {
+        state.statusUser = {
+          ...state.statusUser,
+          addressList: 'success',
+        };
+        state.addressList = action.payload;
+      })
+      .addCase(getAllAddress.rejected, (state) => {
+        toast.error('No response from server');
+        state.statusUser = {
+          ...state.statusUser,
+          addressList: 'error',
+        };
+        state.addressList = [];
       });
   },
 });

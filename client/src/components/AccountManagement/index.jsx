@@ -5,7 +5,10 @@ import Modal from '@mui/material/Modal';
 import { useEffect, useState } from 'react';
 import AccountList from './AccountList';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllAccount } from '../../store/slices/userManagementSlice/userReduce';
+import {
+  getAllAccount,
+  getAllAddress,
+} from '../../store/slices/userManagementSlice/userReduce';
 import { handleLoading } from '../../store/slices/loadingSlice';
 import AccountForm from './AccountForm';
 
@@ -28,16 +31,23 @@ function AccountManagement() {
 
   const { accountList } = useSelector((state) => state.userManagement);
   const { statusUser } = useSelector((state) => state.userManagement);
+  const { addressList } = useSelector((state) => state.userManagement);
 
   useEffect(() => {
     dispatch(getAllAccount());
+    dispatch(getAllAddress());
     dispatch(handleLoading(true));
   }, []);
 
   useEffect(() => {
-    if (statusUser.accountList === 'success' || statusUser.accountList === 'error')
+    if (
+      (statusUser.accountList === 'success' ||
+        statusUser.accountList === 'error') &&
+      (statusUser.addressList === 'success' ||
+        statusUser.addressList === 'error')
+    )
       dispatch(handleLoading(false));
-  }, [accountList]);
+  }, [accountList, addressList]);
 
   return (
     <div>
@@ -47,7 +57,7 @@ function AccountManagement() {
           Add Account
         </Button>
       </div>
-      <AccountList accounts={accountList} />
+      <AccountList accounts={accountList} addressList={addressList} />
       <Modal
         // @ts-ignore
         open={open}
@@ -56,7 +66,7 @@ function AccountManagement() {
         aria-describedby='modal-modal-description'
       >
         <Box sx={style}>
-          <AccountForm action='create' onClose={handleClose}/>
+          <AccountForm action='create' onClose={handleClose} />
         </Box>
       </Modal>
     </div>

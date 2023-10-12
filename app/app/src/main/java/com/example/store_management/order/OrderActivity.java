@@ -44,6 +44,7 @@ public class OrderActivity extends AppCompatActivity {
     private TextView btnDelivered;
     private TextView btnProcessing;
     private TextView btnCanceled;
+    private TextView btnConfirm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +55,7 @@ public class OrderActivity extends AppCompatActivity {
         btnDelivered = findViewById(R.id.btnDelivered);
         btnProcessing = findViewById(R.id.btnProcessing);
         btnCanceled = findViewById(R.id.btnCanceled);
+        btnConfirm = findViewById(R.id.btnConfirm);
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
 
         progressDialog = new ProgressDialog(this);
@@ -94,7 +96,7 @@ public class OrderActivity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-                statusActive = "1";
+                statusActive = "2";
                 orderList = dataManager.getOrderList();
                 handleActiveStatus();
                 handleFilterStatus();
@@ -106,7 +108,7 @@ public class OrderActivity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-                statusActive = "0";
+                statusActive = "1";
                 orderList = dataManager.getOrderList();
                 handleActiveStatus();
                 handleFilterStatus();
@@ -118,7 +120,19 @@ public class OrderActivity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-                statusActive = "2";
+                statusActive = "3";
+                orderList = dataManager.getOrderList();
+                handleActiveStatus();
+                handleFilterStatus();
+                setRecyclerViewOrder();
+            }
+        });
+
+        btnConfirm.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onClick(View v) {
+                statusActive = "0";
                 orderList = dataManager.getOrderList();
                 handleActiveStatus();
                 handleFilterStatus();
@@ -191,6 +205,7 @@ public class OrderActivity extends AppCompatActivity {
         statusList.add(btnDelivered);
         statusList.add(btnProcessing);
         statusList.add(btnCanceled);
+        statusList.add(btnConfirm);
 
         for (TextView status : statusList) {
             status.setTextColor(0xFF909090);
@@ -198,19 +213,24 @@ public class OrderActivity extends AppCompatActivity {
         }
 
         switch (statusActive) {
-            case "1": {
+            case "2": {
                 btnDelivered.setTextColor(0xFF303030);
                 btnDelivered.setTypeface(customFontActive);
                 break;
             }
-            case "0": {
+            case "1": {
                 btnProcessing.setTextColor(0xFF303030);
                 btnProcessing.setTypeface(customFontActive);
                 break;
             }
-            case "2": {
+            case "3": {
                 btnCanceled.setTextColor(0xFF303030);
                 btnCanceled.setTypeface(customFontActive);
+                break;
+            }
+            case "0": {
+                btnConfirm.setTextColor(0xFF303030);
+                btnConfirm.setTypeface(customFontActive);
                 break;
             }
             default: {

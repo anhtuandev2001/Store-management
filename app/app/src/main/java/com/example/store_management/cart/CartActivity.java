@@ -47,6 +47,8 @@ public class CartActivity extends AppCompatActivity {
         TextView totalPriceTextView = findViewById(R.id.totalTextView);
         Button checkoutButton = findViewById(R.id.btnSubmit);
 
+        dataManager.setPositionProductBack("cart");
+
         // Khởi tạo ProgressDialog và cấu hình
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Loading...");

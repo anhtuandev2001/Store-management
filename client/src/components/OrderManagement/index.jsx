@@ -4,8 +4,15 @@ import Modal from '@mui/material/Modal';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { handleLoading } from '../../store/slices/loadingSlice';
-import { getAllOrder } from '../../store/slices/productManagementSlice/productReduce';
-import { getAllAccount } from '../../store/slices/userManagementSlice/userReduce';
+import {
+  getAllCart,
+  getAllOrder,
+  getAllProduct,
+} from '../../store/slices/productManagementSlice/productReduce';
+import {
+  getAllAccount,
+  getAllAddress,
+} from '../../store/slices/userManagementSlice/userReduce';
 import OrderList from './OrderList';
 
 const style = {
@@ -31,19 +38,27 @@ function OrderManagement() {
 
   useEffect(() => {
     dispatch(getAllAccount());
+    dispatch(getAllAddress());
     dispatch(getAllOrder());
+    dispatch(getAllCart());
+    dispatch(getAllProduct());
     dispatch(handleLoading(true));
   }, []);
 
-  console.log(status, statusUser);
+  console.log(status);
 
   useEffect(() => {
     if (
       (status.orderList == 'success' || status.orderList == 'error') &&
-      (statusUser.accountList == 'success' || statusUser.accountList == 'error')
+      (status.productInfo == 'success' || status.productInfo == 'error') &&
+      (statusUser.accountList == 'success' ||
+        statusUser.accountList == 'error') &&
+      (statusUser.addressList == 'success' ||
+        statusUser.addressList == 'error') &&
+      (status.cartList == 'success' || status.cartList == 'error')
     )
       dispatch(handleLoading(false));
-  }, [orderList, status, statusUser]);
+  }, [status, statusUser]);
 
   return (
     <div>

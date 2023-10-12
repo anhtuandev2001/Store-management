@@ -147,16 +147,18 @@ public class CheckoutActivity extends AppCompatActivity {
         int quantity = dataManager.getCartQuantity();
         String userId = userData.getId();
         String cartIdList = dataManager.getCartId();
-        String addressId = "651e3a8ab5b70c89d571c";
+        String addressId = address.getId();
 
         OrderInsertRequest orderInsertRequest = new OrderInsertRequest(orderDate, String.valueOf(quantity), String.valueOf(totalPrice), "0", userId, cartIdList, addressId);
 
+        Log.d("jalsjfklsdjf", "performOrderSubmission: "+orderInsertRequest);
         dataManager.setOrderInsertRequest(orderInsertRequest);
 
         apiManager.insertOrder(new Callback<OrderInsertResponse>() {
             @Override
             public void onResponse(Call<OrderInsertResponse> call, Response<OrderInsertResponse> response) {
                 progressDialog.dismiss();
+                Log.d("jalsjfklsdjf", "onFailure: "+response);
 
                 if (response.isSuccessful()) {
                     Intent intent = new Intent(CheckoutActivity.this, OrderSuccessActivity.class);
@@ -169,6 +171,7 @@ public class CheckoutActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<OrderInsertResponse> call, Throwable t) {
+                Log.d("jalsjfklsdjf", "onFailure: "+t);
                 progressDialog.dismiss();
                 // Handle the case where the API call fails
                 showSubmissionErrorDialog();
